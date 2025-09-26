@@ -13,6 +13,7 @@ class Schedule extends Model
     protected $fillable = [
         'name',
         'description',
+        'date',
         'start_time',
         'location',
     ];
@@ -20,6 +21,7 @@ class Schedule extends Model
     protected function casts(): array
     {
         return [
+            'date' => 'date',
             'start_time' => 'datetime',
         ];
     }
