@@ -16,6 +16,7 @@ class Attendance extends Model
         'tap_time',
         'status',
         'lateness_duration_minutes',
+        'notes',
     ];
 
     protected function casts(): array

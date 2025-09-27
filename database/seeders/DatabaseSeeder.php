@@ -16,9 +16,7 @@ class DatabaseSeeder extends Seeder
         // Call seeders to create departments, positions, users and schedules
         $this->call([
             DepartmentSeeder::class,
-            UserSeeder::class,
             MemberSeeder::class,
-            ScheduleSeeder::class,
         ]);
 
         // User::factory(10)->create();

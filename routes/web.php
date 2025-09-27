@@ -1,12 +1,16 @@
 <?php
 
-use App\Livewire\Dashboard;
-use App\Livewire\Departments;
 use App\Livewire\Members;
-use App\Livewire\Settings\Appearance;
-use App\Livewire\Settings\Password;
+use App\Models\Attendance;
+use App\Livewire\Dashboard;
+use App\Livewire\Schedules;
+use App\Livewire\Departments;
+use App\Livewire\AttendanceReport;
 use App\Livewire\Settings\Profile;
+use App\Livewire\Settings\Password;
+use App\Livewire\Settings\Appearance;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Attendance\ScheduleAttendance;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -17,8 +21,11 @@ Route::get('dashboard', Dashboard::class)
     ->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('departments', Departments::class)->name('departments');
-    Route::get('members', Members::class)->name('members');
+    Route::get('departemen', Departments::class)->name('departments');
+    Route::get('anggota', Members::class)->name('members');
+    Route::get('jadwal', Schedules::class)->name('schedules');
+    Route::get('absensi/{scheduleId}', ScheduleAttendance::class)->name('schedules.attendance');
+    Route::get('absensi', AttendanceReport::class)->name('absensi');
     
     Route::redirect('settings', 'settings/profile');
 

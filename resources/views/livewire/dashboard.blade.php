@@ -24,7 +24,7 @@
                 </div>
                 <div class="text-right">
                     <p class="text-xs sm:text-sm text-gray-600 font-medium">Total Anggota</p>
-                    <p class="text-2xl sm:text-3xl font-bold text-gray-900">{{ $memberCount - 1 }}</p>
+                    <p class="text-2xl sm:text-3xl font-bold text-gray-900">{{ $memberCount }}</p>
                 </div>
             </div>
             <div class="flex items-center text-xs sm:text-sm">
@@ -110,10 +110,6 @@
                 <h3 class="text-base sm:text-lg font-medium text-gray-900 mb-2">Belum Ada Kegiatan</h3>
                 <p class="text-sm sm:text-base text-gray-500 mb-4">Tidak ada kegiatan yang dijadwalkan untuk minggu ini
                 </p>
-                <button
-                    class="bg-gradient-to-r from-blue-500 to-red-500 text-white px-4 sm:px-6 py-2 rounded-lg hover:from-blue-600 hover:to-red-600 transition-all duration-200 font-medium text-sm sm:text-base">
-                    Tambah Kegiatan Baru
-                </button>
             </div>
         @else
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3 sm:gap-4">

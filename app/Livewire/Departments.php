@@ -172,10 +172,14 @@ class Departments extends Component
 
     public function delete($id)
     {
-        $department = Department::findOrFail($id);
-        $department->delete();
-        
-        session()->flash('message', 'Departemen berhasil dihapus!');
+        try {
+            $department = Department::findOrFail($id);
+            $department->delete();
+            
+            $this->dispatch('swal:success', ['message' => 'Departemen berhasil dihapus!']);
+        } catch (\Exception $e) {
+            $this->dispatch('swal:error', ['message' => 'Gagal menghapus departemen. Silakan coba lagi.']);
+        }
     }
 
     // Position methods
@@ -257,9 +261,13 @@ class Departments extends Component
 
     public function deletePosition($id)
     {
-        $position = Position::findOrFail($id);
-        $position->delete();
-        
-        session()->flash('message', 'Jabatan berhasil dihapus!');
+        try {
+            $position = Position::findOrFail($id);
+            $position->delete();
+            
+            $this->dispatch('swal:success', ['message' => 'Jabatan berhasil dihapus!']);
+        } catch (\Exception $e) {
+            $this->dispatch('swal:error', ['message' => 'Gagal menghapus jabatan. Silakan coba lagi.']);
+        }
     }
 }

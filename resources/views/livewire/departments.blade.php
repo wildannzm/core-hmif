@@ -4,11 +4,8 @@
         <div class="flex items-center justify-between">
             <div class="flex-1">
                 <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold mb-2">
-                    Manajemen Departemen & Posisi
+                    Departemen & Jabatan
                 </h1>
-                <p class="text-blue-100 opacity-90">
-                    Kelola struktur organisasi HMIF UNMA
-                </p>
             </div>
         </div>
     </div>
@@ -112,8 +109,7 @@
                                                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                             </svg>
                                         </button>
-                                        <button wire:click="delete({{ $department->id }})"
-                                            wire:confirm="Apakah Anda yakin ingin menghapus departemen ini?"
+                                        <button onclick="confirmDelete({{ $department->id }}, 'department')"
                                             class="text-red-600 hover:text-red-800 p-2 rounded-lg hover:bg-red-50 transition-colors">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
@@ -193,8 +189,7 @@
                                                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                             </svg>
                                         </button>
-                                        <button wire:click="deletePosition({{ $position->id }})"
-                                            wire:confirm="Apakah Anda yakin ingin menghapus posisi ini?"
+                                        <button onclick="confirmDelete({{ $position->id }}, 'position')"
                                             class="text-red-600 hover:text-red-800 p-2 rounded-lg hover:bg-red-50 transition-colors">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
@@ -319,3 +314,54 @@
         </div>
     @endif
 </div>
+
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- SweetAlert Functions -->
+<script>
+    function confirmDelete(id, type) {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: type === 'department' ? 'Departemen ini akan dihapus secara permanen!' :
+                'Posisi ini akan dihapus secara permanen!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (type === 'department') {
+                    @this.call('delete', id);
+                } else {
+                    @this.call('deletePosition', id);
+                }
+            }
+        });
+    }
+
+    // Listen for success message
+    window.addEventListener('swal:success', event => {
+        Swal.fire({
+            title: 'Berhasil!',
+            text: event.detail[0].message,
+            icon: 'success',
+            confirmButtonColor: '#059669',
+            confirmButtonText: 'OK'
+        });
+    });
+
+    // Listen for error message
+    window.addEventListener('swal:error', event => {
+        Swal.fire({
+            title: 'Gagal!',
+            text: event.detail[0].message,
+            icon: 'error',
+            confirmButtonColor: '#dc2626',
+            confirmButtonText: 'OK'
+        });
+    });
+</script>
