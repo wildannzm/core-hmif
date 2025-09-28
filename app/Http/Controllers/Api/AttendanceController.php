@@ -69,13 +69,50 @@ class AttendanceController extends Controller
         }
 
         $appTimezone = config('app.timezone');
-        $currentTime = now($appTimezone); 
-        $startTime = Carbon::parse($todaySchedule->start_time, $appTimezone);
-        
+        $currentTime = now($appTimezone);
+
+        $todaySchedules = Schedule::whereDate('start_time', $currentTime->toDateString())->get();
+
+        if ($todaySchedules->isEmpty()) {
+            return response()->json(['status' => 'error', 'message' => 'No active schedule for today.'], 404);
+        }
+
+        $closestSchedule = null;
+        $smallestDiff = PHP_INT_MAX;
+
+        foreach ($todaySchedules as $schedule) {
+            $startTime = Carbon::parse($schedule->start_time, $appTimezone);
+            $diff = abs($startTime->diffInMinutes($currentTime)); // Gunakan nilai absolut
+
+            if ($diff < $smallestDiff) {
+                $smallestDiff = $diff;
+                $closestSchedule = $schedule;
+            }
+        }
+
+        if ($smallestDiff > 120) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No schedule is active at this time.'
+            ], 404);
+        }
+
+
+        $attendance = Attendance::where('user_id', $user->id)
+            ->where('schedule_id', $closestSchedule->id)
+            ->first();
+
+        if (!$attendance) {
+            return response()->json(['status' => 'error', 'message' => 'Attendance record not found.'], 404);
+        }
+        if ($attendance->status !== 'Alfa') {
+            return response()->json(['status' => 'warning', 'message' => 'You have already checked in for ' . $closestSchedule->name], 409);
+        }
+
+        $startTime = Carbon::parse($closestSchedule->start_time, $appTimezone);
         $status = 'Hadir';
         $latenessDuration = 0;
 
-        
         if ($currentTime->gt($startTime)) {
             $latenessDuration = $startTime->diffInMinutes($currentTime);
         }
