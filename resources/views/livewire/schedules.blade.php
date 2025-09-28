@@ -135,23 +135,25 @@
         </div>
     @else
         <!-- Empty State -->
-        <div class="text-center py-12">
-            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 7V3a4 4 0 118 0v4m-4 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-900">Belum ada kegiatan</h3>
-            <p class="mt-1 text-sm text-gray-500">Mulai dengan membuat jadwal kegiatan baru.</p>
-            <div class="mt-6">
-                <button wire:click="openCreateModal" type="button"
-                    class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gradient-to-r from-red-500 to-blue-600 hover:from-red-600 hover:to-blue-700">
-                    <svg class="w-4 h-4 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    Tambah Kegiatan
-                </button>
+        <div class="bg-white border border-gray-200 rounded-lg shadow-lg">
+            <div class="text-center py-12 px-6">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3a4 4 0 118 0v4m-4 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">Belum ada kegiatan</h3>
+                <p class="mt-1 text-sm text-gray-500">Mulai dengan membuat jadwal kegiatan baru.</p>
+                <div class="mt-6">
+                    <button wire:click="openCreateModal" type="button"
+                        class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gradient-to-r from-red-500 to-blue-600 hover:from-red-600 hover:to-blue-700">
+                        <svg class="w-4 h-4 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Tambah Kegiatan
+                    </button>
+                </div>
             </div>
         </div>
     @endif
