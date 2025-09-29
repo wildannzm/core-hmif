@@ -17,7 +17,13 @@ class MemberSeeder extends Seeder
     public function run(): void
     {
         // Create member role if it doesn't exist
-        $memberRole = Role::firstOrCreate(['name' => 'member']);
+
+        // Create department-specific roles
+        $bphRole = Role::firstOrCreate(['name' => 'bph']);
+        $litbangRole = Role::firstOrCreate(['name' => 'litbang']);
+        $danusRole = Role::firstOrCreate(['name' => 'danus']);
+        $eksternalRole = Role::firstOrCreate(['name' => 'eksternal']);
+        $kominfoRole = Role::firstOrCreate(['name' => 'kominfo']);
 
         // Get departments
         $bph = Department::where('name', 'Badan Pengurus Harian')->first();
@@ -351,7 +357,19 @@ class MemberSeeder extends Seeder
             ]);
 
             // Assign member role to the user
-            $user->assignRole($memberRole);
+
+            // Assign department-specific role based on department
+            if ($memberData['department_id'] === $bph->id) {
+                $user->assignRole($bphRole);
+            } elseif ($memberData['department_id'] === $litbang->id) {
+                $user->assignRole($litbangRole);
+            } elseif ($memberData['department_id'] === $eksternal->id) {
+                $user->assignRole($eksternalRole);
+            }elseif ($memberData['department_id'] === $danus->id) {
+                $user->assignRole($danusRole);
+            } elseif ($memberData['department_id'] === $kominfo->id) {
+                $user->assignRole($kominfoRole);
+            }
         }
 
         $this->command->info('All HMIF members seeded successfully!');

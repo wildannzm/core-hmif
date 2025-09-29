@@ -16,11 +16,9 @@ Route::get('/', function () {
     return redirect()->route('login');
 })->name('home');
 
-Route::get('dashboard', Dashboard::class)
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('dashboard', Dashboard::class)->name('dashboard');
     Route::get('departemen', Departments::class)->name('departments');
     Route::get('anggota', Members::class)->name('members');
     Route::get('jadwal', Schedules::class)->name('schedules');
