@@ -73,41 +73,35 @@
                             </svg>
                             {{ $schedule->location }}
                         </div>
-
-                        <!-- Attendance Summary -->
-                        @php
-                            $attendanceStats = $schedule->attendances->groupBy('status');
-                            $totalAttendance = $schedule->attendances->count();
-                        @endphp
-
-                        <div class="grid grid-cols-2 gap-2 mb-4">
-                            <div class="text-center p-2 bg-green-50 rounded-lg border border-green-200">
-                                <div class="text-lg font-bold text-green-600">
-                                    {{ $attendanceStats->get('Hadir', collect())->count() }}</div>
-                                <div class="text-xs text-green-600">Hadir</div>
-                            </div>
-                            <div class="text-center p-2 bg-red-50 rounded-lg border border-red-200">
-                                <div class="text-lg font-bold text-red-600">
-                                    {{ $attendanceStats->get('Alfa', collect())->count() }}</div>
-                                <div class="text-xs text-red-600">Alfa</div>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Card Actions -->
                     <div class="px-4 pb-4 flex gap-2">
-                        <!-- View Attendance Button -->
-                        <a href="{{ route('schedules.attendance', $schedule->id) }}" wire:navigate
-                            class="flex-1 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-2 text-center inline-flex items-center justify-center">
-                            <svg class="w-3 h-3 me-1" fill="currentColor" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <rect x="5" y="3" width="14" height="18" rx="1"
-                                    style="fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;" />
-                                <path d="M9,6a1,1,0,0,0,1,1h4a1,1,0,0,0,1-1V3H9Zm0,8,2,2,4-4"
-                                    style="fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;" />
-                            </svg>
-                            Lihat Absensi
-                        </a>
+                        @if ($schedule->has_attendance)
+                            <!-- View Attendance Button -->
+                            <a href="{{ route('schedules.attendance', $schedule->id) }}" wire:navigate
+                                class="flex-1 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-2 text-center inline-flex items-center justify-center">
+                                <svg class="w-3 h-3 me-1" fill="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="5" y="3" width="14" height="18" rx="1"
+                                        style="fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;" />
+                                    <path d="M9,6a1,1,0,0,0,1,1h4a1,1,0,0,0,1-1V3H9Zm0,8,2,2,4-4"
+                                        style="fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;" />
+                                </svg>
+                                Lihat Absensi
+                            </a>
+                        @else
+                            <!-- No Attendance Label -->
+                            <div
+                                class="flex-1 text-gray-500 bg-gray-100 font-medium rounded-lg text-xs px-3 py-2 text-center inline-flex items-center justify-center">
+                                <svg class="w-3 h-3 me-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                                Tidak Ada Absensi
+                            </div>
+                        @endif
 
                         <!-- Edit Button -->
                         <button wire:click="openEditModal({{ $schedule->id }})" type="button"
@@ -235,6 +229,15 @@
                             @error('location')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
+                        </div>
+
+                        <!-- Attendance Option -->
+                        <div class="flex items-center">
+                            <input wire:model="has_attendance" id="has_attendance" type="checkbox"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+                            <label for="has_attendance" class="ml-2 text-sm font-medium text-gray-900">
+                                Kegiatan ini memiliki absensi
+                            </label>
                         </div>
                     </div>
 

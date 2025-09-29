@@ -3,10 +3,14 @@
 namespace App\Livewire;
 
 use App\Models\User;
-use App\Models\Department;
-use App\Models\Position;
 use Livewire\Component;
+use App\Models\Position;
+use App\Models\Department;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Layout;
 
+#[Title('Daftar Anggota')]
+#[Layout('components.layouts.app')]
 class Members extends Component
 {
     public $selectedMember = null;

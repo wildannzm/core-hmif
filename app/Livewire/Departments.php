@@ -2,11 +2,16 @@
 
 namespace App\Livewire;
 
-use App\Models\Department;
-use App\Models\Position;
 use Livewire\Component;
+use App\Models\Position;
+use App\Models\Department;
 use Livewire\WithPagination;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Layout;
 
+
+#[Title('Departemen & Jabatan')]
+#[Layout('components.layouts.app')]
 class Departments extends Component
 {
     use WithPagination;

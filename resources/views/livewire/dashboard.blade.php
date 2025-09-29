@@ -95,7 +95,31 @@
                 <span class="sm:hidden">Jadwal Minggu Ini</span>
             </h2>
             <div class="text-xs sm:text-sm text-gray-500">
-                {{ now()->startOfWeek()->format('d M') }} - {{ now()->endOfWeek()->format('d M Y') }}
+                @php
+                    $monthNames = [
+                        'Jan' => 'Jan',
+                        'Feb' => 'Feb',
+                        'Mar' => 'Mar',
+                        'Apr' => 'Apr',
+                        'May' => 'Mei',
+                        'Jun' => 'Jun',
+                        'Jul' => 'Jul',
+                        'Aug' => 'Ags',
+                        'Sep' => 'Sep',
+                        'Oct' => 'Okt',
+                        'Nov' => 'Nov',
+                        'Dec' => 'Des',
+                    ];
+                    $startDate = now()->startOfWeek()->format('d M');
+                    $endDate = now()->endOfWeek()->format('d M Y');
+
+                    // Replace English month with Indonesian
+                    foreach ($monthNames as $eng => $ind) {
+                        $startDate = str_replace($eng, $ind, $startDate);
+                        $endDate = str_replace($eng, $ind, $endDate);
+                    }
+                @endphp
+                {{ $startDate }} - {{ $endDate }}
             </div>
         </div>
 

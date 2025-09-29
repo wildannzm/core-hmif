@@ -16,6 +16,7 @@ class Schedule extends Model
         'date',
         'start_time',
         'location',
+        'has_attendance',
     ];
 
     protected function casts(): array
@@ -23,6 +24,7 @@ class Schedule extends Model
         return [
             'date' => 'date',
             'start_time' => 'datetime',
+            'has_attendance' => 'boolean',
         ];
     }
 

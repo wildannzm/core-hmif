@@ -4,10 +4,14 @@ namespace App\Livewire;
 
 use Carbon\Carbon;
 use App\Models\User;
-use App\Models\Schedule;
 use Livewire\Component;
+use App\Models\Schedule;
 use App\Models\Attendance;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Layout;
 
+#[Title('Jadwal Kegiatan')]
+#[Layout('components.layouts.app')]
 class Schedules extends Component
 {
     public $schedules;
@@ -19,6 +23,7 @@ class Schedules extends Component
     public $date = '';
     public $start_time = '';
     public $location = '';
+    public $has_attendance = true;
 
     protected $rules = [
         'name' => 'required|string|max:255',
@@ -26,6 +31,7 @@ class Schedules extends Component
         'date' => 'required|date',
         'start_time' => 'required|date_format:H:i',
         'location' => 'required|string|max:255',
+        'has_attendance' => 'boolean',
     ];
 
     public function mount()
@@ -43,8 +49,9 @@ class Schedules extends Component
 
     public function openCreateModal()
     {
-        $this->reset(['scheduleId', 'name', 'description', 'date', 'start_time', 'location']);
-        $this->modalTitle = 'Tambah Kegiatan Baru';
+        $this->reset(['scheduleId', 'name', 'description', 'date', 'start_time', 'location', 'has_attendance']);
+        $this->has_attendance = true;
+        $this->modalTitle = 'Tambah Kegiatan';
         $this->showModal = true;
     }
 
@@ -58,6 +65,7 @@ class Schedules extends Component
         $this->date = $schedule->date->format('Y-m-d');
         $this->start_time = $schedule->start_time->format('H:i');
         $this->location = $schedule->location;
+        $this->has_attendance = $schedule->has_attendance;
         
         $this->modalTitle = 'Edit Kegiatan';
         $this->showModal = true;
@@ -73,24 +81,47 @@ class Schedules extends Component
             'date' => $this->date,
             'start_time' => Carbon::createFromFormat('Y-m-d H:i', $this->date . ' ' . $this->start_time),
             'location' => $this->location,
+            'has_attendance' => $this->has_attendance,
         ];
 
         if ($this->scheduleId) {
             // Update existing schedule
+            $schedule = Schedule::findOrFail($this->scheduleId);
+            $oldHasAttendance = $schedule->has_attendance;
+            
             Schedule::where('id', $this->scheduleId)->update($data);
+            
+            // If attendance was enabled but now disabled, delete attendance records
+            if ($oldHasAttendance && !$this->has_attendance) {
+                Attendance::where('schedule_id', $this->scheduleId)->delete();
+            }
+            // If attendance was disabled but now enabled, create attendance records
+            elseif (!$oldHasAttendance && $this->has_attendance) {
+                $users = User::all();
+                foreach ($users as $user) {
+                    Attendance::create([
+                        'user_id' => $user->id,
+                        'schedule_id' => $this->scheduleId,
+                        'status' => 'Alfa',
+                    ]);
+                }
+            }
+            
             session()->flash('message', 'Kegiatan berhasil diupdate!');
         } else {
             // Create new schedule
             $schedule = Schedule::create($data);
             
-            // Create attendance records for all users with default status 'Alfa'
-            $users = User::all();
-            foreach ($users as $user) {
-                Attendance::create([
-                    'user_id' => $user->id,
-                    'schedule_id' => $schedule->id,
-                    'status' => 'Alfa',
-                ]);
+            // Create attendance records only if has_attendance is true
+            if ($this->has_attendance) {
+                $users = User::all();
+                foreach ($users as $user) {
+                    Attendance::create([
+                        'user_id' => $user->id,
+                        'schedule_id' => $schedule->id,
+                        'status' => 'Alfa',
+                    ]);
+                }
             }
             
             session()->flash('message', 'Kegiatan berhasil ditambahkan!');
@@ -116,7 +147,7 @@ class Schedules extends Component
     public function closeModal()
     {
         $this->showModal = false;
-        $this->reset(['scheduleId', 'name', 'description', 'date', 'start_time', 'location']);
+        $this->reset(['scheduleId', 'name', 'description', 'date', 'start_time', 'location', 'has_attendance']);
         $this->resetValidation();
     }
 

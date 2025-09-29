@@ -25,6 +25,12 @@ class ScheduleAttendance extends Component
     public function mount($scheduleId)
     {
         $this->schedule = Schedule::findOrFail($scheduleId);
+        
+        // Check if schedule has attendance enabled
+        if (!$this->schedule->has_attendance) {
+            abort(404, 'Kegiatan ini tidak memiliki absensi.');
+        }
+        
         $this->loadAttendances();
     }
 
@@ -126,11 +132,12 @@ class ScheduleAttendance extends Component
         };
     }
 
-    public function getNotesColorClass($notes, $lateness)
+    public function getNotesColorClass($notes, $lateness_duration_minutes)
     {
-        if ($lateness > 15 || str_contains(strtolower($notes), 'terlambat')) {
+        if ($lateness_duration_minutes > 0) {
             return 'text-red-600 font-medium';
         }
+        
         return 'text-gray-600';
     }
 

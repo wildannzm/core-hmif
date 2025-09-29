@@ -2,12 +2,16 @@
 
 namespace App\Livewire;
 
-use App\Models\Schedule;
 use Carbon\Carbon;
 use Livewire\Component;
+use App\Models\Schedule;
 use Livewire\WithPagination;
+use Livewire\Attributes\Title;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Livewire\Attributes\Layout;
 
+#[Title('Laporan Absensi')]
+#[Layout('components.layouts.app')]
 class AttendanceReport extends Component
 {
     use WithPagination;
@@ -44,15 +48,10 @@ class AttendanceReport extends Component
             $department = $attendance->user->department->name ?? '';
             
             // BPH positions get priority (0-10)
-            $bphPositions = ['Ketua' => 1, 'Wakil Ketua' => 2, 'Sekretaris' => 3, 'Sekertaris' => 3, 'Bendahara' => 4, 'Kominfo' => 5];
+            $bphPositions = ['Ketua' => 1, 'Wakil Ketua' => 2, 'Sekretaris' => 3, 'Sekertaris' => 3, 'Bendahara' => 4];
             
             if (isset($bphPositions[$position]) || $department === 'Badan Pengurus Harian' || $department === 'BPH') {
                 return $bphPositions[$position] ?? 10;
-            }
-            
-            // Coordinators get middle priority (100-199)
-            if ($position === 'Koordinator' && $department && !in_array($department, ['HMIF', 'Badan Pengurus Harian', 'BPH'])) {
-                return 100;
             }
             
             // Regular members get lowest priority (999)
@@ -104,6 +103,7 @@ class AttendanceReport extends Component
     public function render()
     {
         $query = Schedule::with(['attendances.user'])
+            ->where('has_attendance', true) // Only schedules that have attendance enabled
             ->whereHas('attendances'); // Only schedules that have attendance records
 
         if ($this->search) {

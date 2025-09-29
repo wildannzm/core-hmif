@@ -86,20 +86,15 @@
                                 </div>
                                 <!-- Mobile: Show time and status below name on small screens -->
                                 <div class="sm:hidden mt-1 space-y-1">
-                                    @if ($attendance->tap_time)
-                                        <div class="text-xs text-gray-600">
-                                            ⏰ {{ \Carbon\Carbon::parse($attendance->tap_time)->format('H:i') }}
-                                            @if ($attendance->lateness_duration_minutes > 0)
-                                                <span
-                                                    class="text-red-600">({{ $attendance->lateness_duration_minutes }}
-                                                    mnt)</span>
-                                            @endif
-                                        </div>
-                                    @endif
                                     <span
                                         class="inline-block px-2 py-0.5 text-xs font-medium rounded-full border {{ $this->getStatusColorClass($attendance->status) }}">
                                         {{ $attendance->status }}
                                     </span>
+                                    @if ($attendance->notes)
+                                        <div class="text-xs text-gray-500 pt-1">
+                                            <p class="truncate">{{ $attendance->notes }}</p>
+                                        </div>
+                                    @endif
                                 </div>
                             </td>
                             <td class="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-700 font-medium">
@@ -117,11 +112,6 @@
                                         <div class="font-medium text-gray-900 text-xs sm:text-sm">
                                             {{ \Carbon\Carbon::parse($attendance->tap_time)->format('H:i') }}
                                         </div>
-                                        @if ($attendance->lateness_duration_minutes > 0)
-                                            <div class="text-xs text-red-600">
-                                                Terlambat {{ $attendance->lateness_duration_minutes }} menit
-                                            </div>
-                                        @endif
                                     @else
                                         <span class="text-gray-400 text-xs sm:text-sm">-</span>
                                     @endif
@@ -155,10 +145,10 @@
                                     <!-- View Mode -->
                                     @if ($attendance->notes)
                                         <div
-                                            class="text-xs sm:text-sm {{ $this->getNotesColorClass($attendance->notes, $attendance->lateness_duration_minutes) }}">
+                                            class="text-xs sm:text-sm {{ $attendance->lateness_duration_minutes > 0 ? 'mt-1' : '' }} {{ $this->getNotesColorClass($attendance->notes, $attendance->lateness_duration_minutes) }}">
                                             {{ $attendance->notes }}
                                         </div>
-                                    @else
+                                    @elseif ($attendance->lateness_duration_minutes <= 0)
                                         <span class="text-gray-400 text-xs sm:text-sm">-</span>
                                     @endif
                                 @endif

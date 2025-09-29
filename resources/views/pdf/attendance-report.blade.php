@@ -140,11 +140,11 @@
         <thead>
             <tr>
                 <th style="width: 40px; text-align:center;">No</th>
-                <th>Nama</th>
-                <th>Jabatan</th>
-                <th style="width: 80px;">Waktu Tiba</th>
-                <th style="width: 70px;">Status</th>
-                <th>Keterangan</th>
+                <th style="text-align: center">Nama</th>
+                <th style="text-align: center">Jabatan</th>
+                <th style="width: 70px; text-align: center">Waktu Tiba</th>
+                <th style="width: 70px; text-align: center">Status</th>
+                <th style="text-align: center">Keterangan</th>
             </tr>
         </thead>
         <tbody>
@@ -156,14 +156,7 @@
                         @php
                             $position = $attendance->user->position->name ?? 'Anggota';
                             $department = $attendance->user->department->name ?? '';
-                            $bphPositions = [
-                                'Ketua',
-                                'Wakil Ketua',
-                                'Sekretaris',
-                                'Sekertaris',
-                                'Bendahara',
-                                'Kominfo',
-                            ];
+                            $bphPositions = ['Ketua', 'Wakil Ketua', 'Sekretaris', 'Sekertaris', 'Bendahara'];
                             $isBPH =
                                 in_array($position, $bphPositions) ||
                                 $department === 'Badan Pengurus Harian' ||
@@ -172,9 +165,9 @@
 
                         @if ($isBPH)
                             {{ $position === 'Sekertaris' ? 'Sekretaris' : $position }}
-                        @elseif($position === 'Koordinator' && $department && !in_array($department, ['HMIF', 'Badan Pengurus Harian', 'BPH']))
+                        @elseif($position === 'Koordinator' && $department && !in_array($department, ['Badan Pengurus Harian', 'BPH']))
                             Koordinator {{ $department }}
-                        @elseif($department && !in_array($department, ['HMIF', 'Badan Pengurus Harian', 'BPH']))
+                        @elseif($department && !in_array($department, ['Badan Pengurus Harian', 'BPH']))
                             Anggota {{ $department }}
                         @else
                             Anggota
@@ -183,10 +176,6 @@
                     <td style="text-align: center;">
                         @if ($attendance->tap_time)
                             {{ \Carbon\Carbon::parse($attendance->tap_time)->format('H:i') }}
-                            @if ($attendance->lateness_duration_minutes > 0)
-                                <br><small style="color: #dc2626;">({{ $attendance->lateness_duration_minutes }}
-                                    mnt)</small>
-                            @endif
                         @else
                             -
                         @endif

@@ -2,11 +2,15 @@
 
 namespace App\Livewire;
 
-use App\Models\User;
-use App\Models\Schedule;
-use Livewire\Component;
 use Carbon\Carbon;
+use App\Models\User;
+use Livewire\Component;
+use App\Models\Schedule;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Layout;
 
+#[Title('Dashboard')]
+#[Layout('components.layouts.app')]
 class Dashboard extends Component
 {
     public function getMemberCountProperty()

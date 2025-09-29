@@ -112,15 +112,20 @@ class AttendanceController extends Controller
         $startTime = Carbon::parse($closestSchedule->start_time, $appTimezone);
         $status = 'Hadir';
         $latenessDuration = 0;
+        $notes = $attendance->notes; // Keep existing notes
 
         if ($currentTime->gt($startTime)) {
             $latenessDuration = $startTime->diffInMinutes($currentTime);
+            if ($latenessDuration > 0) {
+                $notes = $this->getLatenessForHumans($latenessDuration);
+            }
         }
 
         $attendance->update([
             'status' => $status,
             'tap_time' => $currentTime,
             'lateness_duration_minutes' => $latenessDuration,
+            'notes' => $notes,
         ]);
 
         return response()->json([
@@ -134,5 +139,30 @@ class AttendanceController extends Controller
                 'lateness_minutes' => $latenessDuration
             ]
         ], 200); // 200 OK
+    }
+
+    /**
+     *
+     * @param int $minutes
+     * @return string
+     */
+    private function getLatenessForHumans($minutes)
+    {
+        if ($minutes <= 0) {
+            return '';
+        }
+
+        $hours = floor($minutes / 60);
+        $remainingMinutes = $minutes % 60;
+
+        $parts = [];
+        if ($hours > 0) {
+            $parts[] = "{$hours} jam";
+        }
+        if ($remainingMinutes > 0) {
+            $parts[] = "{$remainingMinutes} menit";
+        }
+
+        return 'Terlambat ' . implode(' ', $parts);
     }
 }
