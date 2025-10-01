@@ -6,6 +6,11 @@ use Carbon\Carbon;
 use App\Models\Schedule;
 use Livewire\Component;
 use App\Models\Attendance;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Layout;
+
+#[Title('Daftar Absensi Kegiatan')]
+#[Layout('components.layouts.app')]
 
 class ScheduleAttendance extends Component
 {
