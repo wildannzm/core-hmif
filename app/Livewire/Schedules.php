@@ -24,6 +24,8 @@ class Schedules extends Component
     public $start_time = '';
     public $location = '';
     public $has_attendance = true;
+    public $search = '';
+    public $filter = 'all';
 
     protected $rules = [
         'name' => 'required|string|max:255',
@@ -41,10 +43,42 @@ class Schedules extends Component
 
     public function loadSchedules()
     {
-        $this->schedules = Schedule::with(['attendances.user.position', 'attendances.user.department'])
-            ->orderBy('date', 'desc')
+        $query = Schedule::with(['attendances.user.position', 'attendances.user.department']);
+
+        // Apply search filter
+        if ($this->search) {
+            $query->where(function($q) {
+                $q->where('name', 'like', '%' . $this->search . '%')
+                  ->orWhere('location', 'like', '%' . $this->search . '%')
+                  ->orWhere('description', 'like', '%' . $this->search . '%');
+            });
+        }
+
+        // Apply date filter
+        if ($this->filter === 'week') {
+            $query->whereBetween('date', [
+                Carbon::now()->startOfWeek(),
+                Carbon::now()->endOfWeek()
+            ]);
+        } elseif ($this->filter === 'month') {
+            $query->whereMonth('date', Carbon::now()->month)
+                  ->whereYear('date', Carbon::now()->year);
+        }
+
+        $this->schedules = $query->orderBy('date', 'desc')
             ->orderBy('start_time', 'desc')
             ->get();
+    }
+
+    public function setFilter($filter)
+    {
+        $this->filter = $filter;
+        $this->loadSchedules();
+    }
+
+    public function updatedSearch()
+    {
+        $this->loadSchedules();
     }
 
     public function openCreateModal()

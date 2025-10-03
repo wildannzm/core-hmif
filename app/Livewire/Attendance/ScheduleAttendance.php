@@ -20,12 +20,26 @@ class ScheduleAttendance extends Component
     public $editStatus = '';
     public $editNotes = '';
     public $editTapTime = '';
+    public $originalTapTime = '';
 
     protected $rules = [
         'editStatus' => 'required|in:Hadir,Sakit,Izin,Alfa',
         'editNotes' => 'nullable|string|max:500',
         'editTapTime' => 'nullable|date_format:H:i',
     ];
+
+    public function updatedEditStatus($value)
+    {
+        // Reset waktu tiba jika status bukan "Hadir"
+        if ($value !== 'Hadir') {
+            $this->editTapTime = '';
+        } else {
+            // Jika user mengubah kembali ke "Hadir", kembalikan waktu asli jika ada
+            if (empty($this->editTapTime) && !empty($this->originalTapTime)) {
+                $this->editTapTime = $this->originalTapTime;
+            }
+        }
+    }
 
     public function mount($scheduleId)
     {
@@ -78,6 +92,9 @@ class ScheduleAttendance extends Component
         $this->editStatus = $attendance->status;
         $this->editNotes = $attendance->notes ?? '';
         $this->editTapTime = $attendance->tap_time ? Carbon::parse($attendance->tap_time)->format('H:i') : '';
+        
+        // Store original tap time for reference
+        $this->originalTapTime = $this->editTapTime;
     }
 
     public function saveEdit()
@@ -117,12 +134,12 @@ class ScheduleAttendance extends Component
         $this->loadAttendances();
         $this->cancelEdit();
         
-        session()->flash('message', 'Absensi berhasil diupdate!');
+        session()->flash('message', 'Absensi berhasil diperbarui.');
     }
 
     public function cancelEdit()
     {
-        $this->reset(['editingAttendance', 'editStatus', 'editNotes', 'editTapTime']);
+        $this->reset(['editingAttendance', 'editStatus', 'editNotes', 'editTapTime', 'originalTapTime']);
         $this->resetValidation();
     }
 
