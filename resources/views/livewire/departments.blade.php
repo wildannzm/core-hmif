@@ -309,7 +309,7 @@
 
     <!-- Department Modal -->
     @if ($showModal)
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-2 sm:p-4 z-50">
+        <div class="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 z-50">
             <div
                 class="bg-white rounded-lg sm:rounded-xl shadow-xl max-w-sm sm:max-w-lg w-full max-h-screen overflow-y-auto">
                 <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
@@ -348,7 +348,7 @@
 
     <!-- Position Modal -->
     @if ($showPositionModal)
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-2 sm:p-4 z-50">
+        <div class="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 z-50">
             <div
                 class="bg-white rounded-lg sm:rounded-xl shadow-xl max-w-sm sm:max-w-lg w-full max-h-screen overflow-y-auto">
                 <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">

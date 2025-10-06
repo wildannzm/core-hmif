@@ -88,35 +88,37 @@
                             </span>
                         </div>
                         <div class="flex space-x-1 flex-shrink-0">
-                            @if ($editingAttendance === $attendance->id)
-                                <!-- Save/Cancel Buttons -->
-                                <button wire:click="saveEdit" type="button"
-                                    class="text-white bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-green-300 font-medium rounded-lg w-9 h-9 flex items-center justify-center transition-colors shadow-sm"
-                                    title="Simpan">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                </button>
-                                <button wire:click="cancelEdit" type="button"
-                                    class="text-gray-600 bg-gray-100 hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 font-medium rounded-lg w-9 h-9 flex items-center justify-center transition-colors shadow-sm"
-                                    title="Batal">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </button>
-                            @else
-                                <!-- Edit Button -->
-                                <button wire:click="startEdit({{ $attendance->id }})" type="button"
-                                    class="text-blue-600 bg-blue-50 hover:bg-blue-100 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg w-9 h-9 flex items-center justify-center transition-colors shadow-sm"
-                                    title="Edit">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                        </path>
-                                    </svg>
-                                </button>
+                            @if (auth()->user()->hasSecretaryAccess())
+                                @if ($editingAttendance === $attendance->id)
+                                    <!-- Save/Cancel Buttons -->
+                                    <button wire:click="saveEdit" type="button"
+                                        class="text-white bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-green-300 font-medium rounded-lg w-9 h-9 flex items-center justify-center transition-colors shadow-sm"
+                                        title="Simpan">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </button>
+                                    <button wire:click="cancelEdit" type="button"
+                                        class="text-gray-600 bg-gray-100 hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 font-medium rounded-lg w-9 h-9 flex items-center justify-center transition-colors shadow-sm"
+                                        title="Batal">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                @else
+                                    <!-- Edit Button -->
+                                    <button wire:click="startEdit({{ $attendance->id }})" type="button"
+                                        class="text-blue-600 bg-blue-50 hover:bg-blue-100 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg w-9 h-9 flex items-center justify-center transition-colors shadow-sm"
+                                        title="Edit">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                @endif
                             @endif
                         </div>
                     </div>
@@ -220,7 +222,9 @@
                         <th scope="col" class="px-3 sm:px-6 py-3 sm:py-4 font-semibold">Status</th>
                         <th scope="col" class="px-3 sm:px-6 py-3 sm:py-4 font-semibold hidden lg:table-cell">
                             Keterangan</th>
-                        <th scope="col" class="px-3 sm:px-6 py-3 sm:py-4 font-semibold">Aksi</th>
+                        @if (auth()->user()->hasSecretaryAccess())
+                            <th scope="col" class="px-3 sm:px-6 py-3 sm:py-4 font-semibold">Aksi</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -288,47 +292,50 @@
                                     @endif
                                 @endif
                             </td>
-                            <td class="px-3 sm:px-6 py-3 sm:py-4">
-                                @if ($editingAttendance === $attendance->id)
-                                    <!-- Save/Cancel Buttons -->
-                                    <div class="flex gap-1">
-                                        <button wire:click="saveEdit" type="button"
-                                            class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg w-8 h-8 flex items-center justify-center transition-colors"
-                                            title="Simpan">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                            @if (auth()->user()->hasSecretaryAccess())
+                                <td class="px-3 sm:px-6 py-3 sm:py-4">
+                                    @if ($editingAttendance === $attendance->id)
+                                        <!-- Save/Cancel Buttons -->
+                                        <div class="flex gap-1">
+                                            <button wire:click="saveEdit" type="button"
+                                                class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg w-8 h-8 flex items-center justify-center transition-colors"
+                                                title="Simpan">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                </svg>
+                                            </button>
+                                            <button wire:click="cancelEdit" type="button"
+                                                class="text-gray-600 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg w-8 h-8 flex items-center justify-center transition-colors"
+                                                title="Batal">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    @else
+                                        <!-- Edit Button -->
+                                        <button wire:click="startEdit({{ $attendance->id }})" type="button"
+                                            class="text-blue-600 bg-blue-50 hover:bg-blue-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg w-8 h-8 flex items-center justify-center transition-colors"
+                                            title="Edit">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M5 13l4 4L19 7"></path>
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                </path>
                                             </svg>
                                         </button>
-                                        <button wire:click="cancelEdit" type="button"
-                                            class="text-gray-600 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg w-8 h-8 flex items-center justify-center transition-colors"
-                                            title="Batal">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                @else
-                                    <!-- Edit Button -->
-                                    <button wire:click="startEdit({{ $attendance->id }})" type="button"
-                                        class="text-blue-600 bg-blue-50 hover:bg-blue-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg w-8 h-8 flex items-center justify-center transition-colors"
-                                        title="Edit">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                @endif
-                            </td>
+                                    @endif
+                                </td>
+                            @endif
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-3 sm:px-6 py-6 sm:py-8 text-center text-gray-500">
+                            <td colspan="{{ auth()->user()->hasSecretaryAccess() ? '7' : '6' }}"
+                                class="px-3 sm:px-6 py-6 sm:py-8 text-center text-gray-500">
                                 <svg class="mx-auto h-8 w-8 sm:h-12 sm:w-12 text-gray-400 mb-2 sm:mb-4" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

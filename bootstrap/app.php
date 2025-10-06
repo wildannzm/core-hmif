@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'api.token' => \App\Http\Middleware\ApiTokenMiddleware::class,
+            'check.position' => \App\Http\Middleware\CheckPosition::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

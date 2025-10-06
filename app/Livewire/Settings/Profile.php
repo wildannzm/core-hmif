@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Layout;
+
+#[Title('Profile')]
+#[Layout('components.layouts.app')]
 
 class Profile extends Component
 {

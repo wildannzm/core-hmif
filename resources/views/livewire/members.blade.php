@@ -198,7 +198,7 @@
     @if ($showEditModal && $selectedMember)
         <div class="fixed inset-0 z-50 overflow-y-auto">
             <!-- Background overlay -->
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-30 transition-opacity" wire:click="closeEditModal">
+            <div class="fixed inset-0 bg-black/20 backdrop-blur-sm transition-opacity" wire:click="closeEditModal">
             </div>
 
             <!-- Modal container -->

@@ -80,4 +80,54 @@ class User extends Authenticatable
     {
         return $this->hasMany(Attendance::class);
     }
+
+    /**
+     * Check if user has access to secretary features (Ketua, Wakil Ketua, Sekertaris)
+     */
+    public function hasSecretaryAccess(): bool
+    {
+        return $this->position && in_array($this->position->name, ['Ketua', 'Wakil Ketua', 'Sekertaris']);
+    }
+
+    /**
+     * Check if user has access to treasurer features (Ketua, Wakil Ketua, Bendahara)
+     */
+    public function hasTreasurerAccess(): bool
+    {
+        return $this->position && in_array($this->position->name, ['Ketua', 'Wakil Ketua', 'Bendahara']);
+    }
+
+    /**
+     * Check if user has access to schedule management (BPH members and Koordinator)
+     */
+    public function hasScheduleManagementAccess(): bool
+    {
+        if (!$this->position || !$this->department) {
+            return false;
+        }
+
+        // Check if user is from BPH department
+        $isBPH = $this->department->name === 'Badan Pengurus Harian';
+        
+        // Check if user has Koordinator position
+        $isKoordinator = $this->position->name === 'Koordinator';
+
+        return $isBPH || $isKoordinator;
+    }
+
+    /**
+     * Check if user has access to organizational structure (Ketua, Wakil Ketua)
+     */
+    public function hasOrganizationalAccess(): bool
+    {
+        return $this->position && in_array($this->position->name, ['Ketua', 'Wakil Ketua']);
+    }
+
+    /**
+     * Check if user has access to attendance reports (Ketua, Wakil Ketua, Sekertaris)
+     */
+    public function hasAttendanceReportAccess(): bool
+    {
+        return $this->position && in_array($this->position->name, ['Ketua', 'Wakil Ketua', 'Sekertaris']);
+    }
 }

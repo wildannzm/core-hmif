@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Layout;
+
+#[Title('Password')]
+#[Layout('components.layouts.app')]
 
 class Password extends Component
 {

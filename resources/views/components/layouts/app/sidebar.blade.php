@@ -47,7 +47,9 @@
             <nav class="flex-1 space-y-2 p-4" x-data="{
                 openMenus: {
                     keanggotaan: JSON.parse(localStorage.getItem('sidebar_keanggotaan') || 'false'),
-                    kegiatan: JSON.parse(localStorage.getItem('sidebar_kegiatan') || 'false')
+                    kegiatan: JSON.parse(localStorage.getItem('sidebar_kegiatan') || 'false'),
+                    sekretaris: JSON.parse(localStorage.getItem('sidebar_sekretaris') || 'false'),
+                    bendahara: JSON.parse(localStorage.getItem('sidebar_bendahara') || 'false')
                 },
                 toggleMenu(menu) {
                     this.openMenus[menu] = !this.openMenus[menu];
@@ -76,48 +78,51 @@
                 </a>
 
                 <!-- Keanggotaan Dropdown -->
-                <div class="space-y-1">
-                    <button @click="toggleMenu('keanggotaan')"
-                        class="group flex w-full items-center px-3 py-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-red-50 hover:text-blue-700 transition-all duration-200">
-                        <svg class="w-5 h-5 text-blue-600" viewBox="0 0 28 28" fill="currentColor"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M14 1.99774C11.6528 1.99774 9.75 3.90053 9.75 6.24774C9.75 8.33903 11.2605 10.0775 13.25 10.4318V13.5H8.75C7.50736 13.5 6.5 14.5074 6.5 15.75V17.566C4.51049 17.9202 3 19.6587 3 21.75C3 24.0972 4.90279 26 7.25 26C9.59721 26 11.5 24.0972 11.5 21.75C11.5 19.6587 9.98951 17.9202 8 17.566V15.75C8 15.3358 8.33579 15 8.75 15H19.25C19.6642 15 20 15.3358 20 15.75V17.566C18.0105 17.9202 16.5 19.6587 16.5 21.75C16.5 24.0972 18.4028 26 20.75 26C23.0972 26 25 24.0972 25 21.75C25 19.6587 23.4895 17.9202 21.5 17.566V15.75C21.5 14.5074 20.4926 13.5 19.25 13.5H14.75V10.4318C16.7395 10.0775 18.25 8.33904 18.25 6.24774C18.25 3.90053 16.3472 1.99774 14 1.99774ZM11.25 6.24774C11.25 4.72896 12.4812 3.49774 14 3.49774C15.5188 3.49774 16.75 4.72896 16.75 6.24774C16.75 7.76652 15.5188 8.99774 14 8.99774C12.4812 8.99774 11.25 7.76652 11.25 6.24774ZM4.5 21.75C4.5 20.2312 5.73122 19 7.25 19C8.76878 19 10 20.2312 10 21.75C10 23.2688 8.76878 24.5 7.25 24.5C5.73122 24.5 4.5 23.2688 4.5 21.75ZM20.75 19C22.2688 19 23.5 20.2312 23.5 21.75C23.5 23.2688 22.2688 24.5 20.75 24.5C19.2312 24.5 18 23.2688 18 21.75C18 20.2312 19.2312 19 20.75 19Z"
-                                fill="currentColor" />
-                        </svg>
-                        <span class="ml-3 flex-1 text-left">Struktur Organisasi</span>
-                        <svg class="w-4 h-4 transition-transform duration-200"
-                            :class="{ 'rotate-180': openMenus.keanggotaan }" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                            </path>
-                        </svg>
-                    </button>
-
-                    <div x-show="openMenus.keanggotaan" x-transition:enter="transition ease-out duration-200"
-                        x-transition:enter-start="opacity-0 transform -translate-y-2"
-                        x-transition:enter-end="opacity-100 transform translate-y-0" class="ml-8 space-y-1">
-                        <a href="{{ route('departments') }}" wire:navigate
-                            class="group flex items-center px-3 py-2 text-sm rounded-lg transition-colors {{ request()->routeIs('departments') ? 'bg-gradient-to-r from-blue-500 to-red-500 text-white shadow-md' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700' }}">
-                            <svg class="w-4 h-4 {{ request()->routeIs('departments') ? 'text-white' : 'text-red-500' }}"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                @if (auth()->user()->hasOrganizationalAccess())
+                    <div class="space-y-1">
+                        <button @click="toggleMenu('keanggotaan')"
+                            class="group flex w-full items-center px-3 py-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-red-50 hover:text-blue-700 transition-all duration-200">
+                            <svg class="w-5 h-5 text-blue-600" viewBox="0 0 28 28" fill="currentColor"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M14 1.99774C11.6528 1.99774 9.75 3.90053 9.75 6.24774C9.75 8.33903 11.2605 10.0775 13.25 10.4318V13.5H8.75C7.50736 13.5 6.5 14.5074 6.5 15.75V17.566C4.51049 17.9202 3 19.6587 3 21.75C3 24.0972 4.90279 26 7.25 26C9.59721 26 11.5 24.0972 11.5 21.75C11.5 19.6587 9.98951 17.9202 8 17.566V15.75C8 15.3358 8.33579 15 8.75 15H19.25C19.6642 15 20 15.3358 20 15.75V17.566C18.0105 17.9202 16.5 19.6587 16.5 21.75C16.5 24.0972 18.4028 26 20.75 26C23.0972 26 25 24.0972 25 21.75C25 19.6587 23.4895 17.9202 21.5 17.566V15.75C21.5 14.5074 20.4926 13.5 19.25 13.5H14.75V10.4318C16.7395 10.0775 18.25 8.33904 18.25 6.24774C18.25 3.90053 16.3472 1.99774 14 1.99774ZM11.25 6.24774C11.25 4.72896 12.4812 3.49774 14 3.49774C15.5188 3.49774 16.75 4.72896 16.75 6.24774C16.75 7.76652 15.5188 8.99774 14 8.99774C12.4812 8.99774 11.25 7.76652 11.25 6.24774ZM4.5 21.75C4.5 20.2312 5.73122 19 7.25 19C8.76878 19 10 20.2312 10 21.75C10 23.2688 8.76878 24.5 7.25 24.5C5.73122 24.5 4.5 23.2688 4.5 21.75ZM20.75 19C22.2688 19 23.5 20.2312 23.5 21.75C23.5 23.2688 22.2688 24.5 20.75 24.5C19.2312 24.5 18 23.2688 18 21.75C18 20.2312 19.2312 19 20.75 19Z"
+                                    fill="currentColor" />
+                            </svg>
+                            <span class="ml-3 flex-1 text-left">Struktur Organisasi</span>
+                            <svg class="w-4 h-4 transition-transform duration-200"
+                                :class="{ 'rotate-180': openMenus.keanggotaan }" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                    d="M19 9l-7 7-7-7">
                                 </path>
                             </svg>
-                            <span class="ml-2">Departemen</span>
-                        </a>
-                        <a href="{{ route('members') }}" wire:navigate
-                            class="group flex items-center px-3 py-2 text-sm rounded-lg transition-colors {{ request()->routeIs('members') ? 'bg-gradient-to-r from-blue-500 to-red-500 text-white shadow-md' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700' }}">
-                            <svg class="w-4 h-4 {{ request()->routeIs('members') ? 'text-white' : 'text-red-500' }}"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
-                            <span class="ml-2">Anggota</span>
-                        </a>
+                        </button>
+
+                        <div x-show="openMenus.keanggotaan" x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 transform -translate-y-2"
+                            x-transition:enter-end="opacity-100 transform translate-y-0" class="ml-8 space-y-1">
+                            <a href="{{ route('departments') }}" wire:navigate
+                                class="group flex items-center px-3 py-2 text-sm rounded-lg transition-colors {{ request()->routeIs('departments') ? 'bg-gradient-to-r from-blue-500 to-red-500 text-white shadow-md' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700' }}">
+                                <svg class="w-4 h-4 {{ request()->routeIs('departments') ? 'text-white' : 'text-red-500' }}"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                    </path>
+                                </svg>
+                                <span class="ml-2">Departemen</span>
+                            </a>
+                            <a href="{{ route('members') }}" wire:navigate
+                                class="group flex items-center px-3 py-2 text-sm rounded-lg transition-colors {{ request()->routeIs('members') ? 'bg-gradient-to-r from-blue-500 to-red-500 text-white shadow-md' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700' }}">
+                                <svg class="w-4 h-4 {{ request()->routeIs('members') ? 'text-white' : 'text-red-500' }}"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                                <span class="ml-2">Anggota</span>
+                            </a>
+                        </div>
                     </div>
-                </div>
+                @endif
 
                 <!-- Kegiatan Dropdown -->
                 <div class="space-y-1">
@@ -149,18 +154,96 @@
                             </svg>
                             <span class="ml-2">Jadwal Kegiatan</span>
                         </a>
-                        <a href="{{ route('absensi') }}" wire:navigate
-                            class="group flex items-center px-3 py-2 text-sm rounded-lg transition-colors {{ request()->routeIs('absensi') ? 'bg-gradient-to-r from-blue-500 to-red-500 text-white shadow-md' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700' }}">
-                            <svg class="w-4 h-4 {{ request()->routeIs('absensi') ? 'text-white' : 'text-red-500' }}"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4">
-                                </path>
-                            </svg>
-                            <span class="ml-2">Absensi</span>
-                        </a>
+                        @if (auth()->user()->hasAttendanceReportAccess())
+                            <a href="{{ route('attendance') }}" wire:navigate
+                                class="group flex items-center px-3 py-2 text-sm rounded-lg transition-colors {{ request()->routeIs('attendance') ? 'bg-gradient-to-r from-blue-500 to-red-500 text-white shadow-md' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700' }}">
+                                <svg class="w-4 h-4 {{ request()->routeIs('attendance') ? 'text-white' : 'text-red-500' }}"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4">
+                                    </path>
+                                </svg>
+                                <span class="ml-2">Absensi</span>
+                            </a>
+                        @endif
                     </div>
                 </div>
+
+                <!-- Sekretaris Dropdown -->
+                @if (auth()->user()->hasSecretaryAccess())
+                    <div class="space-y-1">
+                        <button @click="toggleMenu('sekretaris')"
+                            class="group flex w-full items-center px-3 py-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-red-50 hover:text-blue-700 transition-all duration-200">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
+                            </svg>
+                            <span class="ml-3 flex-1 text-left">Sekretaris</span>
+                            <svg class="w-4 h-4 transition-transform duration-200"
+                                :class="{ 'rotate-180': openMenus.sekretaris }" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7">
+                                </path>
+                            </svg>
+                        </button>
+
+                        <div x-show="openMenus.sekretaris" x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 transform -translate-y-2"
+                            x-transition:enter-end="opacity-100 transform translate-y-0" class="ml-8 space-y-1">
+                            <a href="{{ route('surat') }}" wire:navigate
+                                class="group flex items-center px-3 py-2 text-sm rounded-lg transition-colors {{ request()->routeIs('surat') ? 'bg-gradient-to-r from-blue-500 to-red-500 text-white shadow-md' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700' }}">
+                                <svg class="w-4 h-4 {{ request()->routeIs('surat') ? 'text-white' : 'text-red-500' }}"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+                                    </path>
+                                </svg>
+                                <span class="ml-2">Manajemen Surat</span>
+                            </a>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Bendahara Dropdown -->
+                @if (auth()->user()->hasTreasurerAccess())
+                    <div class="space-y-1">
+                        <button @click="toggleMenu('bendahara')"
+                            class="group flex w-full items-center px-3 py-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-red-50 hover:text-blue-700 transition-all duration-200">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v2a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
+                                </path>
+                            </svg>
+                            <span class="ml-3 flex-1 text-left">Bendahara</span>
+                            <svg class="w-4 h-4 transition-transform duration-200"
+                                :class="{ 'rotate-180': openMenus.bendahara }" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7">
+                                </path>
+                            </svg>
+                        </button>
+
+                        <div x-show="openMenus.bendahara" x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 transform -translate-y-2"
+                            x-transition:enter-end="opacity-100 transform translate-y-0" class="ml-8 space-y-1">
+                            <a href="{{ route('finance') }}" wire:navigate
+                                class="group flex items-center px-3 py-2 text-sm rounded-lg transition-colors {{ request()->routeIs('finance') ? 'bg-gradient-to-r from-blue-500 to-red-500 text-white shadow-md' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700' }}">
+                                <svg class="w-4 h-4 {{ request()->routeIs('finance') ? 'text-white' : 'text-red-500' }}"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                    </path>
+                                </svg>
+                                <span class="ml-2">Keuangan</span>
+                            </a>
+                        </div>
+                    </div>
+                @endif
             </nav>
 
             <!-- User Profile Section -->
