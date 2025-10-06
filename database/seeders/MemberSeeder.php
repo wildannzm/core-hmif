@@ -209,7 +209,7 @@ class MemberSeeder extends Seeder
                 'position_id' => $anggota->id,
             ],
             [
-                'name' => 'Joan Aroyadi',
+                'name' => 'Joan Aryoadi',
                 'nim' => '2414101002',
                 'email' => '2414101002@unma.ac.id',
                 'department_id' => $eksternal->id,
