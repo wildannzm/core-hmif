@@ -2,7 +2,7 @@
     <!-- Header -->
     <div class="text-center space-y-2">
         <h2 class="text-2xl font-bold text-gray-900">Masuk ke Akun</h2>
-        <p class="text-gray-600">Masukkan email dan password untuk masuk</p>
+        <p class="text-gray-600">Masukkan email dan password</p>
     </div>
 
     <!-- Session Status -->
@@ -28,7 +28,7 @@
                 </div>
                 <input wire:model="email" id="email" type="email" required autofocus autocomplete="email"
                     placeholder="Masukan Email"
-                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 bg-white text-gray-900 placeholder-gray-400" />
+                    class="w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition duration-200 bg-white text-gray-900 placeholder-gray-400 @error('email') border-red-300 focus:ring-red-500 @else border-gray-300 focus:ring-blue-500 @enderror" />
             </div>
             @error('email')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -49,7 +49,7 @@
                 </div>
                 <input wire:model="password" id="password" :type="showPassword ? 'text' : 'password'" required
                     autocomplete="current-password" placeholder="Masukan Password"
-                    class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 bg-white text-gray-900 placeholder-gray-400" />
+                    class="w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition duration-200 bg-white text-gray-900 placeholder-gray-400 @error('password') border-red-300 focus:ring-red-500 @else border-gray-300 focus:ring-blue-500 @enderror" />
 
                 <!-- Toggle Password Visibility Button -->
                 <button type="button" @click="showPassword = !showPassword"
@@ -76,9 +76,60 @@
 
 
         <!-- Login Button -->
-        <button type="submit"
-            class="w-full bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-lg">
-            {{ __('Masuk') }}
+        <button type="submit" wire:loading.attr="disabled"
+            class="w-full bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-lg disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none">
+            <span wire:loading.remove wire:target="login">{{ __('Masuk') }}</span>
+            <span wire:loading wire:target="login" class="flex items-center justify-center">
+                Memproses...
+            </span>
         </button>
     </form>
+
+    <!-- SweetAlert Integration -->
+    <script>
+        document.addEventListener('livewire:init', () => {
+            // Success notification
+            Livewire.on('swal:success', (data) => {
+                Swal.fire({
+                    title: data[0].title,
+                    text: data[0].text,
+                    icon: data[0].icon,
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#10B981',
+                    timer: 2500,
+                    timerProgressBar: true,
+                    showClass: {
+                        popup: 'animate__animated animate__bounceIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOut'
+                    }
+                }).then(() => {
+                    // Redirect after success message
+                    window.location.href = '{{ route('dashboard') }}';
+                });
+            });
+
+            // Error notification
+            Livewire.on('swal:error', (data) => {
+                Swal.fire({
+                    title: data[0].title,
+                    text: data[0].text,
+                    icon: data[0].icon,
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#EF4444',
+                    showClass: {
+                        popup: 'animate__animated animate__shakeX'
+                    }
+                });
+            });
+
+            // Handle redirect after success
+            Livewire.on('redirect-after-success', () => {
+                setTimeout(() => {
+                    @this.redirectIntended('{{ route('dashboard') }}', true);
+                }, 2500);
+            });
+        });
+    </script>
 </div>

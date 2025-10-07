@@ -22,6 +22,15 @@ class Password extends Component
     public string $password_confirmation = '';
 
     /**
+     * Confirm password update with SweetAlert
+     */
+    public function confirmPasswordUpdate(): void
+    {
+        // Dispatch SweetAlert confirmation
+        $this->dispatch('swal:confirm-password-update');
+    }
+
+    /**
      * Update the password for the currently authenticated user.
      */
     public function updatePassword(): void
@@ -31,18 +40,41 @@ class Password extends Component
                 'current_password' => ['required', 'string', 'current_password'],
                 'password' => ['required', 'string', PasswordRule::defaults(), 'confirmed'],
             ]);
+
+            Auth::user()->update([
+                'password' => Hash::make($validated['password']),
+            ]);
+
+            $this->reset('current_password', 'password', 'password_confirmation');
+
+            // Dispatch SweetAlert success notification
+            $this->dispatch('swal:success', [
+                'title' => 'Berhasil!',
+                'text' => 'Kata sandi Anda berhasil diperbarui dengan aman.',
+                'icon' => 'success'
+            ]);
+
         } catch (ValidationException $e) {
             $this->reset('current_password', 'password', 'password_confirmation');
+            
+            // Get first error message
+            $firstError = collect($e->errors())->flatten()->first();
+            
+            // Dispatch SweetAlert error notification
+            $this->dispatch('swal:error', [
+                'text' => $firstError ?: 'Kata sandi saat ini tidak valid atau kata sandi baru tidak memenuhi syarat keamanan.'
+            ]);
+
+            throw $e;
+        } catch (\Exception $e) {
+            $this->reset('current_password', 'password', 'password_confirmation');
+            
+            // Dispatch SweetAlert error notification for general errors
+            $this->dispatch('swal:error', [
+                'text' => 'Terjadi kesalahan tak terduga. Silakan coba lagi.'
+            ]);
 
             throw $e;
         }
-
-        Auth::user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
-
-        $this->reset('current_password', 'password', 'password_confirmation');
-
-        $this->dispatch('password-updated');
     }
 }

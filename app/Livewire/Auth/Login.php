@@ -28,22 +28,50 @@ class Login extends Component
      */
     public function login(): void
     {
-        $this->validate();
+        try {
+            $this->validate();
 
-        $this->ensureIsNotRateLimited();
+            $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
-            RateLimiter::hit($this->throttleKey());
+            if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+                RateLimiter::hit($this->throttleKey());
 
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                // Dispatch SweetAlert error for failed login
+                $this->dispatch('swal:error', [
+                    'title' => 'Login Gagal!',
+                    'text' => 'Email atau kata sandi yang Anda masukkan salah, silakan coba lagi.',
+                    'icon' => 'error'
+                ]);
+
+                return;
+            }
+
+            RateLimiter::clear($this->throttleKey());
+            Session::regenerate();
+
+            // Dispatch SweetAlert success for successful login
+            $this->dispatch('swal:success', [
+                'title' => 'Login Berhasil!',
+                'text' => 'Selamat datang di HMIF UNMA.',
+                'icon' => 'success'
             ]);
+
+            // Small delay to show the success message before redirect
+            $this->dispatch('redirect-after-success');
+
+        } catch (ValidationException $e) {
+            // Handle validation errors with SweetAlert
+            $errors = collect($e->errors())->flatten();
+            $errorMessage = $errors->first() ?: 'Terjadi kesalahan validasi.';
+            
+            $this->dispatch('swal:error', [
+                'title' => 'Data Tidak Valid!',
+                'text' => $errorMessage,
+                'icon' => 'error'
+            ]);
+
+            throw $e;
         }
-
-        RateLimiter::clear($this->throttleKey());
-        Session::regenerate();
-
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }
 
     /**
@@ -58,13 +86,32 @@ class Login extends Component
         event(new Lockout(request()));
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
+        $minutes = ceil($seconds / 60);
+
+        // Dispatch SweetAlert for rate limiting
+        $this->dispatch('swal:error', [
+            'title' => 'Terlalu Banyak Percobaan!',
+            'text' => "Anda telah melakukan terlalu banyak percobaan login. Silakan coba lagi dalam {$minutes} menit.",
+            'icon' => 'warning'
+        ]);
 
         throw ValidationException::withMessages([
-            'email' => __('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
+            'email' => "Terlalu banyak percobaan login. Silakan coba lagi dalam {$minutes} menit.",
         ]);
+    }
+
+    /**
+     * Get custom validation messages in Indonesian
+     */
+    protected function messages(): array
+    {
+        return [
+            'email.required' => 'Alamat email harus diisi.',
+            'email.email' => 'Format alamat email tidak valid.',
+            'email.string' => 'Alamat email harus berupa teks.',
+            'password.required' => 'Kata sandi harus diisi.',
+            'password.string' => 'Kata sandi harus berupa teks.',
+        ];
     }
 
     /**

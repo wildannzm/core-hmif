@@ -4,8 +4,7 @@
         class="bg-gradient-to-r from-blue-600 to-red-600 rounded-lg sm:rounded-xl shadow-lg p-3 sm:p-6 text-white mx-1 sm:mx-0">
         <div class="flex items-center justify-between">
             <div class="flex-1 min-w-0">
-                <h1 class="text-sm sm:text-xl lg:text-2xl xl:text-3xl font-bold mb-1 sm:mb-2 leading-tight">Selamat
-                    Datang di Dashboard HMIF UNMA</h1>
+                <h1 class="text-sm sm:text-xl lg:text-2xl xl:text-3xl font-bold mb-1 sm:mb-2 leading-tight">Dashboard</h1>
             </div>
         </div>
     </div>

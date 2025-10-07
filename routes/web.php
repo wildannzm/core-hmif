@@ -39,11 +39,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('content-plan', ContentPlans::class)->name('content-plan')
         ->middleware('check.kominfo');
     
-    Route::redirect('settings', 'settings/profile');
+    Route::redirect('pengaturan', 'pengaturan/profil');
 
-    Route::get('settings/profile', Profile::class)->name('settings.profile');
-    Route::get('settings/password', Password::class)->name('settings.password');
-    Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
+    Route::get('pengaturan/profil', Profile::class)->name('settings.profile');
+    Route::get('pengaturan/password', Password::class)->name('settings.password');
+    Route::get('pengaturan/appearance', Appearance::class)->name('settings.appearance');
 });
 
 require __DIR__.'/auth.php';
