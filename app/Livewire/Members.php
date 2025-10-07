@@ -8,6 +8,7 @@ use App\Models\Position;
 use App\Models\Department;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
+use Illuminate\Support\Facades\Auth;
 
 #[Title('Daftar Anggota')]
 #[Layout('components.layouts.app')]
@@ -153,6 +154,49 @@ class Members extends Component
         $this->editRfidUid = '';
         $this->editDepartmentId = '';
         $this->editPositionId = '';
+    }
+
+    public function deleteMember($memberId)
+    {
+        try {
+            // Find the member
+            $member = User::findOrFail($memberId);
+            
+            // Store member name for success message
+            $memberName = $member->name;
+            
+            // Prevent deletion of super admin or current user
+            if ($member->hasRole('super_admin')) {
+                $this->dispatch('delete-error', [
+                    'message' => 'Super Admin tidak dapat dihapus!'
+                ]);
+                return;
+            }
+            
+            if ($member->id === Auth::id()) {
+                $this->dispatch('delete-error', [
+                    'message' => 'Anda tidak dapat menghapus akun sendiri!'
+                ]);
+                return;
+            }
+            
+            // Delete the member
+            $member->delete();
+            
+            // Dispatch success event
+            $this->dispatch('member-deleted', [
+                'memberName' => $memberName
+            ]);
+            
+            // Refresh the component data
+            $this->resetPage();
+            
+        } catch (\Exception $e) {
+            // Dispatch error event
+            $this->dispatch('delete-error', [
+                'message' => 'Terjadi kesalahan saat menghapus anggota: ' . $e->getMessage()
+            ]);
+        }
     }
 
     public function getPositionDisplayName($user)

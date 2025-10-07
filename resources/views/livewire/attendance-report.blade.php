@@ -65,19 +65,63 @@
                     $totalAttendees = $schedule->attendances->count();
                     $presentCount = $attendanceStats->get('Hadir', collect())->count();
                 @endphp
-                <div class="border-b border-gray-200 last:border-b-0 px-2 py-3 hover:bg-gray-50 transition-colors">
-                    <!-- Header Row -->
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="flex items-center space-x-2 flex-1 min-w-0">
-                            <span
-                                class="text-xs font-medium text-white bg-blue-500 rounded-full px-2 py-1 flex-shrink-0">
+                <div class="border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors">
+                    <!-- Card Body -->
+                    <div class="px-4 py-4">
+                        <!-- Header Row -->
+                        <div class="flex items-center mb-3">
+                            <span class="text-xs font-medium text-white bg-blue-500 rounded-full px-2.5 py-1 mr-3">
                                 {{ ($schedules->currentPage() - 1) * $schedules->perPage() + $index + 1 }}
                             </span>
+                            <div class="font-semibold text-gray-900 text-base break-words">{{ $schedule->name }}</div>
                         </div>
-                        <div class="flex space-x-1 flex-shrink-0">
+
+                        <!-- Description -->
+                        @if ($schedule->description)
+                            <div class="text-sm text-gray-600 mb-3 break-words leading-relaxed">
+                                {{ Str::limit($schedule->description, 100) }}
+                            </div>
+                        @endif
+
+                        <!-- Details Grid -->
+                        <div class="space-y-2">
+                            <!-- Date & Time -->
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-sm text-gray-500 font-medium">Waktu:</span>
+                                <div class="text-right text-sm ml-2">
+                                    <div class="font-medium text-gray-900">
+                                        {{ $schedule->date->locale('id')->translatedFormat('d F Y') }}
+                                    </div>
+                                    <div class="text-gray-600 text-sm">
+                                        {{ $schedule->start_time->format('H:i') }} s/d Selesai
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Location -->
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-sm text-gray-500 font-medium">Lokasi:</span>
+                                <span
+                                    class="text-sm font-medium text-gray-900 text-right break-words ml-2">{{ $schedule->location }}</span>
+                            </div>
+
+                            <!-- Attendance Stats -->
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-sm text-gray-500 font-medium">Kehadiran:</span>
+                                <span
+                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    {{ $presentCount }}/{{ $totalAttendees }} hadir
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Footer -->
+                    <div class="px-4 py-3 bg-gray-50 border-t border-gray-100">
+                        <div class="flex justify-end items-center space-x-2">
                             <!-- View Button -->
                             <a href="{{ route('schedules.attendance', $schedule->id) }}" wire:navigate
-                                class="text-blue-600 bg-blue-50 hover:bg-blue-100 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg w-9 h-9 flex items-center justify-center transition-colors shadow-sm"
+                                class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 focus:ring-2 focus:ring-blue-300 transition-colors shadow-sm"
                                 title="Lihat Detail">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -89,7 +133,7 @@
                             </a>
                             <!-- Export PDF Button -->
                             <button wire:click="exportPDF({{ $schedule->id }})" type="button"
-                                class="text-red-600 bg-red-50 hover:bg-red-100 focus:ring-2 focus:ring-red-300 font-medium rounded-lg w-9 h-9 flex items-center justify-center transition-colors shadow-sm"
+                                class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-red-600 bg-red-50 hover:bg-red-100 focus:ring-2 focus:ring-red-300 transition-colors shadow-sm"
                                 title="Unduh PDF">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -97,48 +141,6 @@
                                     </path>
                                 </svg>
                             </button>
-                        </div>
-                    </div>
-
-                    <!-- Activity Name -->
-                    <div class="font-semibold text-gray-900 text-base mb-2 break-words">{{ $schedule->name }}</div>
-
-                    <!-- Description -->
-                    @if ($schedule->description)
-                        <div class="text-xs text-gray-600 mb-3 break-words leading-relaxed">
-                            {{ Str::limit($schedule->description, 100) }}
-                        </div>
-                    @endif
-
-                    <!-- Details Grid -->
-                    <div class="space-y-2">
-                        <!-- Date & Time -->
-                        <div class="flex justify-between items-start">
-                            <span class="text-gray-600 text-xs">Waktu:</span>
-                            <div class="text-right text-xs flex-1 ml-2">
-                                <div class="font-medium text-gray-900">
-                                    {{ $schedule->date->locale('id')->translatedFormat('d F Y') }}
-                                </div>
-                                <div class="text-gray-600">
-                                    {{ $schedule->start_time->format('H:i') }} s/d Selesai
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Location -->
-                        <div class="flex justify-between items-start">
-                            <span class="text-gray-600 text-xs">Lokasi:</span>
-                            <span
-                                class="text-gray-900 text-xs text-right flex-1 ml-2 break-words font-medium">{{ $schedule->location }}</span>
-                        </div>
-
-                        <!-- Attendance Stats -->
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600 text-xs">Kehadiran:</span>
-                            <span
-                                class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                {{ $presentCount }}/{{ $totalAttendees }} hadir
-                            </span>
                         </div>
                     </div>
                 </div>

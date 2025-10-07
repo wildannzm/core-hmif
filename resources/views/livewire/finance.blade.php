@@ -83,10 +83,10 @@
                     <select wire:model.live="filterPeriod"
                         class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm lg:min-w-[140px]">
                         <option value="all">Semua Periode</option>
-                        <option value="today">Hari Ini</option>
-                        <option value="week">Minggu Ini</option>
-                        <option value="month">Bulan Ini</option>
-                        <option value="year">Tahun Ini</option>
+                        <option value="today">Harian</option>
+                        <option value="week">Mingguan</option>
+                        <option value="month">Bulanan</option>
+                        <option value="year">Tahunan</option>
                     </select>
                 </div>
 
@@ -135,45 +135,129 @@
     <!-- Transactions Table -->
     <div
         class="bg-white rounded-lg sm:rounded-xl shadow-lg border border-gray-100 overflow-hidden mx-1 sm:mx-0 relative">
-        <!-- Loading Overlay -->
-        <div wire:loading wire:target="search,filterType,filterPeriod"
-            class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
-            <div class="flex items-center space-x-2">
-                <svg class="animate-spin h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                        stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                    </path>
-                </svg>
-                <span class="text-sm text-gray-600">Memuat data...</span>
-            </div>
+
+        <!-- Mobile Card Layout -->
+        <div class="block sm:hidden">
+            @forelse ($transactions as $transaction)
+                <div class="border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors">
+                    <!-- Card Body -->
+                    <div class="px-4 py-4">
+                        <!-- Header Row -->
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-xs font-medium text-white bg-blue-500 rounded-full px-2.5 py-1">
+                                    {{ $loop->iteration }}
+                                </span>
+                                <span class="text-sm font-medium text-gray-500">
+                                    {{ \Carbon\Carbon::parse($transaction['transaction_date'])->locale('id')->translatedFormat('d F Y') }}
+                                </span>
+                            </div>
+                            <span
+                                class="inline-flex px-3 py-1 text-xs font-semibold rounded-full
+                                {{ $transaction['transaction_type'] === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                {{ $transaction['transaction_type'] === 'income' ? 'Pemasukan' : 'Pengeluaran' }}
+                            </span>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="mb-3">
+                            <div
+                                class="text-2xl font-bold {{ $transaction['transaction_type'] === 'income' ? 'text-green-600' : 'text-red-600' }}">
+                                {{ $transaction['transaction_type'] === 'income' ? '+' : '-' }}Rp
+                                {{ number_format($transaction['amount'], 0, ',', '.') }}
+                            </div>
+                        </div>
+
+                        <!-- Details Grid -->
+                        <div class="space-y-2">
+                            <!-- Description -->
+                            <div class="flex flex-col space-y-1">
+                                <span class="text-sm text-gray-500 font-medium">Deskripsi:</span>
+                                <div class="text-sm font-medium text-gray-900 break-words">
+                                    {{ $transaction['description'] }}
+                                </div>
+                            </div>
+
+                            <!-- Funding Source -->
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-sm text-gray-500 font-medium">Sumber Dana:</span>
+                                <span class="text-sm font-medium text-gray-900 text-right break-words ml-2">
+                                    {{ $transaction['funding_source'] ?? 'Sumber Dana Umum' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Footer -->
+                    <div class="px-4 py-3 bg-gray-50 border-t border-gray-100">
+                        <div class="flex justify-end items-center space-x-2">
+                            <!-- Edit Button -->
+                            <button wire:click="openEditModal({{ $transaction['id'] }})" type="button"
+                                class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 focus:ring-2 focus:ring-blue-300 transition-colors shadow-sm"
+                                title="Edit">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                    </path>
+                                </svg>
+                            </button>
+                            <!-- Delete Button -->
+                            <button onclick="confirmDeleteTransaction({{ $transaction['id'] }})" type="button"
+                                class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-red-600 bg-red-50 hover:bg-red-100 focus:ring-2 focus:ring-red-300 transition-colors shadow-sm"
+                                title="Hapus">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="p-8 text-center text-gray-500">
+                    <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v2a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+                    <div class="text-base font-medium text-gray-600 mb-1">Belum ada transaksi keuangan</div>
+                    <div class="text-sm text-gray-400">Data transaksi keuangan masih kosong</div>
+                </div>
+            @endforelse
         </div>
 
-        <!-- Table View (Responsive for all screens) -->
-        <div class="overflow-x-auto">
+        <!-- Desktop Table View -->
+        <div class="hidden sm:block overflow-x-auto">
             <table class="min-w-full text-sm text-left text-gray-500">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
                     <tr>
                         <th scope="col" class="px-2 sm:px-6 py-2 sm:py-4 font-semibold text-center min-w-[40px]">
                             No
                         </th>
-                        <th scope="col" class="px-2 sm:px-6 py-2 sm:py-4 font-semibold text-center min-w-[80px] sm:min-w-[100px]">
+                        <th scope="col"
+                            class="px-2 sm:px-6 py-2 sm:py-4 font-semibold text-center min-w-[80px] sm:min-w-[100px]">
                             Tanggal
                         </th>
-                        <th scope="col" class="px-2 sm:px-6 py-2 sm:py-4 font-semibold text-center min-w-[70px] sm:min-w-[80px]">
+                        <th scope="col"
+                            class="px-2 sm:px-6 py-2 sm:py-4 font-semibold text-center min-w-[70px] sm:min-w-[80px]">
                             Jenis
                         </th>
-                        <th scope="col" class="px-2 sm:px-6 py-2 sm:py-4 font-semibold text-center min-w-[90px] sm:min-w-[120px]">
-                            Jumlah
-                        </th>
-                        <th scope="col" class="px-2 sm:px-6 py-2 sm:py-4 font-semibold text-center min-w-[120px] sm:min-w-[150px]">
+                        <th scope="col"
+                            class="px-2 sm:px-6 py-2 sm:py-4 font-semibold text-center min-w-[120px] sm:min-w-[150px]">
                             Deskripsi
                         </th>
-                        <th scope="col" class="px-2 sm:px-6 py-2 sm:py-4 font-semibold text-center min-w-[100px] sm:min-w-[120px]">
+                        <th scope="col"
+                            class="px-2 sm:px-6 py-2 sm:py-4 font-semibold text-center min-w-[100px] sm:min-w-[120px]">
                             Sumber Dana
                         </th>
-                        <th scope="col" class="px-2 sm:px-6 py-2 sm:py-4 font-semibold text-center min-w-[70px] sm:min-w-[80px]">
+                        <th scope="col"
+                            class="px-2 sm:px-6 py-2 sm:py-4 font-semibold text-center min-w-[90px] sm:min-w-[120px]">
+                            Jumlah
+                        </th>
+                        <th scope="col"
+                            class="px-2 sm:px-6 py-2 sm:py-4 font-semibold text-center min-w-[70px] sm:min-w-[80px]">
                             Aksi
                         </th>
                     </tr>
@@ -186,26 +270,18 @@
                             </td>
                             <td class="px-2 sm:px-6 py-2 sm:py-4 text-xs text-gray-700 text-center">
                                 <div class="whitespace-nowrap">
-                                    {{ \Carbon\Carbon::parse($transaction['transaction_date'])->locale('id')->format('d/m/Y') }}
+                                    {{ \Carbon\Carbon::parse($transaction['transaction_date'])->locale('id')->translatedFormat('d F Y') }}
                                 </div>
                             </td>
                             <td class="px-2 sm:px-6 py-2 sm:py-4 text-center">
                                 <span
                                     class="inline-flex px-1 sm:px-2 py-0.5 sm:py-1 text-xs font-semibold rounded-full whitespace-nowrap
                                             {{ $transaction['transaction_type'] === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    <span class="sm:hidden">{{ $transaction['transaction_type'] === 'income' ? 'In' : 'Out' }}</span>
-                                    <span class="hidden sm:inline">{{ $transaction['transaction_type'] === 'income' ? 'Pemasukan' : 'Pengeluaran' }}</span>
+                                    <span
+                                        class="sm:hidden">{{ $transaction['transaction_type'] === 'income' ? 'In' : 'Out' }}</span>
+                                    <span
+                                        class="hidden sm:inline">{{ $transaction['transaction_type'] === 'income' ? 'Pemasukan' : 'Pengeluaran' }}</span>
                                 </span>
-                            </td>
-                            <td class="px-2 sm:px-6 py-2 sm:py-4 text-xs text-gray-700 text-center font-medium {{ $transaction['transaction_type'] === 'income' ? 'text-green-600' : 'text-red-600' }}">
-                                <div class="whitespace-nowrap">
-                                    <div class="sm:hidden">
-                                        {{ $transaction['transaction_type'] === 'income' ? '+' : '-' }}{{ number_format($transaction['amount'] / 1000, 0) }}K
-                                    </div>
-                                    <div class="hidden sm:block">
-                                        {{ $transaction['transaction_type'] === 'income' ? '+' : '-' }}Rp {{ number_format($transaction['amount'], 0, ',', '.') }}
-                                    </div>
-                                </div>
                             </td>
                             <td class="px-2 sm:px-6 py-2 sm:py-4 text-xs text-gray-700 text-center">
                                 <div class="max-w-[120px] sm:max-w-none overflow-hidden">
@@ -216,8 +292,21 @@
                             </td>
                             <td class="px-2 sm:px-6 py-2 sm:py-4 text-xs text-gray-700 text-center">
                                 <div class="max-w-[100px] sm:max-w-none overflow-hidden">
-                                    <div class="truncate" title="{{ $transaction['funding_source'] ?? 'Sumber Dana Umum' }}">
+                                    <div class="truncate"
+                                        title="{{ $transaction['funding_source'] ?? 'Sumber Dana Umum' }}">
                                         {{ $transaction['funding_source'] ?? 'Umum' }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td
+                                class="px-2 sm:px-6 py-2 sm:py-4 text-xs text-gray-700 text-center font-medium {{ $transaction['transaction_type'] === 'income' ? 'text-green-600' : 'text-red-600' }}">
+                                <div class="whitespace-nowrap">
+                                    <div class="sm:hidden">
+                                        {{ $transaction['transaction_type'] === 'income' ? '+' : '-' }}{{ number_format($transaction['amount'] / 1000, 0) }}K
+                                    </div>
+                                    <div class="hidden sm:block">
+                                        {{ $transaction['transaction_type'] === 'income' ? '+' : '-' }}Rp
+                                        {{ number_format($transaction['amount'], 0, ',', '.') }}
                                     </div>
                                 </div>
                             </td>
@@ -302,15 +391,14 @@
                     onclick="event.stopPropagation()" style="margin: 0 auto;">
                     <form wire:submit="save">
                         <!-- Modal Header -->
-                        <div
-                            class="bg-gradient-to-r from-blue-600 to-red-600 px-3 sm:px-4 md:px-6 py-3 sm:py-4 rounded-t-xl">
+                        <div class="bg-white border-b border-gray-200 px-3 sm:px-4 md:px-6 py-3 sm:py-4 rounded-t-xl">
                             <div class="flex items-center justify-between">
                                 <h3
-                                    class="text-sm sm:text-base md:text-lg leading-6 font-semibold text-white truncate pr-2">
+                                    class="text-sm sm:text-base md:text-lg leading-6 font-semibold text-gray-900 truncate pr-2">
                                     {{ $editingId ? 'Edit Transaksi Keuangan' : 'Tambah Transaksi Keuangan' }}
                                 </h3>
                                 <button type="button" wire:click="closeModal"
-                                    class="text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-white/20 rounded-lg p-1 transition-colors">
+                                    class="text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-lg p-1 transition-colors">
                                     <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -532,6 +620,20 @@
                 confirmButtonColor: '#dc2626',
                 confirmButtonText: 'OK'
             });
+        });
+
+        // Listen for PDF download event
+        window.addEventListener('download-pdf', event => {
+            const {
+                url,
+                filename
+            } = event.detail[0];
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         });
     </script>
 </div>

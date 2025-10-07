@@ -130,4 +130,22 @@ class User extends Authenticatable
     {
         return $this->position && in_array($this->position->name, ['Ketua', 'Wakil Ketua', 'Sekertaris']);
     }
+
+    /**
+     * Check if user has access to Kominfo features (Ketua, Wakil Ketua, All Kominfo Department Members)
+     */
+    public function hasKominfoAccess(): bool
+    {
+        // Check if user has BPH positions (Ketua, Wakil Ketua)
+        if ($this->position && in_array($this->position->name, ['Ketua', 'Wakil Ketua'])) {
+            return true;
+        }
+
+        // Check if user is from Kominfo department
+        if ($this->department && str_contains(strtolower($this->department->name), 'kominfo')) {
+            return true;
+        }
+
+        return false;
+    }
 }

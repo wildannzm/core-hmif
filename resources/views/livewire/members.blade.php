@@ -47,55 +47,76 @@
                     <!-- Mobile Card Layout -->
                     <div class="block sm:hidden">
                         @foreach ($departmentMembers as $index => $member)
-                            <div
-                                class="border-b border-gray-200 last:border-b-0 px-3 py-4 hover:bg-gray-50 transition-colors">
-                                <div class="flex items-start justify-between mb-2">
-                                    <div class="flex-1 min-w-0">
-                                        <h3 class="text-sm font-medium text-gray-900 truncate">{{ $member->name }}</h3>
-                                        <p class="text-xs text-gray-500 mt-1">NPM: {{ $member->nim }}</p>
+                            <div class="border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors">
+                                <!-- Card Body -->
+                                <div class="px-4 py-4">
+                                    <!-- Header Info -->
+                                    <div class="mb-3">
+                                        <h3 class="text-base font-semibold text-gray-900 mb-1">{{ $member->name }}</h3>
+                                        <p class="text-sm text-gray-600">NPM: {{ $member->nim }}</p>
                                     </div>
-                                    <button wire:click="editMember({{ $member->id }})"
-                                        class="ml-3 inline-flex items-center justify-center w-8 h-8 rounded-md text-white bg-blue-500 hover:bg-blue-600 transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                        </svg>
-                                    </button>
+
+                                    <!-- Card Content -->
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between items-center py-1">
+                                            <span class="text-sm text-gray-500 font-medium">Jabatan:</span>
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium 
+                                                @if ($departmentName === 'Badan Pengurus Harian') bg-red-100 text-red-800
+                                                @else bg-blue-100 text-blue-800 @endif">
+                                                {{ $this->getPositionDisplayName($member) }}
+                                            </span>
+                                        </div>
+                                        <div class="flex justify-between items-center py-1">
+                                            <span class="text-sm text-gray-500 font-medium">ID RFID:</span>
+                                            @if ($member->rfid_uid)
+                                                <span
+                                                    class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-green-100 text-green-800">
+                                                    <svg class="w-3 h-3 mr-1.5" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    {{ $member->rfid_uid }}
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-800">
+                                                    <svg class="w-3 h-3 mr-1.5" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                    Belum diatur
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="grid grid-cols-1 gap-2 text-xs">
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-500">Jabatan:</span>
-                                        <span
-                                            class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium 
-                                            @if ($departmentName === 'Badan Pengurus Harian') bg-red-100 text-red-800
-                                            @else bg-blue-100 text-blue-800 @endif">
-                                            {{ $this->getPositionDisplayName($member) }}
-                                        </span>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-500">ID RFID:</span>
-                                        @if ($member->rfid_uid)
-                                            <span
-                                                class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-100 text-green-800">
-                                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                {{ $member->rfid_uid }}
-                                            </span>
-                                        @else
-                                            <span
-                                                class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-800">
-                                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                                Belum diatur
-                                            </span>
-                                        @endif
+
+                                <!-- Card Footer -->
+                                <div class="px-4 py-3 bg-gray-50 border-t border-gray-100">
+                                    <div class="flex justify-end items-center space-x-2">
+                                        <button wire:click="editMember({{ $member->id }})"
+                                            class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 transition-colors shadow-sm"
+                                            title="Edit anggota">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                        </button>
+                                        <button
+                                            onclick="confirmDeleteMember({{ $member->id }}, '{{ $member->name }}')"
+                                            class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-white bg-red-500 hover:bg-red-600 focus:ring-2 focus:ring-red-300 transition-colors shadow-sm"
+                                            title="Hapus anggota">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -173,16 +194,29 @@
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <button wire:click="editMember({{ $member->id }})"
-                                                class="inline-flex items-center justify-center w-8 h-8 rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-150"
-                                                title="Edit anggota">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                </svg>
-                                            </button>
+                                            <div class="flex items-center space-x-2">
+                                                <button wire:click="editMember({{ $member->id }})"
+                                                    class="inline-flex items-center justify-center w-8 h-8 rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-150"
+                                                    title="Edit anggota">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                    </svg>
+                                                </button>
+                                                <button
+                                                    onclick="confirmDeleteMember({{ $member->id }}, '{{ $member->name }}')"
+                                                    class="inline-flex items-center justify-center w-8 h-8 rounded-md text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-150"
+                                                    title="Hapus anggota">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -210,15 +244,7 @@
                     <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
-                                <div
-                                    class="flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-r from-blue-100 to-red-100 rounded-full flex items-center justify-center">
-                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                    </svg>
-                                </div>
-                                <div class="ml-2 sm:ml-3">
+                                <div class="">
                                     <h3 class="text-base sm:text-lg font-medium text-gray-900">Edit Data Anggota</h3>
                                     <p class="text-xs sm:text-sm text-gray-500">Perbarui informasi anggota
                                         {{ $selectedMember->name }}</p>
@@ -326,4 +352,101 @@
             </div>
         </div>
     @endif
+
+    <!-- SweetAlert Script -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmDeleteMember(memberId, memberName) {
+            Swal.fire({
+                title: 'Hapus Anggota?',
+                html: `Apakah Anda yakin ingin menghapus anggota <strong>${memberName}</strong>?<br><span class="text-sm text-gray-600">Tindakan ini tidak dapat dibatalkan.</span>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: '<i class="fas fa-trash mr-1"></i> Ya, Hapus!',
+                cancelButtonText: '<i class="fas fa-times mr-1"></i> Batal',
+                reverseButtons: true,
+                focusCancel: true,
+                customClass: {
+                    popup: 'swal-popup-custom',
+                    confirmButton: 'swal-confirm-delete',
+                    cancelButton: 'swal-cancel-button'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading state
+                    Swal.fire({
+                        title: 'Menghapus...',
+                        text: 'Sedang menghapus data anggota',
+                        icon: 'info',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    // Call Livewire method
+                    @this.call('deleteMember', memberId);
+                }
+            });
+        }
+
+        // Listen for Livewire events
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('member-deleted', (event) => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: `Anggota ${event.memberName} berhasil dihapus`,
+                    timer: 2000,
+                    showConfirmButton: false,
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true
+                });
+            });
+
+            Livewire.on('delete-error', (event) => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: event.message || 'Terjadi kesalahan saat menghapus anggota',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#ef4444'
+                });
+            });
+        });
+    </script>
+
+    <!-- Custom CSS for SweetAlert -->
+    <style>
+        .swal-popup-custom {
+            border-radius: 12px !important;
+        }
+
+        .swal-confirm-delete {
+            background: linear-gradient(45deg, #ef4444, #dc2626) !important;
+            border: none !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+        }
+
+        .swal-confirm-delete:hover {
+            background: linear-gradient(45deg, #dc2626, #b91c1c) !important;
+        }
+
+        .swal-cancel-button {
+            background: #f9fafb !important;
+            color: #374151 !important;
+            border: 1px solid #d1d5db !important;
+            border-radius: 8px !important;
+            font-weight: 500 !important;
+        }
+
+        .swal-cancel-button:hover {
+            background: #f3f4f6 !important;
+        }
+    </style>
 </div>

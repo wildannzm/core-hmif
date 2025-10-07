@@ -7,6 +7,7 @@ use App\Livewire\Finance;
 use App\Livewire\Letter;
 use App\Livewire\Departments;
 use App\Livewire\AttendanceReport;
+use App\Livewire\ContentPlans;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Appearance;
@@ -33,6 +34,10 @@ Route::middleware(['auth'])->group(function () {
     // Treasurer routes - accessible by Ketua, Wakil Ketua, and Bendahara
     Route::get('keuangan', Finance::class)->name('finance')
         ->middleware('check.position:Ketua,Wakil Ketua,Bendahara');
+    
+    // Kominfo routes - accessible by Ketua, Wakil Ketua, and all Kominfo department members
+    Route::get('content-plan', ContentPlans::class)->name('content-plan')
+        ->middleware('check.kominfo');
     
     Route::redirect('settings', 'settings/profile');
 

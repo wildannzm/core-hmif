@@ -37,11 +37,11 @@
             </div>
 
             <!-- Filter and Add Button Container -->
-            <div class="flex gap-2">
+            <div class="grid grid-cols-2 gap-2">
                 <!-- Filter Dropdown -->
                 <div class="relative" x-data="{ open: false }">
                     <button @click="open = !open" type="button"
-                        class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300 inline-flex items-center justify-between min-w-[120px]">
+                        class="w-full px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300 inline-flex items-center justify-between">
                         <span>
                             @if ($filter === 'all')
                                 Semua
@@ -78,7 +78,7 @@
                 <!-- Add Button -->
                 @if (auth()->user()->hasScheduleManagementAccess())
                     <button wire:click="openCreateModal" type="button"
-                        class="bg-gradient-to-r from-blue-600 to-red-600 text-white hover:from-blue-700 hover:to-red-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 sm:px-4 py-2 text-center inline-flex items-center transition-colors whitespace-nowrap">
+                        class="w-full bg-gradient-to-r from-blue-600 to-red-600 text-white hover:from-blue-700 hover:to-red-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 sm:px-4 py-2 text-center inline-flex items-center justify-center transition-colors">
                         <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 24 24">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -351,7 +351,7 @@
                             Batal
                         </button>
                         <button type="submit"
-                            class="text-white bg-gradient-to-r from-red-500 via-red-600 to-red-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 sm:px-5 py-2 sm:py-2.5 text-center order-1 sm:order-2">
+                            class="text-white bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 sm:px-5 py-2 sm:py-2.5 text-center order-1 sm:order-2">
                             {{ $scheduleId ? 'Update' : 'Simpan' }}
                         </button>
                     </div>

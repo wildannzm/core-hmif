@@ -3,6 +3,39 @@
 
 <head>
     @include('partials.head')
+
+    <!-- Custom Scrollbar Styles -->
+    <style>
+        /* Custom scrollbar for navigation area */
+        .sidebar-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+        }
+
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(156, 163, 175, 0.5);
+            border-radius: 3px;
+            transition: background-color 0.2s ease;
+        }
+
+        .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(156, 163, 175, 0.8);
+        }
+
+        /* Ensure proper height calculation */
+        .sidebar-container {
+            height: 100vh;
+            max-height: 100vh;
+        }
+    </style>
 </head>
 
 <body class="min-h-screen bg-gray-50" x-data="{ sidebarOpen: false }">
@@ -17,10 +50,10 @@
             @click="sidebarOpen = false"></div>
 
         <!-- Sidebar content -->
-        <div class="relative flex h-full flex-col bg-white border-r border-gray-200 shadow-lg z-50">
+        <div class="sidebar-container relative flex flex-col bg-white border-r border-gray-200 shadow-lg z-50">
 
             <!-- Logo and Header -->
-            <div class="flex items-center justify-between p-4 border-b border-gray-200">
+            <div class="flex-shrink-0 flex items-center justify-between p-4 border-b border-gray-200">
                 <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 rtl:space-x-reverse"
                     wire:navigate>
                     <div
@@ -43,13 +76,14 @@
                 </button>
             </div>
 
-            <!-- Navigation Menu -->
-            <nav class="flex-1 space-y-2 p-4" x-data="{
+            <!-- Navigation Menu - Scrollable Area -->
+            <nav class="flex-1 overflow-y-auto sidebar-scroll space-y-2 p-4" x-data="{
                 openMenus: {
                     keanggotaan: JSON.parse(localStorage.getItem('sidebar_keanggotaan') || 'false'),
                     kegiatan: JSON.parse(localStorage.getItem('sidebar_kegiatan') || 'false'),
                     sekretaris: JSON.parse(localStorage.getItem('sidebar_sekretaris') || 'false'),
-                    bendahara: JSON.parse(localStorage.getItem('sidebar_bendahara') || 'false')
+                    bendahara: JSON.parse(localStorage.getItem('sidebar_bendahara') || 'false'),
+                    kominfo: JSON.parse(localStorage.getItem('sidebar_kominfo') || 'false')
                 },
                 toggleMenu(menu) {
                     this.openMenus[menu] = !this.openMenus[menu];
@@ -244,10 +278,57 @@
                         </div>
                     </div>
                 @endif
+
+                <!-- Kominfo Dropdown -->
+                @if (auth()->user()->hasKominfoAccess())
+                    <div class="space-y-1">
+                        <button @click="toggleMenu('kominfo')"
+                            class="group flex w-full items-center px-3 py-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-red-50 hover:text-blue-700 transition-all duration-200">
+                            <svg class="w-5 h-5 text-blue-600" viewBox="0 0 24 24" fill="currentColor"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M3.42091 4.83828C2.43562 4.07194 1 4.77409 1 6.02231V17.9777C1 19.2259 2.43562 19.928 3.42091 19.1617L11.6139 12.7893C11.8575 12.5999 12 12.3086 12 12V17.9777C12 19.2259 13.4356 19.928 14.4209 19.1617L22.6139 12.7893C22.8575 12.5999 23 12.3086 23 12C23 11.6914 22.8575 11.4001 22.6139 11.2106L14.4209 4.83828C13.4356 4.07194 12 4.77409 12 6.02231V12C12 11.6914 11.8575 11.4001 11.6139 11.2106L3.42091 4.83828ZM9.37118 12L3 16.9553V7.04463L9.37118 12ZM20.3712 12L14 16.9553V7.04463L20.3712 12Z"
+                                    fill="currentColor"></path>
+                            </svg>
+                            <span class="ml-3 flex-1 text-left">Kominfo</span>
+                            <svg class="w-4 h-4 transition-transform duration-200"
+                                :class="{ 'rotate-180': openMenus.kominfo }" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7">
+                                </path>
+                            </svg>
+                        </button>
+
+                        <div x-show="openMenus.kominfo" x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 transform -translate-y-2"
+                            x-transition:enter-end="opacity-100 transform translate-y-0" class="ml-8 space-y-1">
+                            <a href="{{ route('content-plan') }}" wire:navigate
+                                class="group flex items-center px-3 py-2 text-sm rounded-lg transition-colors {{ request()->routeIs('content-plan') ? 'bg-gradient-to-r from-blue-500 to-red-500 text-white shadow-md' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700' }}">
+                                <svg class="w-4 h-4 {{ request()->routeIs('content-plan') ? 'text-white' : 'text-red-500' }}"
+                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12.37 8.87988H17.62" stroke="currentColor" stroke-width="1.5"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M6.38 8.87988L7.13 9.62988L9.38 7.37988" stroke="currentColor"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M12.37 15.8799H17.62" stroke="currentColor" stroke-width="1.5"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M6.38 15.8799L7.13 16.6299L9.38 14.3799" stroke="currentColor"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path
+                                        d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z"
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </svg>
+                                <span class="ml-2">Content Plan</span>
+                            </a>
+                        </div>
+                    </div>
+                @endif
             </nav>
 
-            <!-- User Profile Section -->
-            <div class="border-t border-gray-200 p-4" x-data="{ userMenuOpen: false }">
+            <!-- User Profile Section - Fixed at Bottom -->
+            <div class="flex-shrink-0 border-t border-gray-200 p-4" x-data="{ userMenuOpen: false }">
                 <div class="relative">
                     <button @click="userMenuOpen = !userMenuOpen"
                         class="group flex w-full items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-red-50 transition-all duration-200">

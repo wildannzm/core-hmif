@@ -78,21 +78,97 @@
         <!-- Mobile Card Layout -->
         <div class="block sm:hidden">
             @forelse($attendances as $index => $attendance)
-                <div class="border-b border-gray-200 last:border-b-0 px-2 py-3 hover:bg-gray-50 transition-colors">
-                    <!-- Header Row -->
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="flex items-center space-x-2 flex-1 min-w-0">
-                            <span
-                                class="text-xs font-medium text-white bg-blue-500 rounded-full px-2 py-1 flex-shrink-0">
+                <div class="border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors">
+                    <!-- Card Body -->
+                    <div class="px-4 py-4">
+                        <!-- Header Row -->
+                        <div class="flex items-center mb-3">
+                            <span class="text-xs font-medium text-white bg-blue-500 rounded-full px-2.5 py-1 mr-3">
                                 {{ $index + 1 }}
                             </span>
+                            <div class="font-semibold text-gray-900 text-base break-words">
+                                {{ $attendance->user->name }}</div>
                         </div>
-                        <div class="flex space-x-1 flex-shrink-0">
-                            @if (auth()->user()->hasSecretaryAccess())
+
+                        <!-- Details Grid -->
+                        <div class="space-y-2">
+                            <!-- Position -->
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-sm text-gray-500 font-medium">Jabatan:</span>
+                                <span
+                                    class="text-sm font-medium text-gray-900 text-right break-words ml-2">{{ $this->getPositionText($attendance->user) }}</span>
+                            </div>
+
+                            <!-- Time -->
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-sm text-gray-500 font-medium">Waktu Tiba:</span>
+                                <div class="ml-2 max-w-[140px]">
+                                    @if ($editingAttendance === $attendance->id)
+                                        <input wire:model.live="editTapTime" type="time"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
+                                            @if ($editStatus !== 'Hadir') disabled @endif>
+                                    @else
+                                        <span class="text-sm font-medium text-gray-900 text-right block">
+                                            @if ($attendance->tap_time)
+                                                {{ \Carbon\Carbon::parse($attendance->tap_time)->format('H:i') }} WIB
+                                            @else
+                                                <span class="text-gray-400">-</span>
+                                            @endif
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-sm text-gray-500 font-medium">Status:</span>
+                                <div class="ml-2 max-w-[140px]">
+                                    @if ($editingAttendance === $attendance->id)
+                                        <select wire:model.live="editStatus"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                                            <option value="Hadir">Hadir</option>
+                                            <option value="Sakit">Sakit</option>
+                                            <option value="Izin">Izin</option>
+                                            <option value="Alfa">Alfa</option>
+                                        </select>
+                                    @else
+                                        <div class="text-right">
+                                            <span
+                                                class="inline-flex px-2.5 py-1 text-xs font-medium rounded-full border {{ $this->getStatusColorClass($attendance->status) }}">
+                                                {{ $attendance->status }}
+                                            </span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- Notes -->
+                            @if ($editingAttendance === $attendance->id || $attendance->notes)
+                                <div class="space-y-2 py-1">
+                                    <span class="text-sm text-gray-500 font-medium">Keterangan:</span>
+                                    @if ($editingAttendance === $attendance->id)
+                                        <textarea wire:model="editNotes" rows="2"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                                            placeholder="Masukkan keterangan..."></textarea>
+                                    @else
+                                        <div
+                                            class="text-sm {{ $this->getNotesColorClass($attendance->notes, $attendance->lateness_duration_minutes) }} bg-gray-50 rounded p-2 break-words">
+                                            {{ $attendance->notes ?: '-' }}
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Card Footer -->
+                    @if (auth()->user()->hasSecretaryAccess())
+                        <div class="px-4 py-3 bg-gray-50 border-t border-gray-100">
+                            <div class="flex justify-end items-center space-x-2">
                                 @if ($editingAttendance === $attendance->id)
                                     <!-- Save/Cancel Buttons -->
                                     <button wire:click="saveEdit" type="button"
-                                        class="text-white bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-green-300 font-medium rounded-lg w-9 h-9 flex items-center justify-center transition-colors shadow-sm"
+                                        class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-white bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-green-300 transition-colors shadow-sm"
                                         title="Simpan">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -100,7 +176,7 @@
                                         </svg>
                                     </button>
                                     <button wire:click="cancelEdit" type="button"
-                                        class="text-gray-600 bg-gray-100 hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 font-medium rounded-lg w-9 h-9 flex items-center justify-center transition-colors shadow-sm"
+                                        class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-gray-600 bg-gray-100 hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 transition-colors shadow-sm"
                                         title="Batal">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -110,92 +186,19 @@
                                 @else
                                     <!-- Edit Button -->
                                     <button wire:click="startEdit({{ $attendance->id }})" type="button"
-                                        class="text-blue-600 bg-blue-50 hover:bg-blue-100 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg w-9 h-9 flex items-center justify-center transition-colors shadow-sm"
+                                        class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 focus:ring-2 focus:ring-blue-300 transition-colors shadow-sm"
                                         title="Edit">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
                                             </path>
                                         </svg>
                                     </button>
                                 @endif
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Name -->
-                    <div class="font-semibold text-gray-900 text-base mb-2 break-words">{{ $attendance->user->name }}
-                    </div>
-
-                    <!-- Details Grid -->
-                    <div class="space-y-2">
-                        <!-- Position -->
-                        <div class="flex justify-between items-start">
-                            <span class="text-gray-600 text-xs">Jabatan:</span>
-                            <span
-                                class="font-medium text-gray-900 text-xs text-right flex-1 ml-2 break-words">{{ $this->getPositionText($attendance->user) }}</span>
-                        </div>
-
-                        <!-- Time -->
-                        <div class="flex justify-between items-start">
-                            <span class="text-gray-600 text-xs">Waktu Tiba:</span>
-                            <div class="flex-1 ml-2 max-w-[120px]">
-                                @if ($editingAttendance === $attendance->id)
-                                    <input wire:model.live="editTapTime" type="time"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
-                                        @if ($editStatus !== 'Hadir') disabled @endif>
-                                @else
-                                    <span class="text-gray-900 text-right block text-xs font-medium">
-                                        @if ($attendance->tap_time)
-                                            {{ \Carbon\Carbon::parse($attendance->tap_time)->format('H:i') }} WIB
-                                        @else
-                                            <span class="text-gray-400">Belum absen</span>
-                                        @endif
-                                    </span>
-                                @endif
                             </div>
                         </div>
-
-                        <!-- Status -->
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600 text-xs">Status:</span>
-                            <div class="flex-1 ml-2 max-w-[120px]">
-                                @if ($editingAttendance === $attendance->id)
-                                    <select wire:model.live="editStatus"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5">
-                                        <option value="Hadir">Hadir</option>
-                                        <option value="Sakit">Sakit</option>
-                                        <option value="Izin">Izin</option>
-                                        <option value="Alfa">Alfa</option>
-                                    </select>
-                                @else
-                                    <div class="text-right">
-                                        <span
-                                            class="inline-flex px-2 py-0.5 text-xs font-medium rounded-full border {{ $this->getStatusColorClass($attendance->status) }}">
-                                            {{ $attendance->status }}
-                                        </span>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Notes -->
-                        @if ($editingAttendance === $attendance->id || $attendance->notes)
-                            <div class="flex flex-col space-y-1">
-                                <span class="text-gray-600 text-xs">Keterangan:</span>
-                                @if ($editingAttendance === $attendance->id)
-                                    <textarea wire:model="editNotes" rows="2"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
-                                        placeholder="Masukkan keterangan..."></textarea>
-                                @else
-                                    <div
-                                        class="text-xs {{ $this->getNotesColorClass($attendance->notes, $attendance->lateness_duration_minutes) }} bg-gray-50 rounded p-2 break-words">
-                                        {{ $attendance->notes ?: '-' }}
-                                    </div>
-                                @endif
-                            </div>
-                        @endif
-                    </div>
+                    @endif
                 </div>
             @empty
                 <div class="p-8 text-center text-gray-500">

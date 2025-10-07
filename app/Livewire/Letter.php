@@ -8,6 +8,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 #[Layout('components.layouts.app')]
 #[Title('Surat Masuk & Keluar')]
@@ -221,8 +222,58 @@ class Letter extends Component
     public function exportPdf()
     {
         try {
-            // TODO: Generate PDF export
-            $this->dispatch('swal:success', ['message' => 'PDF sedang diunduh...']);
+            if ($this->activeTab === 'incoming') {
+                // Get all incoming letters
+                $query = IncomeLetter::query();
+                
+                // Apply search filter if exists
+                if ($this->search) {
+                    $query->where(function($q) {
+                        $q->where('letter_number', 'like', '%' . $this->search . '%')
+                          ->orWhere('sender', 'like', '%' . $this->search . '%')
+                          ->orWhere('recipient', 'like', '%' . $this->search . '%');
+                    });
+                }
+                
+                $letters = $query->orderBy('received_date', 'desc')->get();
+                $title = 'Rekap Surat Masuk HMIF 2025/2026';
+                $filename = 'rekap-surat-masuk-' . date('Y-m-d') . '.pdf';
+                
+            } else {
+                // Get all outgoing letters
+                $query = OutcomeLetter::query();
+                
+                // Apply search filter if exists
+                if ($this->search) {
+                    $query->where(function($q) {
+                        $q->where('letter_number', 'like', '%' . $this->search . '%')
+                          ->orWhere('sent_to', 'like', '%' . $this->search . '%')
+                          ->orWhere('subject', 'like', '%' . $this->search . '%')
+                          ->orWhere('attachments', 'like', '%' . $this->search . '%');
+                    });
+                }
+                
+                $letters = $query->orderBy('letter_date', 'desc')->get();
+                $title = 'Rekap Surat Keluar HMIF 2025/2026';
+                $filename = 'rekap-surat-keluar-' . date('Y-m-d') . '.pdf';
+            }
+            
+            // Generate PDF directly
+            $pdf = Pdf::loadView('pdf.letter-recap', [
+                'letters' => $letters,
+                'title' => $title,
+                'type' => $this->activeTab,
+                'generated_at' => now()->locale('id')->translatedFormat('d F Y H:i')
+            ]);
+            
+            // Use JavaScript to trigger download
+            $this->dispatch('download-pdf', [
+                'url' => 'data:application/pdf;base64,' . base64_encode($pdf->output()),
+                'filename' => $filename
+            ]);
+            
+            $this->dispatch('swal:success', ['message' => 'PDF berhasil diunduh']);
+            
         } catch (\Exception $e) {
             $this->dispatch('swal:error', ['message' => 'Gagal mengekspor PDF: ' . $e->getMessage()]);
         }

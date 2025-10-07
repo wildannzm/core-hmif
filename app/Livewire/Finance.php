@@ -8,6 +8,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 #[Title('Keuangan')]
 #[Layout('components.layouts.app')]
@@ -18,7 +19,7 @@ class Finance extends Component
     public $search = '';
     public $perPage = 10;
     public $sortField = 'transaction_date';
-    public $sortDirection = 'desc';
+    public $sortDirection = 'asc';
     public $filterType = '';
     public $filterPeriod = 'all';
     
@@ -182,10 +183,89 @@ class Finance extends Component
     public function exportReport()
     {
         try {
-            // TODO: Generate and download financial report
-            session()->flash('message', 'Laporan keuangan berhasil diekspor.');
+            // Build query based on current filters
+            $query = FinanceModel::query();
+            
+            // Apply search filter
+            if ($this->search) {
+                $query->where(function($q) {
+                    $q->where('description', 'like', '%' . $this->search . '%')
+                      ->orWhere('funding_source', 'like', '%' . $this->search . '%');
+                });
+            }
+            
+            // Apply type filter
+            if ($this->filterType) {
+                $query->where('type', $this->filterType);
+            }
+            
+            // Apply period filter
+            if ($this->filterPeriod !== 'all') {
+                $now = Carbon::now();
+                switch ($this->filterPeriod) {
+                    case 'today':
+                        $query->whereDate('transaction_date', $now->toDateString());
+                        break;
+                    case 'week':
+                        $query->whereBetween('transaction_date', [$now->startOfWeek(), $now->endOfWeek()]);
+                        break;
+                    case 'month':
+                        $query->whereMonth('transaction_date', $now->month)
+                              ->whereYear('transaction_date', $now->year);
+                        break;
+                    case 'year':
+                        $query->whereYear('transaction_date', $now->year);
+                        break;
+                }
+            }
+            
+            // Get all transactions (not paginated for PDF)
+            $transactions = $query->orderBy('transaction_date', 'asc')->get();
+            
+            // Calculate totals
+            $totalIncome = $transactions->where('type', 'income')->sum('amount');
+            $totalExpense = $transactions->where('type', 'expense')->sum('amount');
+            $balance = $totalIncome - $totalExpense;
+            
+            // Determine report title based on filter
+            $title = 'Laporan Keuangan HMIF Periode 2025/2026';
+            if ($this->filterType === 'income') {
+                $title = 'Laporan Keuangan Pemasukan HMIF Periode 2025/2026';
+            } elseif ($this->filterType === 'expense') {
+                $title = 'Laporan Keuangan Pengeluaran HMIF Periode 2025/2026';
+            }
+            
+            // Determine filename based on filter
+            $filename = 'laporan-keuangan-';
+            if ($this->filterType === 'income') {
+                $filename .= 'pemasukan-';
+            } elseif ($this->filterType === 'expense') {
+                $filename .= 'pengeluaran-';
+            }
+            $filename .= date('Y-m-d') . '.pdf';
+            
+            // Generate PDF
+            $pdf = Pdf::loadView('pdf.finance-report', [
+                'transactions' => $transactions,
+                'title' => $title,
+                'filter_type' => $this->filterType,
+                'show_type_column' => empty($this->filterType), // Only show type column when no filter
+                'total_income' => $totalIncome,
+                'total_expense' => $totalExpense,
+                'balance' => $balance,
+                'generated_at' => now()->locale('id')->translatedFormat('d F Y H:i')
+            ]);
+            
+            // Use JavaScript to trigger download
+            $this->dispatch('download-pdf', [
+                'url' => 'data:application/pdf;base64,' . base64_encode($pdf->output()),
+                'filename' => $filename
+            ]);
+            
+            $this->dispatch('swal:success', ['message' => 'Laporan PDF berhasil diunduh']);
+            
         } catch (\Exception $e) {
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            $this->dispatch('swal:error', ['message' => 'Gagal mengekspor laporan: ' . $e->getMessage()]);
         }
     }
     

@@ -55,10 +55,10 @@
                 </div>
 
                 <!-- Control Buttons -->
-                <div class="flex gap-2">
+                <div class="grid grid-cols-2 gap-2 sm:flex sm:gap-2">
                     <!-- Add Button -->
                     <button wire:click="openCreateModal('{{ $activeTab }}')"
-                        class="bg-gradient-to-r from-blue-600 to-red-600 text-white hover:from-blue-700 hover:to-red-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 sm:px-4 py-2 text-center inline-flex items-center transition-colors whitespace-nowrap">
+                        class="bg-gradient-to-r from-blue-600 to-red-600 text-white hover:from-blue-700 hover:to-red-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 sm:px-4 py-2 text-center inline-flex items-center justify-center transition-colors">
                         <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 24 24">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -71,7 +71,7 @@
 
                     <!-- Export PDF Button -->
                     <button wire:click="exportPdf"
-                        class="bg-red-600 text-white hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 sm:px-4 py-2 text-center inline-flex items-center transition-colors whitespace-nowrap">
+                        class="bg-red-600 text-white hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 sm:px-4 py-2 text-center inline-flex items-center justify-center transition-colors">
                         <svg class="w-4 h-4 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -110,7 +110,161 @@
 
         <!-- Letters Table -->
         <div class="bg-white rounded-lg sm:rounded-xl shadow-lg border border-gray-100 overflow-hidden mx-1 sm:mx-0">
-            <div class="overflow-x-auto">
+            <!-- Mobile Card Layout -->
+            <div class="block sm:hidden">
+                @forelse ($letters as $letter)
+                    <div class="border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors">
+                        <!-- Card Body -->
+                        <div class="px-4 py-4">
+                            <!-- Header Row -->
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-xs font-medium text-white bg-blue-500 rounded-full px-2.5 py-1">
+                                        {{ $loop->iteration }}
+                                    </span>
+                                    <span
+                                        class="inline-flex px-3 py-1 text-xs font-semibold rounded-full
+                                        {{ $activeTab === 'incoming' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                                        {{ $activeTab === 'incoming' ? 'Surat Masuk' : 'Surat Keluar' }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Letter Number -->
+                            <div class="mb-3">
+                                <div class="text-lg font-bold text-gray-900">
+                                    {{ $letter['letter_number'] }}
+                                </div>
+                            </div>
+
+                            <!-- Details Grid for Incoming Letters -->
+                            @if ($activeTab === 'incoming')
+                                <div class="space-y-2">
+                                    <!-- Received Date -->
+                                    <div class="flex justify-between items-center py-1">
+                                        <span class="text-sm text-gray-500 font-medium">Tanggal Terima:</span>
+                                        <span class="text-sm font-medium text-gray-900">
+                                            {{ \Carbon\Carbon::parse($letter['received_date'])->locale('id')->translatedFormat('d F Y') }}
+                                        </span>
+                                    </div>
+
+                                    <!-- Execution Date -->
+                                    <div class="flex justify-between items-center py-1">
+                                        <span class="text-sm text-gray-500 font-medium">Tanggal Pelaksanaan:</span>
+                                        <span class="text-sm font-medium text-gray-900">
+                                            {{ $letter['execution_date'] ? \Carbon\Carbon::parse($letter['execution_date'])->locale('id')->translatedFormat('d F Y') : '-' }}
+                                        </span>
+                                    </div>
+
+                                    <!-- Sender -->
+                                    <div class="flex justify-between items-start py-1">
+                                        <span class="text-sm text-gray-500 font-medium">Pengirim:</span>
+                                        <span class="text-sm font-medium text-gray-900 text-right break-words ml-2">
+                                            {{ $letter['sender'] }}
+                                        </span>
+                                    </div>
+
+                                    <!-- Recipient -->
+                                    <div class="flex justify-between items-start py-1">
+                                        <span class="text-sm text-gray-500 font-medium">Penerima:</span>
+                                        <span class="text-sm font-medium text-gray-900 text-right break-words ml-2">
+                                            {{ $letter['recipient'] }}
+                                        </span>
+                                    </div>
+                                </div>
+                            @else
+                                <!-- Details Grid for Outgoing Letters -->
+                                <div class="space-y-2">
+                                    <!-- Letter Date -->
+                                    <div class="flex justify-between items-center py-1">
+                                        <span class="text-sm text-gray-500 font-medium">Tanggal Surat:</span>
+                                        <span class="text-sm font-medium text-gray-900">
+                                            {{ \Carbon\Carbon::parse($letter['letter_date'])->locale('id')->translatedFormat('d F Y') }}
+                                        </span>
+                                    </div>
+
+                                    <!-- Sent To -->
+                                    <div class="flex justify-between items-start py-1">
+                                        <span class="text-sm text-gray-500 font-medium">Dikirim Kepada:</span>
+                                        <span class="text-sm font-medium text-gray-900 text-right break-words ml-2">
+                                            {{ $letter['sent_to'] }}
+                                        </span>
+                                    </div>
+
+                                    <!-- Subject -->
+                                    <div class="flex flex-col space-y-1 py-1">
+                                        <span class="text-sm text-gray-500 font-medium">Perihal:</span>
+                                        <div class="text-sm font-medium text-gray-900 break-words">
+                                            {{ $letter['subject'] }}
+                                        </div>
+                                    </div>
+
+                                    <!-- Attachments -->
+                                    @if ($letter['attachments'])
+                                        <div class="flex flex-col space-y-1 py-1">
+                                            <span class="text-sm text-gray-500 font-medium">Lampiran:</span>
+                                            <div class="text-sm font-medium text-gray-900 break-words">
+                                                {{ $letter['attachments'] }}
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Card Footer -->
+                        <div class="px-4 py-3 bg-gray-50 border-t border-gray-100">
+                            <div class="flex justify-end items-center space-x-2">
+                                <!-- Edit Button -->
+                                <button wire:click="openEditModal({{ $letter['id'] }})" type="button"
+                                    class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 focus:ring-2 focus:ring-blue-300 transition-colors shadow-sm"
+                                    title="Edit">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                        </path>
+                                    </svg>
+                                </button>
+                                <!-- Delete Button -->
+                                <button onclick="confirmDeleteLetter({{ $letter['id'] }})" type="button"
+                                    class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-red-600 bg-red-50 hover:bg-red-100 focus:ring-2 focus:ring-red-300 transition-colors shadow-sm"
+                                    title="Hapus">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                        </path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="p-8 text-center text-gray-500">
+                        @if ($activeTab === 'incoming')
+                            <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+                                </path>
+                            </svg>
+                            <div class="text-base font-medium text-gray-600 mb-1">Belum ada surat masuk</div>
+                            <div class="text-sm text-gray-400">Data surat masuk masih kosong</div>
+                        @else
+                            <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8">
+                                </path>
+                            </svg>
+                            <div class="text-base font-medium text-gray-600 mb-1">Belum ada surat keluar</div>
+                            <div class="text-sm text-gray-400">Data surat keluar masih kosong</div>
+                        @endif
+                    </div>
+                @endforelse
+            </div>
+
+            <!-- Desktop Table Layout -->
+            <div class="hidden sm:block overflow-x-auto">
                 <table class="min-w-full text-sm text-left text-gray-500">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
                         <tr>
@@ -312,6 +466,20 @@
                 confirmButtonText: 'OK'
             });
         });
+
+        // Listen for PDF download event
+        window.addEventListener('download-pdf', event => {
+            const {
+                url,
+                filename
+            } = event.detail[0];
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
     </script>
 
     <!-- Modal -->
@@ -328,11 +496,10 @@
                     onclick="event.stopPropagation()" style="margin: 0 auto;">
                     <form wire:submit="save">
                         <!-- Modal Header -->
-                        <div
-                            class="bg-gradient-to-r from-blue-600 to-red-600 px-3 sm:px-4 md:px-6 py-3 sm:py-4 rounded-t-xl">
+                        <div class="bg-white border-b border-gray-200 px-3 sm:px-4 md:px-6 py-3 sm:py-4 rounded-t-xl">
                             <div class="flex items-center justify-between">
                                 <h3
-                                    class="text-sm sm:text-base md:text-lg leading-6 font-semibold text-white truncate pr-2">
+                                    class="text-sm sm:text-base md:text-lg leading-6 font-semibold text-gray-900 truncate pr-2">
                                     @if ($editingId)
                                         Edit {{ $letter_type === 'incoming' ? 'Surat Masuk' : 'Surat Keluar' }}
                                     @else
@@ -340,7 +507,7 @@
                                     @endif
                                 </h3>
                                 <button type="button" wire:click="closeModal"
-                                    class="text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-white/20 rounded-lg p-1 transition-colors">
+                                    class="text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-lg p-1 transition-colors">
                                     <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

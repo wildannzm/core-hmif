@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'api.token' => \App\Http\Middleware\ApiTokenMiddleware::class,
             'check.position' => \App\Http\Middleware\CheckPosition::class,
+            'check.kominfo' => \App\Http\Middleware\CheckKominfoAccess::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
