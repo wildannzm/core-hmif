@@ -65,7 +65,7 @@
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                     <input type="text" wire:model.live="search" placeholder="Cari transaksi..."
-                        class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm">
+                        class="w-full pl-10 pr-4 py-2.5 border focus:outline-none border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm">
                 </div>
             </div>
 
@@ -74,14 +74,14 @@
                 <!-- Filter Dropdowns -->
                 <div class="grid grid-cols-2 gap-2 lg:flex lg:gap-2">
                     <select wire:model.live="filterType"
-                        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm lg:min-w-[130px]">
+                        class="w-full px-3 py-2.5 focus:outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm lg:min-w-[130px]">
                         <option value="">Semua Jenis</option>
                         <option value="income">Pemasukan</option>
                         <option value="expense">Pengeluaran</option>
                     </select>
 
                     <select wire:model.live="filterPeriod"
-                        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm lg:min-w-[140px]">
+                        class="w-full px-3 py-2.5 focus:outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm lg:min-w-[140px]">
                         <option value="all">Semua Periode</option>
                         <option value="today">Harian</option>
                         <option value="week">Mingguan</option>

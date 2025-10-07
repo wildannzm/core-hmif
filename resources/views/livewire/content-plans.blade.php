@@ -22,7 +22,7 @@
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                     <input type="text" wire:model.live="search" placeholder="Cari content plan..."
-                        class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm">
+                        class="w-full pl-10 pr-4 py-2.5 focus:outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm">
                 </div>
             </div>
 
@@ -31,7 +31,7 @@
                 <!-- Filter Dropdowns -->
                 <div class="grid grid-cols-2 gap-2 lg:flex lg:gap-2">
                     <select wire:model.live="filterMonth"
-                        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm lg:min-w-[130px]">
+                        class="w-full px-3 py-2.5 border focus:outline-none border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm lg:min-w-[130px]">
                         <option value="">Pilih Bulan</option>
                         <option value="1">Januari</option>
                         <option value="2">Februari</option>
@@ -48,7 +48,7 @@
                     </select>
 
                     <select wire:model.live="filterYear"
-                        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm lg:min-w-[100px]">
+                        class="w-full px-3 py-2.5 border focus:outline-none border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm lg:min-w-[100px]">
                         <option value="">Pilih Tahun</option>
                         <option value="2025">2025</option>
                         <option value="2026">2026</option>
@@ -405,7 +405,7 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Publish <span
                                         class="text-red-500">*</span></label>
                                 <input type="date" wire:model="publish_date"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    class="w-full border focus:outline-none border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                 @error('publish_date')
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
                                 @enderror
@@ -414,7 +414,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
                                 <select wire:model="status"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    class="w-full border focus:outline-none border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                     <option value="">Pilih Status</option>
                                     <option value="Progress">Progress</option>
                                     <option value="Approved">Approved</option>
@@ -430,7 +430,7 @@
                             <label class="block text-sm font-medium text-gray-700 mb-1">Judul <span
                                     class="text-red-500">*</span></label>
                             <input type="text" wire:model="title"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                class="w-full border focus:outline-none border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 placeholder="Masukkan judul content plan">
                             @error('title')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -442,7 +442,7 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Konten Pilar <span
                                         class="text-red-500">*</span></label>
                                 <select wire:model="pillar"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    class="w-full border focus:outline-none border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                     <option value="">Pilih Konten Pilar</option>
                                     <option value="Entertainment">Entertainment</option>
                                     <option value="Education">Education</option>
@@ -458,7 +458,7 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Tipe Konten <span
                                         class="text-red-500">*</span></label>
                                 <select wire:model="content_type"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    class="w-full border focus:outline-none border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                     <option value="">Pilih Tipe Konten</option>
                                     <option value="Post">Post</option>
                                     <option value="Story">Story</option>
@@ -474,7 +474,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Goals</label>
                             <select wire:model="goals"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                class="w-full border focus:outline-none border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                 <option value="">Pilih Goals</option>
                                 <option value="Education">Education</option>
                                 <option value="Engagement">Engagement</option>
@@ -489,7 +489,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Executor</label>
                                 <select wire:model="executor_id"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    class="w-full border focus:outline-none border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                     <option value="">Pilih Executor</option>
                                     @foreach ($kominfoUsers as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -503,7 +503,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Publisher</label>
                                 <select wire:model="publisher_id"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    class="w-full border focus:outline-none border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                     <option value="">Pilih Publisher</option>
                                     @foreach ($kominfoUsers as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -518,7 +518,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Referensi</label>
                             <textarea wire:model="reference" rows="3"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                class="w-full border focus:outline-none border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 placeholder="Masukkan referensi atau inspirasi konten"></textarea>
                             @error('reference')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -528,7 +528,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Result URL</label>
                             <input type="url" wire:model="result_url"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                class="w-full border border-gray-300 focus:outline-none rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 placeholder="https://...">
                             @error('result_url')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -538,7 +538,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Caption</label>
                             <textarea wire:model="caption" rows="4"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                class="w-full focus:outline-none border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 placeholder="Masukkan caption konten"></textarea>
                             @error('caption')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -548,7 +548,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Catatan Revisi</label>
                             <textarea wire:model="revision_notes" rows="3"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                class="w-full focus:outline-none border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 placeholder="Masukkan catatan revisi jika diperlukan"></textarea>
                             @error('revision_notes')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>

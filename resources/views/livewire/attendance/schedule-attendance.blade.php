@@ -105,7 +105,7 @@
                                 <div class="ml-2 max-w-[140px]">
                                     @if ($editingAttendance === $attendance->id)
                                         <input wire:model.live="editTapTime" type="time"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none"
                                             @if ($editStatus !== 'Hadir') disabled @endif>
                                     @else
                                         <span class="text-sm font-medium text-gray-900 text-right block">
@@ -125,7 +125,7 @@
                                 <div class="ml-2 max-w-[140px]">
                                     @if ($editingAttendance === $attendance->id)
                                         <select wire:model.live="editStatus"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                                            class="bg-gray-50 focus:outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
                                             <option value="Hadir">Hadir</option>
                                             <option value="Sakit">Sakit</option>
                                             <option value="Izin">Izin</option>
@@ -148,7 +148,7 @@
                                     <span class="text-sm text-gray-500 font-medium">Keterangan:</span>
                                     @if ($editingAttendance === $attendance->id)
                                         <textarea wire:model="editNotes" rows="2"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                                            class="bg-gray-50 focus:outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                                             placeholder="Masukkan keterangan..."></textarea>
                                     @else
                                         <div
@@ -246,7 +246,7 @@
                                 @if ($editingAttendance === $attendance->id)
                                     <!-- Edit Mode -->
                                     <input wire:model.live="editTapTime" type="time"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 sm:p-2 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 sm:p-2 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none"
                                         @if ($editStatus !== 'Hadir') disabled @endif>
                                 @else
                                     <!-- View Mode -->
@@ -263,7 +263,7 @@
                                 @if ($editingAttendance === $attendance->id)
                                     <!-- Edit Mode -->
                                     <select wire:model.live="editStatus"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 sm:p-2">
+                                        class="bg-gray-50 focus:outline-none border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 sm:p-2">
                                         <option value="Hadir">Hadir</option>
                                         <option value="Sakit">Sakit</option>
                                         <option value="Izin">Izin</option>
@@ -281,7 +281,7 @@
                                 @if ($editingAttendance === $attendance->id)
                                     <!-- Edit Mode -->
                                     <textarea wire:model="editNotes" rows="2"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 sm:p-2"
+                                        class="bg-gray-50 focus:outline-none border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 sm:p-2"
                                         placeholder="Masukkan keterangan..."></textarea>
                                 @else
                                     <!-- View Mode -->

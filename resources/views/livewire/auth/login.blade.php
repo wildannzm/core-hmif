@@ -28,7 +28,7 @@
                 </div>
                 <input wire:model="email" id="email" type="email" required autofocus autocomplete="email"
                     placeholder="Masukan Email"
-                    class="w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition duration-200 bg-white text-gray-900 placeholder-gray-400 @error('email') border-red-300 focus:ring-red-500 @else border-gray-300 focus:ring-blue-500 @enderror" />
+                    class="w-full pl-10 pr-4 py-3 focus:outline-none border rounded-lg focus:ring-2 focus:border-transparent transition duration-200 bg-white text-gray-900 placeholder-gray-400 @error('email') border-red-300 focus:ring-red-500 @else border-gray-300 focus:ring-blue-500 @enderror" />
             </div>
             @error('email')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -49,7 +49,7 @@
                 </div>
                 <input wire:model="password" id="password" :type="showPassword ? 'text' : 'password'" required
                     autocomplete="current-password" placeholder="Masukan Password"
-                    class="w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition duration-200 bg-white text-gray-900 placeholder-gray-400 @error('password') border-red-300 focus:ring-red-500 @else border-gray-300 focus:ring-blue-500 @enderror" />
+                    class="w-full pl-10 pr-12 py-3 focus:outline-none border rounded-lg focus:ring-2 focus:border-transparent transition duration-200 bg-white text-gray-900 placeholder-gray-400 @error('password') border-red-300 focus:ring-red-500 @else border-gray-300 focus:ring-blue-500 @enderror" />
 
                 <!-- Toggle Password Visibility Button -->
                 <button type="button" @click="showPassword = !showPassword"

@@ -40,7 +40,7 @@
                         </svg>
                     </div>
                     <input wire:model.live="search" type="text" id="search"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-9 sm:pl-10 p-2 sm:p-2.5"
+                        class="bg-gray-50 focus:outline-none border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-9 sm:pl-10 p-2 sm:p-2.5"
                         placeholder="Nama kegiatan atau lokasi...">
                 </div>
             </div>
@@ -50,7 +50,7 @@
                 <label for="dateFilter"
                     class="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Tanggal</label>
                 <input wire:model.live="dateFilter" type="date" id="dateFilter"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5">
+                    class="bg-gray-50 border focus:outline-none border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5">
             </div>
         </div>
     </div>

@@ -324,7 +324,7 @@
                             Nama Departemen
                         </label>
                         <input type="text" wire:model="name" id="name"
-                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm sm:text-base @error('name') border-red-500 @else border-gray-300 @enderror"
+                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm sm:text-base @error('name') border-red-500 @else border-gray-300 @enderror"
                             placeholder="Masukkan nama departemen">
                         @error('name')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -363,7 +363,7 @@
                             Nama Jabatan
                         </label>
                         <input type="text" wire:model="positionName" id="positionName"
-                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm sm:text-base @error('positionName') border-red-500 @else border-gray-300 @enderror"
+                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm sm:text-base @error('positionName') border-red-500 @else border-gray-300 @enderror"
                             placeholder="Masukkan nama jabatan">
                         @error('positionName')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>

@@ -57,7 +57,7 @@
                 <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 rtl:space-x-reverse"
                     wire:navigate>
                     <div
-                        class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-50 to-red-50 border">
+                        class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-50 to-red-50 border">
                         <img src="{{ asset('images/Logo HMIF.png') }}" alt="Logo HMIF" class="h-8 w-8 object-contain">
                     </div>
                     <div>

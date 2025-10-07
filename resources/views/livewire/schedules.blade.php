@@ -32,7 +32,7 @@
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                     <input type="text" wire:model.live="search" placeholder="Cari kegiatan..."
-                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm">
+                        class="w-full pl-10 pr-4 py-2 border focus:outline-none border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm">
                 </div>
             </div>
 
@@ -279,7 +279,7 @@
                             <label for="name" class="block mb-1 sm:mb-2 text-sm font-medium text-gray-900">Nama
                                 Kegiatan</label>
                             <input wire:model="name" type="text" id="name"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5"
+                                class="bg-gray-50 border focus:outline-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5"
                                 placeholder="Masukkan nama kegiatan">
                             @error('name')
                                 <p class="mt-1 sm:mt-2 text-xs sm:text-sm text-red-600">{{ $message }}</p>
@@ -291,7 +291,7 @@
                             <label for="description"
                                 class="block mb-1 sm:mb-2 text-sm font-medium text-gray-900">Deskripsi</label>
                             <textarea wire:model="description" id="description" rows="3"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5"
+                                class="bg-gray-50 border focus:outline-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5"
                                 placeholder="Masukkan deskripsi kegiatan"></textarea>
                             @error('description')
                                 <p class="mt-1 sm:mt-2 text-xs sm:text-sm text-red-600">{{ $message }}</p>
@@ -304,7 +304,7 @@
                                 <label for="date"
                                     class="block mb-1 sm:mb-2 text-sm font-medium text-gray-900">Tanggal</label>
                                 <input wire:model="date" type="date" id="date"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5">
+                                    class="bg-gray-50 border focus:outline-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5">
                                 @error('date')
                                     <p class="mt-1 sm:mt-2 text-xs sm:text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -314,7 +314,7 @@
                                     class="block mb-1 sm:mb-2 text-sm font-medium text-gray-900">Waktu
                                     Mulai (WIB)</label>
                                 <input wire:model="start_time" type="time" id="start_time"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5">
+                                    class="bg-gray-50 border focus:outline-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5">
                                 @error('start_time')
                                     <p class="mt-1 sm:mt-2 text-xs sm:text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -326,7 +326,7 @@
                             <label for="location"
                                 class="block mb-1 sm:mb-2 text-sm font-medium text-gray-900">Lokasi</label>
                             <input wire:model="location" type="text" id="location"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5"
+                                class="bg-gray-50 border border-gray-300 focus:outline-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5"
                                 placeholder="Masukkan lokasi kegiatan">
                             @error('location')
                                 <p class="mt-1 sm:mt-2 text-xs sm:text-sm text-red-600">{{ $message }}</p>
@@ -336,7 +336,7 @@
                         <!-- Attendance Option -->
                         <div class="flex items-center">
                             <input wire:model="has_attendance" id="has_attendance" type="checkbox"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+                                class="w-4 h-4 text-blue-600 bg-gray-100 focus:outline-none border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
                             <label for="has_attendance" class="ml-2 text-sm font-medium text-gray-900">
                                 Kegiatan ini memiliki absensi
                             </label>
