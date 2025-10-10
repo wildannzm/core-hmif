@@ -54,7 +54,7 @@
                         </svg>
                     </div>
                     <div>
-                        <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Posisi</h3>
+                        <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Jabatan</h3>
                         <p class="text-lg font-semibold text-gray-900">
                             {{ auth()->user()->position ? auth()->user()->position->name : 'Belum Ditentukan' }}
                         </p>
