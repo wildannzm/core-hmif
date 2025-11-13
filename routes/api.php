@@ -8,5 +8,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('/attendance/tap', [AttendanceController::class, 'storeTap'])
-    ->middleware('api.token');
+Route::domain('{account}.example.com')->group(function () {
+    Route::post('/attendance/tap', [AttendanceController::class, 'storeTap'])
+        ->middleware('api.token');
+});
