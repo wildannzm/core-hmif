@@ -31,7 +31,6 @@ class Dashboard extends Component
     public function render()
     {
         return view('livewire.dashboard', [
-            'memberCount' => $this->memberCount,
             'weeklySchedules' => $this->weeklySchedules,
         ]);
     }
