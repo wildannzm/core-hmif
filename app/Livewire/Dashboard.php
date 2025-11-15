@@ -13,11 +13,6 @@ use Livewire\Attributes\Layout;
 #[Layout('components.layouts.app')]
 class Dashboard extends Component
 {
-    public function getMemberCountProperty()
-    {
-        return User::count();
-    }
-
     public function getWeeklySchedulesProperty()
     {
         // Get schedules for current week

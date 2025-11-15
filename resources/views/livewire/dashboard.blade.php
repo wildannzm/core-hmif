@@ -1,84 +1,41 @@
 <div class="sm:p-6 space-y-3 sm:space-y-6 w-full mx-auto">
-    <!-- Welcome Header -->
+    <!-- Welcome Greeting Card -->
     <div
-        class="bg-gradient-to-r from-blue-600 to-red-600 rounded-lg sm:rounded-xl shadow-lg p-3 sm:p-6 text-white mx-1 sm:mx-0">
-        <div class="flex items-center justify-between">
-            <div class="flex-1 min-w-0">
-                <h1 class="text-sm sm:text-xl lg:text-2xl xl:text-3xl font-bold mb-1 sm:mb-2 leading-tight">Dashboard</h1>
-            </div>
-        </div>
-    </div>
-
-    <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-6 mx-1 sm:mx-0">
-        <!-- Total Members Card -->
-        <div
-            class="bg-white rounded-lg sm:rounded-xl shadow-lg border border-gray-100 p-3 sm:p-6 hover:shadow-xl transition-shadow duration-300">
-            <div class="flex items-center justify-between mb-2 sm:mb-4">
-                <div class="bg-gradient-to-r from-blue-100 to-red-100 p-2 sm:p-3 rounded-lg">
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-blue-600" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-                        </path>
-                    </svg>
+        class="bg-gradient-to-r from-blue-600 to-red-600 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-6 lg:p-8 mx-1 sm:mx-0">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <!-- Greeting Text -->
+            <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                    <div>
+                        @php
+                            $hour = now()->hour;
+                            $greeting = '';
+                            if ($hour >= 0 && $hour < 12) {
+                                $greeting = 'Selamat Pagi';
+                            } elseif ($hour >= 12 && $hour < 15) {
+                                $greeting = 'Selamat Siang';
+                            } elseif ($hour >= 15 && $hour < 18) {
+                                $greeting = 'Selamat Sore';
+                            } else {
+                                $greeting = 'Selamat Malam';
+                            }
+                        @endphp
+                        <p class="text-xs sm:text-sm text-white/80 font-medium mb-1">{{ $greeting }}</p>
+                        <h1 class="text-xl sm:text-2xl lg:text-4xl font-bold text-white leading-tight">
+                            @php
+                                $fullName = Auth::user()->name;
+                                $firstName = explode(' ', $fullName)[0];
+                            @endphp
+                            <span class="hidden sm:inline">Halo, {{ $fullName }}</span>
+                            <span class="sm:hidden">Halo, {{ $firstName }}</span>
+                        </h1>
+                    </div>
                 </div>
-                <div class="text-right">
-                    <p class="text-xs text-gray-600 font-medium">Total Anggota</p>
-                    <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">{{ $memberCount }}</p>
-                </div>
-            </div>
-            <div class="flex items-center text-xs">
-                <span class="text-blue-600 font-medium">Semua aktif</span>
-                <span class="text-gray-500 ml-1 sm:ml-2">periode ini</span>
-            </div>
-        </div>
-
-        <!-- Active Departments Card -->
-        <div
-            class="bg-white rounded-lg sm:rounded-xl shadow-lg border border-gray-100 p-3 sm:p-6 hover:shadow-xl transition-shadow duration-300">
-            <div class="flex items-center justify-between mb-2 sm:mb-4">
-                <div class="bg-gradient-to-r from-red-100 to-blue-100 p-2 sm:p-3 rounded-lg">
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-red-600" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                        </path>
-                    </svg>
-                </div>
-                <div class="text-right">
-                    <p class="text-xs text-gray-600 font-medium">Departemen Aktif</p>
-                    <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">5</p>
-                </div>
-            </div>
-            <div class="flex items-center text-xs">
-                <span class="text-blue-600 font-medium">Semua aktif</span>
-                <span class="text-gray-500 ml-1 sm:ml-2">periode ini</span>
-            </div>
-        </div>
-
-        <!-- This Week Activities Card -->
-        <div
-            class="bg-white rounded-lg sm:rounded-xl shadow-lg border border-gray-100 p-3 sm:p-6 hover:shadow-xl transition-shadow duration-300">
-            <div class="flex items-center justify-between mb-2 sm:mb-4">
-                <div class="bg-gradient-to-r from-blue-100 to-red-100 p-2 sm:p-3 rounded-lg">
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-blue-600" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                        </path>
-                    </svg>
-                </div>
-                <div class="text-right">
-                    <p class="text-xs text-gray-600 font-medium">Kegiatan Minggu Ini</p>
-                    <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
-                        {{ $weeklySchedules->flatten()->count() }}
+                <div>
+                    <p class="text-sm sm:text-base lg:text-lg text-white/90 font-medium flex items-center gap-2">
+                        <span>Semoga Harimu Menyenangkan</span>
                     </p>
                 </div>
-            </div>
-            <div class="flex items-center text-xs">
-                <span class="text-red-600 font-medium">{{ $weeklySchedules->count() }} kegiatan</span>
-                <span class="text-gray-500 ml-1 sm:ml-2">terjadwal</span>
             </div>
         </div>
     </div>

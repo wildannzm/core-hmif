@@ -44,7 +44,11 @@ Route::domain('internal.hmifunma.web.id')->group(function () {
         Route::get('pengaturan/profil', Profile::class)->name('settings.profile');
         Route::get('pengaturan/password', Password::class)->name('settings.password');
         Route::get('pengaturan/appearance', Appearance::class)->name('settings.appearance');
-    }); 
+    });
+});
+
+Route::domain('hmifunma.web.id')->group(function () {
+        
 });
 
 require __DIR__.'/auth.php';
