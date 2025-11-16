@@ -93,7 +93,6 @@
                         <div class="hidden md:block w-px h-14 bg-gray-700"></div>
                         <img src="{{ asset('images/Logo Kabinet Vistara Abhiyasa.png') }}" alt="Logo Kabinet"
                             class="h-12 md:h-14 w-auto">
-                        <div class="hidden lg:block w-px h-14 bg-gray-700"></div>
                         <div class="hidden lg:block">
                             <h1 class="text-white font-bold text-sm xl:text-base leading-tight">
                                 HIMPUNAN MAHASISWA INFORMATIKA
@@ -107,23 +106,23 @@
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#"
-                        class="text-gray-300 hover:text-secondary transition-colors duration-300 font-medium text-lg relative group">
+                    <a href="{{ route('main.home') }}"
+                        class="text-gray-300 hover:text-secondary transition-colors duration-300 font-medium text-lg relative group {{ request()->routeIs('main.home') ? 'text-secondary' : '' }}">
                         Beranda
                         <span
-                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+                            class="absolute -bottom-1 left-0 h-0.5 bg-secondary transition-all duration-300 {{ request()->routeIs('main.home') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
                     </a>
-                    <a href="#"
-                        class="text-gray-300 hover:text-secondary transition-colors duration-300 font-medium text-lg relative group">
+                    <a href=""
+                        class="text-gray-300 hover:text-secondary transition-colors duration-300 font-medium text-lg relative group {{ request()->routeIs('struktural') ? 'text-secondary' : '' }}">
                         Struktural
                         <span
-                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+                            class="absolute -bottom-1 left-0 h-0.5 bg-secondary transition-all duration-300 {{ request()->routeIs('struktural') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
                     </a>
-                    <a href="#"
-                        class="text-gray-300 hover:text-secondary transition-colors duration-300 font-medium text-lg relative group">
+                    <a href=""
+                        class="text-gray-300 hover:text-secondary transition-colors duration-300 font-medium text-lg relative group {{ request()->routeIs('komunitas') ? 'text-secondary' : '' }}">
                         Komunitas
                         <span
-                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+                            class="absolute -bottom-1 left-0 h-0.5 bg-secondary transition-all duration-300 {{ request()->routeIs('komunitas') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
                     </a>
                 </div>
 
@@ -143,16 +142,16 @@
             <!-- Mobile Menu -->
             <div id="mobile-menu" class="md:hidden mobile-menu overflow-hidden max-h-0">
                 <div class="py-4 space-y-3">
-                    <a href="#"
-                        class="block px-4 py-2 text-gray-300 hover:bg-primary hover:text-white rounded-lg transition-all duration-300">
+                    <a href="{{ route('main.home') }}"
+                        class="block px-4 py-2 text-gray-300 hover:bg-primary hover:text-white rounded-lg transition-all duration-300 {{ request()->routeIs('main.home') ? 'bg-primary text-white' : '' }}">
                         Beranda
                     </a>
-                    <a href="#"
-                        class="block px-4 py-2 text-gray-300 hover:bg-primary hover:text-white rounded-lg transition-all duration-300">
+                    <a href=""
+                        class="block px-4 py-2 text-gray-300 hover:bg-primary hover:text-white rounded-lg transition-all duration-300 {{ request()->routeIs('struktural') ? 'bg-primary text-white' : '' }}">
                         Struktural
                     </a>
-                    <a href="#"
-                        class="block px-4 py-2 text-gray-300 hover:bg-primary hover:text-white rounded-lg transition-all duration-300">
+                    <a href=""
+                        class="block px-4 py-2 text-gray-300 hover:bg-primary hover:text-white rounded-lg transition-all duration-300 {{ request()->routeIs('komunitas') ? 'bg-primary text-white' : '' }}">
                         Komunitas
                     </a>
                 </div>
@@ -182,9 +181,6 @@
                         Himpunan Mahasiswa Informatika<br />
                         Universitas Majalengka
                     </p>
-                    <p class="text-gray-500 text-sm">
-                        &copy; {{ date('Y') }} HMIF UNMA. All rights reserved.
-                    </p>
                 </div>
 
                 <!-- Quick Links -->
@@ -192,20 +188,18 @@
                     <h4 class="text-lg font-semibold text-white">Menu</h4>
                     <ul class="space-y-2">
                         <li>
-                            <a href="#"
+                            <a href="{{ route('main.home') }}"
                                 class="text-gray-400 hover:text-secondary transition-colors duration-300">
                                 Beranda
                             </a>
                         </li>
                         <li>
-                            <a href="#"
-                                class="text-gray-400 hover:text-secondary transition-colors duration-300">
+                            <a href="" class="text-gray-400 hover:text-secondary transition-colors duration-300">
                                 Struktural
                             </a>
                         </li>
                         <li>
-                            <a href="#"
-                                class="text-gray-400 hover:text-secondary transition-colors duration-300">
+                            <a href="" class="text-gray-400 hover:text-secondary transition-colors duration-300">
                                 Komunitas
                             </a>
                         </li>
@@ -217,19 +211,19 @@
                     <h4 class="text-lg font-semibold text-white">Ikuti Kami</h4>
                     <p class="text-gray-400 text-sm">Tetap terhubung dengan kami melalui media sosial</p>
                     <div class="flex space-x-4">
-                        <a href="https://facebook.com/hmif" target="_blank"
+                        <a href="https://facebook.com/hmif.unma" target="_blank"
                             class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-all duration-300 transform hover:scale-110">
                             <i class="fab fa-facebook-f text-white"></i>
                         </a>
-                        <a href="https://instagram.com/hmif" target="_blank"
+                        <a href="https://instagram.com/hmifunma" target="_blank"
                             class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 transition-all duration-300 transform hover:scale-110">
                             <i class="fab fa-instagram text-white"></i>
                         </a>
-                        <a href="https://tiktok.com/@hmif" target="_blank"
+                        <a href="https://tiktok.com/@hmifunma" target="_blank"
                             class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-black transition-all duration-300 transform hover:scale-110">
                             <i class="fab fa-tiktok text-white"></i>
                         </a>
-                        <a href="https://youtube.com/@hmif" target="_blank"
+                        <a href="https://youtube.com/@hmifunma" target="_blank"
                             class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-third transition-all duration-300 transform hover:scale-110">
                             <i class="fab fa-youtube text-white"></i>
                         </a>
@@ -241,19 +235,11 @@
             <div class="mt-8 pt-8 border-t border-gray-800">
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <p class="text-gray-500 text-sm text-center md:text-left">
-                        Dibuat dengan <span class="text-third">❤</span> oleh Tim IT HMIF
+                        Made With <span class="text-third">❤</span> By HMIF Dev
                     </p>
-                    <div class="flex items-center space-x-4 mt-4 md:mt-0">
-                        <a href="#"
-                            class="text-gray-500 hover:text-secondary text-sm transition-colors duration-300">
-                            Privacy Policy
-                        </a>
-                        <span class="text-gray-700">|</span>
-                        <a href="#"
-                            class="text-gray-500 hover:text-secondary text-sm transition-colors duration-300">
-                            Terms of Service
-                        </a>
-                    </div>
+                    <p class="text-gray-500 text-sm">
+                        &copy; {{ date('Y') }} HMIF UNMA. All rights reserved.
+                    </p>
                 </div>
             </div>
         </div>
