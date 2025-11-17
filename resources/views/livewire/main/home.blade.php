@@ -585,7 +585,7 @@
     </style>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        function initScrollReveal() {
             // Scroll Reveal Animation
             const observerOptions = {
                 threshold: 0.1,
@@ -603,6 +603,12 @@
             document.querySelectorAll('.scroll-reveal').forEach(el => {
                 observer.observe(el);
             });
-        });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initScrollReveal);
+        
+        // Re-initialize after Livewire navigation (for SPA)
+        document.addEventListener('livewire:navigated', initScrollReveal);
     </script>
 </div>
