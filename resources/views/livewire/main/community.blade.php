@@ -28,7 +28,7 @@
                 <!-- Info -->
                 <div class="flex-1 text-center lg:text-left">
                     <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-                        <span class="text-primary">KPM</span> - Komunitas Pemrograman Mahasiswa
+                        <span class="text-primary">Komunitas Pemrograman Mahasiswa</span>
                     </h2>
                     <p class="text-gray-400 text-lg mb-4">
                         Wadah bagi mahasiswa yang ingin mendalami dunia pemrograman dan pengembangan software. Dari web
@@ -165,7 +165,7 @@
                 <!-- Info -->
                 <div class="flex-1 text-center lg:text-left">
                     <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-                        <span class="text-secondary">Infordia</span> - Informatika Multimedia
+                        <span class="text-secondary">Informatika Multimedia</span>
                     </h2>
                     <p class="text-gray-400 text-lg mb-4">
                         Komunitas kreatif untuk mahasiswa yang passionate di bidang multimedia, desain grafis, animasi,

@@ -1,2 +1,6 @@
+# Public site - Allow indexing
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap
+Sitemap: https://hmifunma.web.id/sitemap.xml

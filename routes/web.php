@@ -55,6 +55,46 @@ Route::domain('hmifunma.web.id')->group(function () {
     Route::get('/', Home::class)->name('main.home');
     Route::get('/struktural', Structure::class)->name('main.structure');
     Route::get('/komunitas', Community::class)->name('main.community');
+    
+    // Sitemap for SEO
+    Route::get('/sitemap.xml', function () {
+        $urls = [
+            [
+                'loc' => 'https://hmifunma.web.id/',
+                'lastmod' => now()->toAtomString(),
+                'changefreq' => 'weekly',
+                'priority' => '1.0'
+            ],
+            [
+                'loc' => 'https://hmifunma.web.id/struktural',
+                'lastmod' => now()->toAtomString(),
+                'changefreq' => 'monthly',
+                'priority' => '0.8'
+            ],
+            [
+                'loc' => 'https://hmifunma.web.id/komunitas',
+                'lastmod' => now()->toAtomString(),
+                'changefreq' => 'monthly',
+                'priority' => '0.8'
+            ],
+        ];
+
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>';
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+        
+        foreach ($urls as $url) {
+            $xml .= '<url>';
+            $xml .= '<loc>' . $url['loc'] . '</loc>';
+            $xml .= '<lastmod>' . $url['lastmod'] . '</lastmod>';
+            $xml .= '<changefreq>' . $url['changefreq'] . '</changefreq>';
+            $xml .= '<priority>' . $url['priority'] . '</priority>';
+            $xml .= '</url>';
+        }
+        
+        $xml .= '</urlset>';
+
+        return response($xml, 200)->header('Content-Type', 'application/xml');
+    })->name('sitemap');
 });
 
 require __DIR__.'/auth.php';

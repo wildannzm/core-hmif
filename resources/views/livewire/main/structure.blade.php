@@ -6,7 +6,7 @@
                 Struktur <span class="text-secondary">Organisasi</span>
             </h1>
             <p class="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto">
-                Kepengurusan Himpunan Mahasiswa Informatika
+                Himpunan Mahasiswa Informatika
             </p>
             <p class="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto">
                 Kabinet Vistara Abhiyasa
