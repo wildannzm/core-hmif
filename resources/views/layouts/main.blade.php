@@ -77,6 +77,21 @@
         .mobile-menu {
             transition: max-height 0.3s ease-in-out;
         }
+
+        /* SPA Page Transition */
+        [x-cloak] {
+            display: none !important;
+        }
+
+        /* Loading indicator untuk SPA navigation */
+        .livewire-progress-bar {
+            height: 3px;
+            background-color: var(--color-secondary);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+        }
     </style>
 </head>
 
@@ -106,19 +121,19 @@
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="{{ route('main.home') }}"
+                    <a href="{{ route('main.home') }}" wire:navigate
                         class="text-gray-300 hover:text-secondary transition-colors duration-300 font-medium text-lg relative group {{ request()->routeIs('main.home') ? 'text-secondary' : '' }}">
                         Beranda
                         <span
                             class="absolute -bottom-1 left-0 h-0.5 bg-secondary transition-all duration-300 {{ request()->routeIs('main.home') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
                     </a>
-                    <a href="{{ route('main.structure') }}"
+                    <a href="{{ route('main.structure') }}" wire:navigate
                         class="text-gray-300 hover:text-secondary transition-colors duration-300 font-medium text-lg relative group {{ request()->routeIs('main.structure') ? 'text-secondary' : '' }}">
                         Struktural
                         <span
                             class="absolute -bottom-1 left-0 h-0.5 bg-secondary transition-all duration-300 {{ request()->routeIs('main.structure') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
                     </a>
-                    <a href="{{ route('main.community') }}"
+                    <a href="{{ route('main.community') }}" wire:navigate
                         class="text-gray-300 hover:text-secondary transition-colors duration-300 font-medium text-lg relative group {{ request()->routeIs('main.community') ? 'text-secondary' : '' }}">
                         Komunitas
                         <span
@@ -142,15 +157,15 @@
             <!-- Mobile Menu -->
             <div id="mobile-menu" class="md:hidden mobile-menu overflow-hidden max-h-0">
                 <div class="py-4 space-y-3">
-                    <a href="{{ route('main.home') }}"
+                    <a href="{{ route('main.home') }}" wire:navigate
                         class="block px-4 py-2 text-gray-300 hover:bg-primary hover:text-white rounded-lg transition-all duration-300 {{ request()->routeIs('main.home') ? 'bg-primary text-white' : '' }}">
                         Beranda
                     </a>
-                    <a href="{{ route('main.structure') }}"
+                    <a href="{{ route('main.structure') }}" wire:navigate
                         class="block px-4 py-2 text-gray-300 hover:bg-primary hover:text-white rounded-lg transition-all duration-300 {{ request()->routeIs('main.structure') ? 'bg-primary text-white' : '' }}">
                         Struktural
                     </a>
-                    <a href="{{ route('main.community') }}"
+                    <a href="{{ route('main.community') }}" wire:navigate
                         class="block px-4 py-2 text-gray-300 hover:bg-primary hover:text-white rounded-lg transition-all duration-300 {{ request()->routeIs('main.community') ? 'bg-primary text-white' : '' }}">
                         Komunitas
                     </a>
@@ -188,19 +203,19 @@
                     <h4 class="text-lg font-semibold text-white">Menu</h4>
                     <ul class="space-y-2">
                         <li>
-                            <a href="{{ route('main.home') }}"
+                            <a href="{{ route('main.home') }}" wire:navigate
                                 class="text-gray-400 hover:text-secondary transition-colors duration-300">
                                 Beranda
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('main.structure') }}"
+                            <a href="{{ route('main.structure') }}" wire:navigate
                                 class="text-gray-400 hover:text-secondary transition-colors duration-300">
                                 Struktural
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('main.community') }}"
+                            <a href="{{ route('main.community') }}" wire:navigate
                                 class="text-gray-400 hover:text-secondary transition-colors duration-300">
                                 Komunitas
                             </a>
