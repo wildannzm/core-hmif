@@ -607,7 +607,7 @@
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', initScrollReveal);
-        
+
         // Re-initialize after Livewire navigation (for SPA)
         document.addEventListener('livewire:navigated', initScrollReveal);
     </script>
