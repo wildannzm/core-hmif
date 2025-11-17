@@ -237,30 +237,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-                <!-- Infordia -->
-                <div class="scroll-reveal animation-delay-200">
-                    <div
-                        class="group bg-gray-800 rounded-2xl p-8 border border-gray-700 hover:border-primary transition-all duration-500 transform hover:-translate-y-3 hover:shadow-2xl hover:shadow-primary/30">
-                        <div
-                            class="relative mb-6 overflow-hidden rounded-xl bg-white aspect-square flex items-center justify-center p-8 shadow-lg">
-                            <img src="{{ asset('images/community/infordia.png') }}" alt="Infordia"
-                                class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110">
-                        </div>
-                        <h3
-                            class="text-xl md:text-2xl font-bold text-white mb-3 text-center group-hover:text-primary transition-colors duration-300">
-                            INFORDIA
-                        </h3>
-                        <p class="text-gray-400 text-center text-sm md:text-base">
-                            Komunitas Multimedia
-                        </p>
-                        <div class="mt-6 flex justify-center">
-                            <div
-                                class="w-12 h-1 bg-primary rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- KPM -->
                 <div class="scroll-reveal animation-delay-400">
                     <div
@@ -280,6 +256,30 @@
                         <div class="mt-6 flex justify-center">
                             <div
                                 class="w-12 h-1 bg-secondary rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Infordia -->
+                <div class="scroll-reveal animation-delay-200">
+                    <div
+                        class="group bg-gray-800 rounded-2xl p-8 border border-gray-700 hover:border-primary transition-all duration-500 transform hover:-translate-y-3 hover:shadow-2xl hover:shadow-primary/30">
+                        <div
+                            class="relative mb-6 overflow-hidden rounded-xl bg-white aspect-square flex items-center justify-center p-8 shadow-lg">
+                            <img src="{{ asset('images/community/infordia.png') }}" alt="Infordia"
+                                class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110">
+                        </div>
+                        <h3
+                            class="text-xl md:text-2xl font-bold text-white mb-3 text-center group-hover:text-primary transition-colors duration-300">
+                            INFORDIA
+                        </h3>
+                        <p class="text-gray-400 text-center text-sm md:text-base">
+                            Komunitas Multimedia
+                        </p>
+                        <div class="mt-6 flex justify-center">
+                            <div
+                                class="w-12 h-1 bg-primary rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500">
                             </div>
                         </div>
                     </div>

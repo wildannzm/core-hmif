@@ -3,7 +3,7 @@
     <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-16 md:py-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
-                Struktur <span class="text-primary">Organisasi</span>
+                Struktur <span class="text-secondary">Organisasi</span>
             </h1>
             <p class="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto">
                 Kepengurusan Himpunan Mahasiswa Informatika
