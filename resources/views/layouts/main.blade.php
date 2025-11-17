@@ -105,7 +105,7 @@
                 <div class="flex items-center space-x-4 w-full md:w-auto justify-center md:justify-start">
                     <div class="flex items-center space-x-4">
                         <img src="{{ asset('images/Logo HMIF.png') }}" alt="Logo HMIF" class="h-12 md:h-14 w-auto">
-                        <div class="hidden md:block w-px h-14 bg-gray-700"></div>
+                        <div class="w-px h-14 bg-gray-700"></div>
                         <img src="{{ asset('images/Logo Kabinet Vistara Abhiyasa.png') }}" alt="Logo Kabinet"
                             class="h-12 md:h-14 w-auto">
                         <div class="hidden lg:block">
@@ -266,36 +266,76 @@
 
     <!-- Mobile Menu Toggle Script -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        function initMobileMenu() {
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
             const menuIcon = document.getElementById('menu-icon');
             const closeIcon = document.getElementById('close-icon');
 
-            mobileMenuButton.addEventListener('click', function() {
-                if (mobileMenu.style.maxHeight === '0px' || mobileMenu.style.maxHeight === '') {
-                    mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
-                    menuIcon.classList.add('hidden');
-                    closeIcon.classList.remove('hidden');
+            if (!mobileMenuButton || !mobileMenu) return;
+
+            // Remove existing listeners by cloning the button
+            const newButton = mobileMenuButton.cloneNode(true);
+            mobileMenuButton.parentNode.replaceChild(newButton, mobileMenuButton);
+
+            // Get updated references
+            const button = document.getElementById('mobile-menu-button');
+
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const menu = document.getElementById('mobile-menu');
+                const mIcon = document.getElementById('menu-icon');
+                const cIcon = document.getElementById('close-icon');
+
+                if (menu.style.maxHeight === '0px' || menu.style.maxHeight === '') {
+                    menu.style.maxHeight = menu.scrollHeight + 'px';
+                    mIcon.classList.add('hidden');
+                    cIcon.classList.remove('hidden');
                 } else {
-                    mobileMenu.style.maxHeight = '0px';
-                    menuIcon.classList.remove('hidden');
-                    closeIcon.classList.add('hidden');
+                    menu.style.maxHeight = '0px';
+                    mIcon.classList.remove('hidden');
+                    cIcon.classList.add('hidden');
                 }
             });
 
             // Close mobile menu when clicking outside
             document.addEventListener('click', function(event) {
-                const isClickInside = mobileMenuButton.contains(event.target) || mobileMenu.contains(event
-                    .target);
+                const menu = document.getElementById('mobile-menu');
+                const btn = document.getElementById('mobile-menu-button');
+                const mIcon = document.getElementById('menu-icon');
+                const cIcon = document.getElementById('close-icon');
 
-                if (!isClickInside && mobileMenu.style.maxHeight !== '0px') {
-                    mobileMenu.style.maxHeight = '0px';
-                    menuIcon.classList.remove('hidden');
-                    closeIcon.classList.add('hidden');
+                if (!menu || !btn) return;
+
+                const isClickInside = btn.contains(event.target) || menu.contains(event.target);
+
+                if (!isClickInside && menu.style.maxHeight !== '0px') {
+                    menu.style.maxHeight = '0px';
+                    mIcon.classList.remove('hidden');
+                    cIcon.classList.add('hidden');
                 }
             });
-        });
+
+            // Close menu after navigation
+            const navLinks = document.querySelectorAll('#mobile-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    const menu = document.getElementById('mobile-menu');
+                    const mIcon = document.getElementById('menu-icon');
+                    const cIcon = document.getElementById('close-icon');
+
+                    menu.style.maxHeight = '0px';
+                    mIcon.classList.remove('hidden');
+                    cIcon.classList.add('hidden');
+                });
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initMobileMenu);
+
+        // Re-initialize after Livewire navigation (for SPA)
+        document.addEventListener('livewire:navigated', initMobileMenu);
     </script>
 </body>
 
