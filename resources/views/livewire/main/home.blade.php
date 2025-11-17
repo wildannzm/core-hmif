@@ -228,7 +228,7 @@
             <!-- Section Header -->
             <div class="text-center mb-16 scroll-reveal">
                 <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
-                    Komunitas <span class="text-secondary">Jurusan</span>
+                    Komunitas <span class="text-secondary">Program Studi</span>
                 </h2>
                 <div class="w-24 h-1 bg-secondary mx-auto mb-6"></div>
                 <p class="text-gray-400 max-w-2xl mx-auto">

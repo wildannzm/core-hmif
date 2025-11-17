@@ -112,17 +112,17 @@
                         <span
                             class="absolute -bottom-1 left-0 h-0.5 bg-secondary transition-all duration-300 {{ request()->routeIs('main.home') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
                     </a>
-                    <a href=""
-                        class="text-gray-300 hover:text-secondary transition-colors duration-300 font-medium text-lg relative group {{ request()->routeIs('struktural') ? 'text-secondary' : '' }}">
+                    <a href="{{ route('main.structure') }}"
+                        class="text-gray-300 hover:text-secondary transition-colors duration-300 font-medium text-lg relative group {{ request()->routeIs('main.structure') ? 'text-secondary' : '' }}">
                         Struktural
                         <span
-                            class="absolute -bottom-1 left-0 h-0.5 bg-secondary transition-all duration-300 {{ request()->routeIs('struktural') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
+                            class="absolute -bottom-1 left-0 h-0.5 bg-secondary transition-all duration-300 {{ request()->routeIs('main.structure') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
                     </a>
-                    <a href=""
-                        class="text-gray-300 hover:text-secondary transition-colors duration-300 font-medium text-lg relative group {{ request()->routeIs('komunitas') ? 'text-secondary' : '' }}">
+                    <a href="{{ route('main.community') }}"
+                        class="text-gray-300 hover:text-secondary transition-colors duration-300 font-medium text-lg relative group {{ request()->routeIs('main.community') ? 'text-secondary' : '' }}">
                         Komunitas
                         <span
-                            class="absolute -bottom-1 left-0 h-0.5 bg-secondary transition-all duration-300 {{ request()->routeIs('komunitas') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
+                            class="absolute -bottom-1 left-0 h-0.5 bg-secondary transition-all duration-300 {{ request()->routeIs('main.community') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
                     </a>
                 </div>
 
@@ -146,12 +146,12 @@
                         class="block px-4 py-2 text-gray-300 hover:bg-primary hover:text-white rounded-lg transition-all duration-300 {{ request()->routeIs('main.home') ? 'bg-primary text-white' : '' }}">
                         Beranda
                     </a>
-                    <a href=""
-                        class="block px-4 py-2 text-gray-300 hover:bg-primary hover:text-white rounded-lg transition-all duration-300 {{ request()->routeIs('struktural') ? 'bg-primary text-white' : '' }}">
+                    <a href="{{ route('main.structure') }}"
+                        class="block px-4 py-2 text-gray-300 hover:bg-primary hover:text-white rounded-lg transition-all duration-300 {{ request()->routeIs('main.structure') ? 'bg-primary text-white' : '' }}">
                         Struktural
                     </a>
-                    <a href=""
-                        class="block px-4 py-2 text-gray-300 hover:bg-primary hover:text-white rounded-lg transition-all duration-300 {{ request()->routeIs('komunitas') ? 'bg-primary text-white' : '' }}">
+                    <a href="{{ route('main.community') }}"
+                        class="block px-4 py-2 text-gray-300 hover:bg-primary hover:text-white rounded-lg transition-all duration-300 {{ request()->routeIs('main.community') ? 'bg-primary text-white' : '' }}">
                         Komunitas
                     </a>
                 </div>
@@ -194,12 +194,14 @@
                             </a>
                         </li>
                         <li>
-                            <a href="" class="text-gray-400 hover:text-secondary transition-colors duration-300">
+                            <a href="{{ route('main.structure') }}"
+                                class="text-gray-400 hover:text-secondary transition-colors duration-300">
                                 Struktural
                             </a>
                         </li>
                         <li>
-                            <a href="" class="text-gray-400 hover:text-secondary transition-colors duration-300">
+                            <a href="{{ route('main.community') }}"
+                                class="text-gray-400 hover:text-secondary transition-colors duration-300">
                                 Komunitas
                             </a>
                         </li>
