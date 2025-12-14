@@ -21,7 +21,7 @@ class Letter extends Component
     public $search = '';
     public $perPage = 10;
     public $sortField = 'received_date';
-    public $sortDirection = 'desc';
+    public $sortDirection = 'asc';
     public $filterPriority = '';
     public $filterStatus = '';
     
@@ -348,7 +348,7 @@ class Letter extends Component
         $this->filterPriority = '';
         $this->filterStatus = '';
         $this->sortField = 'received_date';
-        $this->sortDirection = 'desc';
+        $this->sortDirection = 'asc';
     }
     
 
@@ -387,7 +387,9 @@ class Letter extends Component
             }
             
             // Apply sorting
-            $sortField = $this->sortField === 'received_date' ? 'letter_date' : $this->sortField;
+            $sortField =($this->sortField === 'received_date' || $this->sortField === 'letter_date') 
+                         ? 'letter_date' 
+                         : $this->sortField;
             $query->orderBy($sortField, $this->sortDirection);
             
             $letters = $query->paginate($this->perPage);
