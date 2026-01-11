@@ -17,7 +17,7 @@ use App\Livewire\Attendance\ScheduleAttendance;
 use App\Livewire\Main\Community;
 use App\Livewire\Main\Structure;
 
-Route::domain('internal.hmifunma.web.id')->group(function () {
+// Route::domain('internal.hmifunma.web.id')->group(function () {
     Route::get('/', function () {
         return redirect()->route('login');
     })->name('home');
@@ -48,7 +48,11 @@ Route::domain('internal.hmifunma.web.id')->group(function () {
         Route::get('pengaturan/password', Password::class)->name('settings.password');
         Route::get('pengaturan/appearance', Appearance::class)->name('settings.appearance');
     });
-});
+// });
+
+// Route::domain('tix.hmifunma.web.id')->group(function () {
+    
+// });
 
 
 Route::domain('hmifunma.web.id')->group(function () {
