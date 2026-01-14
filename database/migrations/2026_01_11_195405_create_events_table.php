@@ -18,8 +18,14 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('banner')->nullable(); // Path gambar banner
             $table->string('location');
-            $table->dateTime('start_date');
-            $table->dateTime('end_date')->nullable();
+            
+            // Waktu Pemesanan Tiket
+            $table->dateTime('start_date'); // Waktu mulai pemesanan
+            $table->dateTime('end_date')->nullable(); // Waktu tutup pemesanan
+            
+            // Waktu Event Berlangsung
+            $table->dateTime('event_start_date'); // Waktu mulai event
+            $table->dateTime('event_end_date')->nullable(); // Waktu selesai event
 
             $table->decimal('price', 12, 2)->default(0);
             $table->integer('quota')->default(0); // Kuota Total

@@ -83,7 +83,8 @@
                     kegiatan: JSON.parse(localStorage.getItem('sidebar_kegiatan') || 'false'),
                     sekretaris: JSON.parse(localStorage.getItem('sidebar_sekretaris') || 'false'),
                     bendahara: JSON.parse(localStorage.getItem('sidebar_bendahara') || 'false'),
-                    kominfo: JSON.parse(localStorage.getItem('sidebar_kominfo') || 'false')
+                    kominfo: JSON.parse(localStorage.getItem('sidebar_kominfo') || 'false'),
+                    eventTicket: JSON.parse(localStorage.getItem('sidebar_eventTicket') || 'false')
                 },
                 toggleMenu(menu) {
                     this.openMenus[menu] = !this.openMenus[menu];
@@ -325,6 +326,50 @@
                         </div>
                     </div>
                 @endif
+
+                <!-- Event Ticket Dropdown -->
+                <div class="space-y-1">
+                    <button @click="toggleMenu('eventTicket')"
+                        class="group flex w-full items-center px-3 py-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-red-50 hover:text-blue-700 transition-all duration-200">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z">
+                            </path>
+                        </svg>
+                        <span class="ml-3 flex-1 text-left">Event Ticket</span>
+                        <svg class="w-4 h-4 transition-transform duration-200"
+                            :class="{ 'rotate-180': openMenus.eventTicket }" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <div x-show="openMenus.eventTicket" x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 transform -translate-y-2"
+                        x-transition:enter-end="opacity-100 transform translate-y-0" class="ml-8 space-y-1">
+                        <a href="{{ route('admin.events.index') }}" wire:navigate
+                            class="group flex items-center px-3 py-2 text-sm rounded-lg transition-colors {{ request()->routeIs('admin.events.index') ? 'bg-gradient-to-r from-blue-500 to-red-500 text-white shadow-md' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('admin.events.index') ? 'text-white' : 'text-red-500' }}"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                            <span class="ml-2">Kelola Event</span>
+                        </a>
+                        <a href="{{ route('admin.payment-methods') }}" wire:navigate
+                            class="group flex items-center px-3 py-2 text-sm rounded-lg transition-colors {{ request()->routeIs('admin.payment-methods') ? 'bg-gradient-to-r from-blue-500 to-red-500 text-white shadow-md' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('admin.payment-methods') ? 'text-white' : 'text-red-500' }}"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
+                                </path>
+                            </svg>
+                            <span class="ml-2">Metode Pembayaran</span>
+                        </a>
+                    </div>
+                </div>
             </nav>
 
             <!-- User Profile Section - Fixed at Bottom -->
