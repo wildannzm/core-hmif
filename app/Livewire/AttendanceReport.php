@@ -10,7 +10,7 @@ use Livewire\Attributes\Title;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Livewire\Attributes\Layout;
 
-#[Title('Laporan Absensi')]
+#[Title('HMIF UNMA | Laporan Absensi')]
 #[Layout('components.layouts.app')]
 class AttendanceReport extends Component
 {

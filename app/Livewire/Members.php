@@ -10,7 +10,7 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
 
-#[Title('Daftar Anggota')]
+#[Title('HMIF UNMA | Daftar Anggota')]
 #[Layout('components.layouts.app')]
 class Members extends Component
 {

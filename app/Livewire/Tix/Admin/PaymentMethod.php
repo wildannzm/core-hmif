@@ -8,7 +8,7 @@ use Livewire\WithPagination;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 
-#[Title('Metode Pembayaran')]
+#[Title('HMIF UNMA | Metode Pembayaran')]
 #[Layout('components.layouts.app')]
 class PaymentMethod extends Component
 {

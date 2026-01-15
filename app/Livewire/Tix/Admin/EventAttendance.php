@@ -12,7 +12,7 @@ use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-#[Title('Kehadiran Event')]
+#[Title('HMIF UNMA | Kehadiran Event')]
 #[Layout('components.layouts.app')]
 class EventAttendance extends Component
 {

@@ -10,7 +10,7 @@ use App\Models\Attendance;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 
-#[Title('Jadwal Kegiatan')]
+#[Title('HMIF UNMA | Jadwal Kegiatan')]
 #[Layout('components.layouts.app')]
 class Schedules extends Component
 {

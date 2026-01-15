@@ -2,17 +2,19 @@
 
 namespace App\Livewire\Auth;
 
-use Illuminate\Auth\Events\Lockout;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\Session;
+use Livewire\Component;
 use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Livewire\Component;
+use Illuminate\Auth\Events\Lockout;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Validation\ValidationException;
 
 #[Layout('components.layouts.auth')]
+#[Title('HMIF UNMA | Login')]
 class Login extends Component
 {
     #[Validate('required|string|email')]

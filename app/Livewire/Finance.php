@@ -10,7 +10,7 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-#[Title('Keuangan')]
+#[Title('HMIF UNMA | Keuangan')]
 #[Layout('components.layouts.app')]
 class Finance extends Component
 {

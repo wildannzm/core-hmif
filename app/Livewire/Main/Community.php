@@ -6,7 +6,7 @@ use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 
-#[Title('Komunitas')]
+#[Title('HMIF UNMA | Komunitas')]
 #[Layout('layouts.main')]
 
 class Community extends Component

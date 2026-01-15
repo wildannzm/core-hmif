@@ -11,7 +11,7 @@ use Livewire\Attributes\Layout;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 #[Layout('components.layouts.app')]
-#[Title('Surat Masuk & Keluar')]
+#[Title('HMIF UNMA | Surat Masuk & Keluar')]
 class Letter extends Component
 {
     use WithPagination;

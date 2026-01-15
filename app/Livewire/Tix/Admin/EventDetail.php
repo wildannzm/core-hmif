@@ -9,7 +9,7 @@ use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 
-#[Title('Detail Event')]
+#[Title('HMIF UNMA | Detail Event')]
 #[Layout('components.layouts.app')]
 class EventDetail extends Component
 {

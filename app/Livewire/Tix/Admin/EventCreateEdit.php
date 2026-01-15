@@ -11,7 +11,7 @@ use App\Models\Event as EventModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
-#[Title('Form Event')]
+#[Title('HMIF UNMA | Form Event')]
 #[Layout('components.layouts.app')]
 class EventCreateEdit extends Component
 {
