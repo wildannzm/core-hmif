@@ -10,7 +10,7 @@ use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
-#[Title('HMIF UNMA | Kelola Event')]
+#[Title('Kelola Event')]
 #[Layout('components.layouts.app')]
 class Event extends Component
 {

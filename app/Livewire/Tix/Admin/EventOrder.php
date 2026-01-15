@@ -13,7 +13,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\EventOrder as EventOrderModel;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-#[Title('HMIF UNMA | Pemesanan Event')]
+#[Title('Pemesanan Event')]
 #[Layout('components.layouts.app')]
 class EventOrder extends Component
 {
