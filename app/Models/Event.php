@@ -31,6 +31,9 @@ class Event extends Model
         'event_start_date' => 'datetime',
         'event_end_date' => 'datetime',
         'is_active' => 'boolean',
+        'price' => 'integer',
+        'quota' => 'integer',
+        'available_quota' => 'integer',
     ];
 
     public function orders()

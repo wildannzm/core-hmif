@@ -5,12 +5,13 @@ namespace App\Livewire\Tix\Admin;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Title;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\EventOrder as EventOrderModel;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Barryvdh\DomPDF\Facade\Pdf;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 #[Title('Pemesanan Event')]
 #[Layout('components.layouts.app')]
@@ -18,10 +19,25 @@ class EventOrder extends Component
 {
     use WithPagination, AuthorizesRequests;
 
+    public $eventId;
     public $search = '';
     public $statusFilter = 'all';
     public $selectedOrder;
     public $processing = false;
+
+    public function mount($eventId)
+    {
+        // Validate event exists
+        $event = \App\Models\Event::findOrFail($eventId);
+        $this->eventId = $eventId;
+        
+        // Authorization: Only Ketua, Wakil Ketua, and Bendahara can access
+        $user = Auth::user();
+        if (!$user->hasRole('bph') && 
+            (!$user->position || !in_array($user->position->name, ['Ketua', 'Wakil Ketua', 'Bendahara']))) {
+            abort(403, 'Unauthorized access to event orders.');
+        }
+    }
 
     public function updatingSearch()
     {
@@ -59,10 +75,12 @@ class EventOrder extends Component
         $this->processing = true;
 
         try {
-            // Authorization check - only admin can verify
-            // if (!auth()->user()->hasRole('admin')) {
-            //     throw new \Exception('Unauthorized action.');
-            // }
+            // Authorization check - only authorized positions can verify
+            $user = Auth::user();
+            if (!$user->hasRole('bph') && 
+                (!$user->position || !in_array($user->position->name, ['Ketua', 'Wakil Ketua', 'Bendahara']))) {
+                throw new \Exception('Unauthorized action.');
+            }
 
             DB::beginTransaction();
 
@@ -123,10 +141,12 @@ class EventOrder extends Component
         $this->processing = true;
 
         try {
-            // Authorization check - only admin can reject
-            // if (!auth()->user()->hasRole('admin')) {
-            //     throw new \Exception('Unauthorized action.');
-            // }
+            // Authorization check - only authorized positions can reject
+            $user = Auth::user();
+            if (!$user->hasRole('bph') && 
+                (!$user->position || !in_array($user->position->name, ['Ketua', 'Wakil Ketua', 'Bendahara']))) {
+                throw new \Exception('Unauthorized action.');
+            }
 
             DB::beginTransaction();
 
@@ -176,6 +196,18 @@ class EventOrder extends Component
     public function downloadTickets($orderId)
     {
         try {
+            // Authorization check
+            $user = Auth::user();
+            if (!$user->hasRole('bph') && 
+                (!$user->position || !in_array($user->position->name, ['Ketua', 'Wakil Ketua', 'Bendahara']))) {
+                $this->dispatch('alert', [
+                    'type' => 'error',
+                    'title' => 'Unauthorized',
+                    'text' => 'You are not authorized to download tickets.'
+                ]);
+                return;
+            }
+            
             $order = EventOrderModel::with(['event', 'attendees'])->findOrFail($orderId);
             
             if ($order->status !== 'verified') {
@@ -204,7 +236,7 @@ class EventOrder extends Component
             
             return response()->streamDownload(function() use ($pdf) {
                 echo $pdf->output();
-            }, 'tickets_' . $order->invoice_code . '.pdf', [
+            }, 'e-tickets - ' . $order->invoice_code . '.pdf', [
                 'Content-Type' => 'application/pdf',
             ]);
 
@@ -234,20 +266,11 @@ class EventOrder extends Component
         foreach ($order->attendees as $index => $attendee) {
             $ticketCode = $attendee->ticket_code ?? strtoupper(substr(md5($attendee->id . $order->id), 0, 10));
             
-            // Generate QR code data
-            $qrData = json_encode([
-                'order_id' => $order->id,
-                'attendee_id' => $attendee->id,
-                'ticket_code' => $ticketCode,
-                'event_id' => $order->event_id,
-                'verified_at' => now()->toIso8601String(),
-            ]);
-
-            // Generate QR code as SVG (no external dependencies needed)
+            // Generate QR code with ticket code as primary data
             $qrCodeSvg = QrCode::size(200)
                 ->margin(1)
                 ->errorCorrection('H')
-                ->generate($qrData);
+                ->generate($ticketCode);
 
             // Convert SVG to base64 data URI
             $qrCodeBase64 = 'data:image/svg+xml;base64,' . base64_encode($qrCodeSvg);

@@ -116,9 +116,31 @@ class CheckoutEvent extends Component
 
     public function submit(): void
     {
+        // Rate limiting: Prevent spam submissions (max 3 per minute per user IP)
+        $key = 'checkout_attempt_' . request()->ip();
+        $attempts = cache()->get($key, 0);
+        
+        if ($attempts >= 3) {
+            $this->dispatch('swal:error', 
+                message: 'Terlalu banyak percobaan. Silakan tunggu beberapa saat.'
+            );
+            return;
+        }
+        
+        cache()->put($key, $attempts + 1, now()->addMinutes(1));
+        
         $this->validate();
 
         try {
+            // Sanitize inputs to prevent XSS
+            $this->buyerName = strip_tags($this->buyerName);
+            $this->buyerEmail = filter_var($this->buyerEmail, FILTER_SANITIZE_EMAIL);
+            $this->buyerPhone = preg_replace('/[^0-9]/', '', $this->buyerPhone);
+            
+            foreach ($this->attendees as $key => $name) {
+                $this->attendees[$key] = strip_tags(trim($name));
+            }
+            
             // Refresh event to get latest data
             $this->event->refresh();
             
@@ -187,8 +209,7 @@ class CheckoutEvent extends Component
             // Show success notification
             $this->dispatch('swal:success', 
                 title: 'Pesanan Sedang Diproses!',
-                message: 'Pesanan Anda sedang diproses. Anda akan menerima konfirmasi melalui email setelah pembayaran diverifikasi oleh admin.',
-                invoiceCode: $invoiceCode
+                message: 'Pesanan Anda sedang diproses. Anda akan menerima konfirmasi setelah pembayaran diverifikasi oleh admin.',
             );
 
         } catch (\Exception $e) {

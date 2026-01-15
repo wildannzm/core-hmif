@@ -37,13 +37,15 @@
                     placeholder="Cari berdasarkan judul atau lokasi event...">
             </div>
             <!-- Add Button -->
-            <a href="{{ route('admin.events.create') }}" wire:navigate
-                class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 text-white px-4 sm:px-6 py-2.5 rounded-lg transition-all duration-200 font-medium flex items-center justify-center gap-2 shadow-lg text-sm sm:text-base whitespace-nowrap">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Buat Event Baru
-            </a>
+            @if (auth()->user()->hasRole('bph') || (auth()->user()->position && auth()->user()->position->name === 'Koordinator'))
+                <a href="{{ route('admin.events.create') }}" wire:navigate
+                    class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 text-white px-4 sm:px-6 py-2.5 rounded-lg transition-all duration-200 font-medium flex items-center justify-center gap-2 shadow-lg text-sm sm:text-base whitespace-nowrap">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Buat Event Baru
+                </a>
+            @endif
         </div>
     </div>
 
@@ -180,26 +182,30 @@
                                                 </path>
                                             </svg>
                                         </a>
-                                        <a href="{{ route('admin.events.edit', $event->id) }}" wire:navigate
-                                            class="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg transition-colors"
-                                            title="Edit">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                </path>
-                                            </svg>
-                                        </a>
-                                        <button wire:click="confirmDelete({{ $event->id }})"
-                                            class="inline-flex items-center px-3 py-1.5 bg-red-50 text-red-700 hover:bg-red-100 rounded-lg transition-colors"
-                                            title="Hapus">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                </path>
-                                            </svg>
-                                        </button>
+                                        @if (auth()->user()->hasRole('bph') || (auth()->user()->position && auth()->user()->position->name === 'Koordinator'))
+                                            <a href="{{ route('admin.events.edit', $event->id) }}" wire:navigate
+                                                class="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg transition-colors"
+                                                title="Edit">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg>
+                                            </a>
+                                            <button wire:click="confirmDelete({{ $event->id }})"
+                                                class="inline-flex items-center px-3 py-1.5 bg-red-50 text-red-700 hover:bg-red-100 rounded-lg transition-colors"
+                                                title="Hapus">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -313,24 +319,28 @@
                                 </svg>
                                 Detail
                             </a>
-                            <a href="{{ route('admin.events.edit', $event->id) }}" wire:navigate
-                                class="flex-1 inline-flex items-center justify-center px-3 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg transition-colors text-xs font-medium">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                    </path>
-                                </svg>
-                                Edit
-                            </a>
-                            <button wire:click="confirmDelete({{ $event->id }})"
-                                class="flex-1 inline-flex items-center justify-center px-3 py-2 bg-red-50 text-red-700 hover:bg-red-100 rounded-lg transition-colors text-xs font-medium">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                    </path>
-                                </svg>
-                                Hapus
-                            </button>
+                            @if (auth()->user()->hasRole('bph') || (auth()->user()->position && auth()->user()->position->name === 'Koordinator'))
+                                <a href="{{ route('admin.events.edit', $event->id) }}" wire:navigate
+                                    class="flex-1 inline-flex items-center justify-center px-3 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg transition-colors text-xs font-medium">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                        </path>
+                                    </svg>
+                                    Edit
+                                </a>
+                                <button wire:click="confirmDelete({{ $event->id }})"
+                                    class="flex-1 inline-flex items-center justify-center px-3 py-2 bg-red-50 text-red-700 hover:bg-red-100 rounded-lg transition-colors text-xs font-medium">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                        </path>
+                                    </svg>
+                                    Hapus
+                                </button>
+                            @endif
                         </div>
                     </div>
                 @endforeach
@@ -351,16 +361,19 @@
                 </svg>
                 <h3 class="mt-2 text-sm font-medium text-gray-900">Belum ada event</h3>
                 <p class="mt-1 text-sm text-gray-500">Mulai dengan membuat event baru untuk HMIF TIX.</p>
-                <div class="mt-6">
-                    <a href="{{ route('admin.events.create') }}" wire:navigate
-                        class="inline-flex items-center px-4 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 text-white font-medium rounded-lg transition-all duration-200 shadow-lg">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
-                            </path>
-                        </svg>
-                        Buat Event Baru
-                    </a>
-                </div>
+                @if (auth()->user()->hasRole('bph') || (auth()->user()->position && auth()->user()->position->name === 'Koordinator'))
+                    <div class="mt-6">
+                        <a href="{{ route('admin.events.create') }}" wire:navigate
+                            class="inline-flex items-center px-4 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-r from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 text-white font-medium rounded-lg transition-all duration-200 shadow-lg">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4">
+                                </path>
+                            </svg>
+                            Buat Event Baru
+                        </a>
+                    </div>
+                @endif
             </div>
         @endif
     </div>

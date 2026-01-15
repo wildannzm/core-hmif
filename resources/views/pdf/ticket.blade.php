@@ -38,7 +38,7 @@
         /* Event Banner Image */
         .event-banner-image {
             width: calc(100% - 40px);
-            height: 180px;
+            height: 214px;
             object-fit: cover;
             display: block;
             background-color: #f3f4f6;
@@ -74,6 +74,7 @@
         }
 
         .location-value {
+            font-family: 'Inter', 'Arial', sans-serif;
             font-size: 14px;
             color: #000000;
             font-weight: 600;

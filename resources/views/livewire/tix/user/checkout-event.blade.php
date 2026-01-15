@@ -112,49 +112,108 @@
 
                     <!-- Step 4: Payment Method -->
                     <div class="bg-white rounded-xl shadow-sm p-6">
-                        <h2 class="text-xl font-bold text-gray-900 mb-4">4. Metode Pembayaran</h2>
-                        <div class="space-y-3">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span
+                                class="flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-600 rounded-full text-sm font-bold">4</span>
+                            <span>Metode Pembayaran</span>
+                        </h2>
+                        <p class="text-sm text-gray-600 mb-5">Pilih metode pembayaran untuk menyelesaikan transaksi</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @foreach ($paymentMethods as $method)
-                                <label
-                                    class="block p-4 border-2 rounded-lg cursor-pointer transition-all {{ $selectedPaymentMethodId == $method->id ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:border-blue-300' }}">
-                                    <div class="flex items-start">
-                                        <input type="radio" wire:model.live="selectedPaymentMethodId"
-                                            value="{{ $method->id }}" class="mt-1 w-5 h-5 text-blue-600">
-                                        <div class="ml-3 flex-1">
-                                            <p class="font-semibold text-gray-900">{{ $method->bank_name }}</p>
-                                            @if ($selectedPaymentMethodId == $method->id)
-                                                <div class="mt-2 p-3 bg-white rounded border border-blue-200">
-                                                    <p class="text-sm text-gray-600">Nomor Rekening:</p>
-                                                    <div class="flex items-center gap-2 mt-1">
-                                                        <p class="text-lg font-bold text-gray-900"
-                                                            id="account-{{ $method->id }}">
-                                                            {{ $method->account_number }}</p>
-                                                        <button type="button"
-                                                            onclick="copyAccountNumber('{{ $method->account_number }}', {{ $method->id }})"
-                                                            class="p-2 hover:bg-blue-100 rounded-lg transition-colors group"
-                                                            title="Salin nomor rekening">
-                                                            <svg class="w-5 h-5 text-gray-600 group-hover:text-blue-600"
-                                                                fill="none" stroke="currentColor"
-                                                                viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    stroke-width="2"
-                                                                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
-                                                                </path>
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-                                                    <p class="text-sm text-gray-600 mt-2">Atas Nama:</p>
-                                                    <p class="font-medium text-gray-900">{{ $method->account_name }}
-                                                    </p>
-                                                </div>
-                                            @endif
+                                <div wire:key="payment-method-{{ $method->id }}" class="relative">
+                                    <input type="radio" wire:model.live="selectedPaymentMethodId"
+                                        value="{{ $method->id }}" id="payment-{{ $method->id }}" class="sr-only">
+
+                                    <label for="payment-{{ $method->id }}"
+                                        class="relative flex flex-col h-full p-5 border-2 rounded-xl cursor-pointer transition-all duration-200 
+                                        {{ $selectedPaymentMethodId == $method->id ? 'border-blue-600 bg-gradient-to-br from-blue-50 to-transparent shadow-lg' : 'border-gray-200 bg-white hover:border-blue-300 hover:shadow-md' }}">
+
+                                        <!-- Check Icon Badge -->
+                                        @if ($selectedPaymentMethodId == $method->id)
+                                            <span
+                                                class="absolute -top-2 -right-2 w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center shadow-lg">
+                                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                                </svg>
+                                            </span>
+                                        @endif
+
+                                        <!-- Bank Icon -->
+                                        <div class="flex items-center gap-3 mb-3">
+                                            <div
+                                                class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-sm">
+                                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="font-bold text-gray-900 text-base leading-tight">
+                                                    {{ $method->bank_name }}</p>
+                                                <p class="text-xs text-gray-500 mt-0.5">Transfer Bank</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </label>
+
+                                        <!-- Account Details (Expanded when selected) -->
+                                        @if ($selectedPaymentMethodId == $method->id)
+                                            <div class="mt-2 pt-3 border-t border-gray-200">
+                                                <div class="space-y-3">
+                                                    <!-- Account Number -->
+                                                    <div
+                                                        class="bg-white/80 backdrop-blur-sm rounded-lg p-3 border border-blue-100">
+                                                        <p class="text-xs text-gray-600 mb-1">Nomor Rekening</p>
+                                                        <div class="flex items-center justify-between gap-2">
+                                                            <p class="font-mono font-bold text-gray-900 text-lg tracking-wider"
+                                                                id="account-{{ $method->id }}">
+                                                                {{ $method->account_number }}
+                                                            </p>
+                                                            <button type="button"
+                                                                onclick="copyAccountNumber('{{ $method->account_number }}', {{ $method->id }})"
+                                                                class="flex-shrink-0 p-2 hover:bg-blue-50 rounded-lg transition-colors group/copy"
+                                                                title="Salin nomor rekening">
+                                                                <svg class="w-5 h-5 text-gray-500 group-hover/copy:text-blue-600 transition-colors"
+                                                                    fill="none" stroke="currentColor"
+                                                                    viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round"
+                                                                        stroke-linejoin="round" stroke-width="2"
+                                                                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
+                                                                    </path>
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Account Name -->
+                                                    <div
+                                                        class="bg-white/80 backdrop-blur-sm rounded-lg p-3 border border-blue-100">
+                                                        <p class="text-xs text-gray-600 mb-1">Atas Nama</p>
+                                                        <p class="font-semibold text-gray-900">
+                                                            {{ $method->account_name }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </label>
+                                </div>
                             @endforeach
                         </div>
+
                         @error('selectedPaymentMethodId')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            <div class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+                                <svg class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-sm text-red-600">{{ $message }}</p>
+                            </div>
                         @enderror
                     </div>
 
@@ -285,13 +344,6 @@
                                 Bayar & Buat Pesanan
                             </span>
                             <span wire:loading wire:target="submit" class="flex items-center justify-center">
-                                <svg class="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10"
-                                        stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                    </path>
-                                </svg>
                                 Memproses...
                             </span>
                         </button>

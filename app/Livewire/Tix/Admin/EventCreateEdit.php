@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Tix\Admin;
 
-use App\Models\Event as EventModel;
 use Livewire\Component;
+use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
-use Illuminate\Support\Str;
+use App\Models\Event as EventModel;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 #[Title('Form Event')]
@@ -87,6 +88,14 @@ class EventCreateEdit extends Component
 
     public function save(): void
     {
+        // Authorization check - only BPH or Koordinator can create/edit events
+        $user = Auth::user();
+        if (!$user->hasRole('bph') && 
+            (!$user->position || $user->position->name !== 'Koordinator')) {
+            $this->dispatch('swal:error', message: 'Anda tidak memiliki akses untuk membuat/mengubah event.');
+            return;
+        }
+        
         // Modify validation rules for update
         if ($this->eventId) {
             $this->rules['slug'] = 'required|string|max:255|unique:events,slug,' . $this->eventId;
@@ -96,6 +105,18 @@ class EventCreateEdit extends Component
         $this->validate();
 
         try {
+            // Additional business logic validation
+            $startDate = new \DateTime($this->start_date);
+            $endDate = new \DateTime($this->end_date);
+            $eventStartDate = new \DateTime($this->event_start_date);
+            $eventEndDate = new \DateTime($this->event_end_date);
+            
+            // Ensure booking period ends before event starts
+            if ($endDate >= $eventStartDate) {
+                $this->dispatch('swal:error', message: 'Tanggal tutup pemesanan harus sebelum tanggal mulai event.');
+                return;
+            }
+            
             $data = [
                 'title' => $this->title,
                 'slug' => $this->slug,

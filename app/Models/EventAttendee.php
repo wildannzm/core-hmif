@@ -24,6 +24,11 @@ class EventAttendee extends Model
 
     public function order()
     {
-        return $this->belongsTo(EventOrder::class);
+        return $this->belongsTo(EventOrder::class, 'event_order_id');
+    }
+    
+    public function eventOrder()
+    {
+        return $this->belongsTo(EventOrder::class, 'event_order_id');
     }
 }

@@ -8,6 +8,7 @@ use Livewire\WithPagination;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 #[Title('Kelola Event')]
 #[Layout('components.layouts.app')]
@@ -36,6 +37,14 @@ class Event extends Component
     public function delete(int $id): void
     {
         try {
+            // Authorization check - only BPH or Koordinator can delete
+            $user = Auth::user();
+            if (!$user->hasRole('bph') && 
+                (!$user->position || $user->position->name !== 'Koordinator')) {
+                $this->dispatch('swal:error', message: 'Anda tidak memiliki akses untuk menghapus event.');
+                return;
+            }
+            
             $event = EventModel::findOrFail($id);
             
             // Delete banner image if exists
@@ -54,6 +63,14 @@ class Event extends Component
     public function toggleStatus(int $id): void
     {
         try {
+            // Authorization check - only BPH or Koordinator can toggle status
+            $user = Auth::user();
+            if (!$user->hasRole('bph') && 
+                (!$user->position || $user->position->name !== 'Koordinator')) {
+                $this->dispatch('swal:error', message: 'Anda tidak memiliki akses untuk mengubah status event.');
+                return;
+            }
+            
             $event = EventModel::findOrFail($id);
             $event->update([
                 'is_active' => !$event->is_active,
