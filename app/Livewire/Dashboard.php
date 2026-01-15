@@ -9,7 +9,7 @@ use App\Models\Schedule;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 
-#[Title('HMIF UNMA | Dashboard')]
+#[Title('Dashboard')]
 #[Layout('components.layouts.app')]
 class Dashboard extends Component
 {

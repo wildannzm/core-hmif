@@ -14,7 +14,7 @@ use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-#[Title('HMIF TIX | Checkout Event')]
+#[Title('Checkout Event')]
 #[Layout('layouts.tix')]
 class CheckoutEvent extends Component
 {

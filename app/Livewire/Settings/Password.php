@@ -10,7 +10,7 @@ use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 
-#[Title('HMIF UNMA | Password')]
+#[Title('Password')]
 #[Layout('components.layouts.app')]
 
 class Password extends Component

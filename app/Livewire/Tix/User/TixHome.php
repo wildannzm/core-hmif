@@ -8,7 +8,7 @@ use Livewire\WithPagination;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 
-#[Title('HMIF TIX | Cari Event Seru')]
+#[Title('Cari Event Seru')]
 #[Layout('layouts.tix')]
 class TixHome extends Component
 {

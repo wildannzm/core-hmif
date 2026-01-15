@@ -10,7 +10,7 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 
 
-#[Title('HMIF UNMA | Departemen & Jabatan')]
+#[Title('Departemen & Jabatan')]
 #[Layout('components.layouts.app')]
 class Departments extends Component
 {

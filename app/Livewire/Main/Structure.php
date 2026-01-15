@@ -6,7 +6,7 @@ use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 
-#[Title('HMIF UNMA | Struktural')]
+#[Title('Struktural')]
 #[Layout('layouts.main')]
 
 class Structure extends Component

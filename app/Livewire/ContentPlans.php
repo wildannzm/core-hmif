@@ -10,7 +10,7 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
 
-#[Title('HMIF UNMA | Content Plan')]
+#[Title('Content Plan')]
 #[Layout('components.layouts.app')]
 class ContentPlans extends Component
 {

@@ -6,7 +6,7 @@ use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 
-#[Title('HMIF UNMA | Profil')]
+#[Title('Profil')]
 #[Layout('components.layouts.app')]
 class Profile extends Component
 {

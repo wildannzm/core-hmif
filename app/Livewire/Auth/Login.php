@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 
 #[Layout('components.layouts.auth')]
-#[Title('HMIF UNMA | Login')]
+#[Title('Login')]
 class Login extends Component
 {
     #[Validate('required|string|email')]
