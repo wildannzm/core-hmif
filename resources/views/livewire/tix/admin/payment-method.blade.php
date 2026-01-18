@@ -114,7 +114,8 @@
                                             </svg>
                                             Edit
                                         </button>
-                                        <button onclick="confirmDelete({{ $method->id }})"
+                                        <button x-data
+                                            x-on:click="$dispatch('confirm-delete', { id: {{ $method->id }} })"
                                             class="inline-flex items-center px-3 py-1.5 bg-red-50 text-red-700 hover:bg-red-100 rounded-lg transition-colors">
                                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
@@ -280,11 +281,11 @@
             });
         });
 
-        // SweetAlert Delete Confirmation
-        function confirmDelete(id) {
+        // SweetAlert Delete Confirmation - Listen to Alpine event
+        document.addEventListener('confirm-delete', (event) => {
             Swal.fire({
                 title: 'Apakah Anda yakin?',
-                text: "Metode pembayaran ini akan dihapus secara permanen!",
+                text: "Metode pembayaran ini akan dihapus",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444',
@@ -294,9 +295,9 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $wire.call('delete', id);
+                    $wire.call('delete', event.detail.id);
                 }
             });
-        }
+        });
     </script>
 @endscript
