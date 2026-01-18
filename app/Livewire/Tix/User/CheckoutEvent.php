@@ -187,8 +187,7 @@ class CheckoutEvent extends Component
             $invoiceCode = 'HMIFTIX-' . strtoupper(substr(uniqid(), -5)) . '-' . date('Ymd');
 
             // Process immediately instead of queuing (TEMPORARY FIX)
-            // TODO: Change back to dispatch() after setting up queue worker
-            ProcessEventOrder::dispatchSync(
+            ProcessEventOrder::dispatch(
                 eventId: $this->event->id,
                 buyerName: $this->buyerName,
                 buyerEmail: $this->buyerEmail,
