@@ -91,6 +91,19 @@ Route::domain('tix.hmifunma.web.id')->group(function () {
         ]);
     });
     
+    // Debug queue - HAPUS SETELAH DEBUGGING SELESAI
+    Route::get('/debug-queue', function () {
+        $pendingJobs = \DB::table('jobs')->count();
+        $failedJobs = \DB::table('failed_jobs')->count();
+        
+        return response()->json([
+            'queue_connection' => config('queue.default'),
+            'pending_jobs' => $pendingJobs,
+            'failed_jobs' => $failedJobs,
+            'queue_works' => $pendingJobs > 0 ? 'Ada ' . $pendingJobs . ' job pending (queue worker tidak berjalan)' : 'Queue kosong',
+        ]);
+    });
+    
     // User-facing TIX routes (Public)
     Route::get('/', TixHome::class)->name('tix.home');
     Route::get('/event/{slug}', DetailEvent::class)->name('tix.event.detail');

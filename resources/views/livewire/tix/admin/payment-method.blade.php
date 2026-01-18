@@ -114,8 +114,7 @@
                                             </svg>
                                             Edit
                                         </button>
-                                        <button wire:click="delete({{ $method->id }})"
-                                            wire:confirm="Apakah Anda yakin ingin menghapus metode pembayaran ini?"
+                                        <button onclick="confirmDelete({{ $method->id }})"
                                             class="inline-flex items-center px-3 py-1.5 bg-red-50 text-red-700 hover:bg-red-100 rounded-lg transition-colors">
                                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
@@ -280,5 +279,24 @@
                 confirmButtonColor: '#3b82f6',
             });
         });
+
+        // SweetAlert Delete Confirmation
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Metode pembayaran ini akan dihapus secara permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $wire.call('delete', id);
+                }
+            });
+        }
     </script>
 @endscript
