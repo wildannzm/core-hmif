@@ -74,6 +74,23 @@ Route::domain('internal.hmifunma.web.id')->group(function () {
 });
 
 Route::domain('tix.hmifunma.web.id')->group(function () {
+    // Debug route - HAPUS SETELAH DEBUGGING SELESAI
+    Route::get('/debug-session', function () {
+        return response()->json([
+            'session_works' => true,
+            'session_id' => session()->getId(),
+            'session_driver' => config('session.driver'),
+            'session_domain' => config('session.domain'),
+            'app_url' => config('app.url'),
+            'request_host' => request()->getHost(),
+            'request_scheme' => request()->getScheme(),
+            'csrf_token' => csrf_token(),
+            'session_test' => session()->get('test', 'not_set'),
+            'can_write_session' => session()->put('test', now()->toString()) ?? 'written',
+            'database_connected' => \DB::connection()->getDatabaseName(),
+        ]);
+    });
+    
     // User-facing TIX routes (Public)
     Route::get('/', TixHome::class)->name('tix.home');
     Route::get('/event/{slug}', DetailEvent::class)->name('tix.event.detail');

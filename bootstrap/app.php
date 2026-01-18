@@ -12,6 +12,18 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Trust all proxies (for aaPanel/Nginx reverse proxy)
+        $middleware->trustProxies(at: '*', headers: \Illuminate\Http\Request::HEADER_X_FORWARDED_FOR | 
+            \Illuminate\Http\Request::HEADER_X_FORWARDED_HOST | 
+            \Illuminate\Http\Request::HEADER_X_FORWARDED_PORT | 
+            \Illuminate\Http\Request::HEADER_X_FORWARDED_PROTO);
+        
+        // Trust all hosts (for multiple subdomains)
+        $middleware->trustHosts(at: [
+            'hmifunma.web.id',
+            '*.hmifunma.web.id',
+        ]);
+        
         $middleware->alias([
             'api.token' => \App\Http\Middleware\ApiTokenMiddleware::class,
             'check.position' => \App\Http\Middleware\CheckPosition::class,
