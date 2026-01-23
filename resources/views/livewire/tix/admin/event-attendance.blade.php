@@ -3,7 +3,6 @@
     <style>
         #qr-reader {
             width: 100% !important;
-            min-height: 300px;
         }
 
         #qr-reader video {
@@ -11,6 +10,7 @@
             height: auto !important;
             display: block !important;
             border-radius: 0.5rem;
+            object-fit: cover;
         }
 
         #qr-reader__dashboard_section {
@@ -147,14 +147,14 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Cari</label>
                 <input type="text" wire:model.live.debounce.300ms="search" placeholder="Nama atau kode tiket..."
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
             </div>
 
             <!-- Status Filter -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
                 <select wire:model.live="filterStatus"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
                     <option value="all">Semua Status</option>
                     <option value="checked_in">Sudah Check-in</option>
                     <option value="not_checked_in">Belum Check-in</option>
@@ -365,18 +365,18 @@
                     </div>
 
                     <!-- Content -->
-                    <div class="space-y-4 sm:space-y-6">
+                    <div class="space-y-3">
                         @if ($scanMode === 'qr')
                             <!-- QR Scanner -->
                             <div
-                                class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-3 sm:p-4 text-center border-2 border-blue-200">
-                                <div class="relative mx-auto w-full max-w-sm rounded-lg overflow-hidden">
+                                class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl px-2 pb-2 pt-1 text-center border-2 border-blue-200">
+                                <div class="relative mx-auto w-full rounded-lg overflow-hidden">
                                     <!-- QR Scanner Container -->
                                     <div id="qr-reader" class="w-full h-full"></div>
                                 </div>
-                                <p class="text-blue-700 mt-3 sm:mt-4 font-semibold text-base sm:text-lg">Arahkan kamera
+                                <p class="text-blue-700 mt-1 font-semibold text-base sm:text-lg">Arahkan kamera
                                     ke QR Code</p>
-                                <p class="text-xs sm:text-sm text-blue-600 mt-1 sm:mt-2" id="qr-status">Memulai
+                                <p class="text-xs sm:text-sm text-blue-600" id="qr-status">Memulai
                                     kamera...</p>
                             </div>
 
@@ -469,6 +469,8 @@
         let lastScanTime = 0;
         let scanAnimationFrame = null;
         let livewireComponent = null;
+        let scanLinePosition = 0;
+        let scanLineDirection = 1;
 
         // Function to setup event listeners
         function setupEventListeners() {
@@ -629,24 +631,28 @@
                             overlayContext.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
 
                             if (code) {
-                                // Draw bounding box around detected QR code (GREEN)
-                                overlayContext.strokeStyle = '#10b981';
+                                // Draw lines connecting all four corners (GREEN)
+                                overlayContext.beginPath();
+                                overlayContext.moveTo(code.location.topLeftCorner.x, code.location.topLeftCorner.y);
+                                overlayContext.lineTo(code.location.topRightCorner.x, code.location.topRightCorner.y);
+                                overlayContext.lineTo(code.location.bottomRightCorner.x, code.location.bottomRightCorner
+                                    .y);
+                                overlayContext.lineTo(code.location.bottomLeftCorner.x, code.location.bottomLeftCorner
+                                    .y);
+                                overlayContext.closePath();
                                 overlayContext.lineWidth = 4;
-                                overlayContext.strokeRect(
-                                    code.location.topLeftCorner.x,
-                                    code.location.topLeftCorner.y,
-                                    code.location.bottomRightCorner.x - code.location.topLeftCorner.x,
-                                    code.location.bottomRightCorner.y - code.location.topLeftCorner.y
-                                );
+                                overlayContext.strokeStyle = '#10b981';
+                                overlayContext.stroke();
 
-                                // Draw corner markers
+                                // Draw corner dots on all four corners
                                 overlayContext.fillStyle = '#10b981';
-                                const cornerSize = 8;
+                                const dotRadius = 8;
                                 [code.location.topLeftCorner, code.location.topRightCorner,
                                     code.location.bottomLeftCorner, code.location.bottomRightCorner
                                 ].forEach(corner => {
-                                    overlayContext.fillRect(corner.x - cornerSize / 2, corner.y - cornerSize /
-                                        2, cornerSize, cornerSize);
+                                    overlayContext.beginPath();
+                                    overlayContext.arc(corner.x, corner.y, dotRadius, 0, 2 * Math.PI);
+                                    overlayContext.fill();
                                 });
 
                                 // Prevent duplicate scans within 3 seconds
@@ -683,61 +689,75 @@
 
                                 // IMPORTANT: Continue scanning - do NOT return here
                             } else {
-                                // Draw scanning area guide (BLUE semi-transparent box in center)
-                                const scanBoxSize = Math.min(canvas.width, canvas.height) * 0.6;
+                                // Draw scanning area box - Perfect square in center
+                                const padding = 50; // Padding from edges
+                                const maxBoxSize = Math.min(canvas.width, canvas.height) - (padding * 2);
+                                const scanBoxSize = Math.min(maxBoxSize, 350); // Max 350px or fit to screen
                                 const scanBoxX = (canvas.width - scanBoxSize) / 2;
                                 const scanBoxY = (canvas.height - scanBoxSize) / 2;
 
-                                // Draw scanning frame
-                                overlayContext.strokeStyle = 'rgba(59, 130, 246, 0.6)';
-                                overlayContext.lineWidth = 3;
-                                overlayContext.strokeRect(scanBoxX, scanBoxY, scanBoxSize, scanBoxSize);
+                                // Draw corner dots (BLUE)
+                                overlayContext.fillStyle = '#3b82f6';
+                                const dotRadius = 8;
+                                const corners = [{
+                                        x: scanBoxX,
+                                        y: scanBoxY
+                                    }, // top-left
+                                    {
+                                        x: scanBoxX + scanBoxSize,
+                                        y: scanBoxY
+                                    }, // top-right
+                                    {
+                                        x: scanBoxX,
+                                        y: scanBoxY + scanBoxSize
+                                    }, // bottom-left
+                                    {
+                                        x: scanBoxX + scanBoxSize,
+                                        y: scanBoxY + scanBoxSize
+                                    } // bottom-right
+                                ];
 
-                                // Draw corner brackets
+                                corners.forEach(corner => {
+                                    overlayContext.beginPath();
+                                    overlayContext.arc(corner.x, corner.y, dotRadius, 0, 2 * Math.PI);
+                                    overlayContext.fill();
+                                });
+
+                                // Draw corner brackets (L-shaped lines)
                                 overlayContext.strokeStyle = '#3b82f6';
-                                overlayContext.lineWidth = 4;
-                                const cornerLength = 30;
+                                overlayContext.lineWidth = 3;
+                                const bracketLength = 30;
 
                                 // Top-left corner
                                 overlayContext.beginPath();
-                                overlayContext.moveTo(scanBoxX, scanBoxY + cornerLength);
-                                overlayContext.lineTo(scanBoxX, scanBoxY);
-                                overlayContext.lineTo(scanBoxX + cornerLength, scanBoxY);
+                                overlayContext.moveTo(scanBoxX, scanBoxY);
+                                overlayContext.lineTo(scanBoxX + bracketLength, scanBoxY);
+                                overlayContext.moveTo(scanBoxX, scanBoxY);
+                                overlayContext.lineTo(scanBoxX, scanBoxY + bracketLength);
                                 overlayContext.stroke();
 
                                 // Top-right corner
                                 overlayContext.beginPath();
-                                overlayContext.moveTo(scanBoxX + scanBoxSize - cornerLength, scanBoxY);
-                                overlayContext.lineTo(scanBoxX + scanBoxSize, scanBoxY);
-                                overlayContext.lineTo(scanBoxX + scanBoxSize, scanBoxY + cornerLength);
+                                overlayContext.moveTo(scanBoxX + scanBoxSize, scanBoxY);
+                                overlayContext.lineTo(scanBoxX + scanBoxSize - bracketLength, scanBoxY);
+                                overlayContext.moveTo(scanBoxX + scanBoxSize, scanBoxY);
+                                overlayContext.lineTo(scanBoxX + scanBoxSize, scanBoxY + bracketLength);
                                 overlayContext.stroke();
 
                                 // Bottom-left corner
                                 overlayContext.beginPath();
-                                overlayContext.moveTo(scanBoxX, scanBoxY + scanBoxSize - cornerLength);
-                                overlayContext.lineTo(scanBoxX, scanBoxY + scanBoxSize);
-                                overlayContext.lineTo(scanBoxX + cornerLength, scanBoxY + scanBoxSize);
+                                overlayContext.moveTo(scanBoxX, scanBoxY + scanBoxSize);
+                                overlayContext.lineTo(scanBoxX + bracketLength, scanBoxY + scanBoxSize);
+                                overlayContext.moveTo(scanBoxX, scanBoxY + scanBoxSize);
+                                overlayContext.lineTo(scanBoxX, scanBoxY + scanBoxSize - bracketLength);
                                 overlayContext.stroke();
 
                                 // Bottom-right corner
                                 overlayContext.beginPath();
-                                overlayContext.moveTo(scanBoxX + scanBoxSize - cornerLength, scanBoxY + scanBoxSize);
-                                overlayContext.lineTo(scanBoxX + scanBoxSize, scanBoxY + scanBoxSize);
-                                overlayContext.lineTo(scanBoxX + scanBoxSize, scanBoxY + scanBoxSize - cornerLength);
-                                overlayContext.stroke();
-
-                                // Draw center crosshair
-                                const centerX = canvas.width / 2;
-                                const centerY = canvas.height / 2;
-                                const crosshairSize = 20;
-
-                                overlayContext.strokeStyle = '#3b82f6';
-                                overlayContext.lineWidth = 2;
-                                overlayContext.beginPath();
-                                overlayContext.moveTo(centerX - crosshairSize, centerY);
-                                overlayContext.lineTo(centerX + crosshairSize, centerY);
-                                overlayContext.moveTo(centerX, centerY - crosshairSize);
-                                overlayContext.lineTo(centerX, centerY + crosshairSize);
+                                overlayContext.moveTo(scanBoxX + scanBoxSize, scanBoxY + scanBoxSize);
+                                overlayContext.lineTo(scanBoxX + scanBoxSize - bracketLength, scanBoxY + scanBoxSize);
+                                overlayContext.moveTo(scanBoxX + scanBoxSize, scanBoxY + scanBoxSize);
+                                overlayContext.lineTo(scanBoxX + scanBoxSize, scanBoxY + scanBoxSize - bracketLength);
                                 overlayContext.stroke();
                             }
                         }
@@ -781,6 +801,8 @@
             }
 
             isScanning = false;
+            scanLinePosition = 0;
+            scanLineDirection = 1;
         }
     </script>
 

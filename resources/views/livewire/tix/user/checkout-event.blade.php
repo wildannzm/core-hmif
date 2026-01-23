@@ -52,7 +52,7 @@
                                     Nama Lengkap <span class="text-red-500">*</span>
                                 </label>
                                 <input wire:model="buyerName" type="text" id="buyerName"
-                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('buyerName') border-red-500 @enderror"
+                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none @error('buyerName') border-red-500 @enderror"
                                     placeholder="Nama lengkap Anda">
                                 @error('buyerName')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -64,7 +64,7 @@
                                     Email <span class="text-red-500">*</span>
                                 </label>
                                 <input wire:model="buyerEmail" type="email" id="buyerEmail"
-                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('buyerEmail') border-red-500 @enderror"
+                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none @error('buyerEmail') border-red-500 @enderror"
                                     placeholder="email@example.com">
                                 @error('buyerEmail')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -76,7 +76,7 @@
                                     Nomor WhatsApp <span class="text-red-500">*</span>
                                 </label>
                                 <input wire:model="buyerPhone" type="text" id="buyerPhone"
-                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('buyerPhone') border-red-500 @enderror"
+                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none @error('buyerPhone') border-red-500 @enderror"
                                     placeholder="08xxxxxxxxxx">
                                 @error('buyerPhone')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -100,7 +100,7 @@
                                     </label>
                                     <input wire:model="attendees.{{ $index }}" type="text"
                                         id="attendee-{{ $index }}"
-                                        class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('attendees.' . $index) border-red-500 @enderror"
+                                        class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none @error('attendees.' . $index) border-red-500 @enderror"
                                         placeholder="Nama lengkap peserta {{ $index + 1 }}">
                                     @error('attendees.' . $index)
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

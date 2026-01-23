@@ -33,7 +33,7 @@
                     </svg>
                 </div>
                 <input wire:model.live.debounce.300ms="search" type="text"
-                    class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
                     placeholder="Cari berdasarkan judul atau lokasi event...">
             </div>
             <!-- Add Button -->

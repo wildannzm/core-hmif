@@ -19,7 +19,7 @@
                     </svg>
                 </div>
                 <input wire:model.live.debounce.300ms="search" type="text"
-                    class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
                     placeholder="Cari berdasarkan nama bank atau nama pemilik...">
             </div>
             <!-- Add Button -->
@@ -191,7 +191,7 @@
                                     Nama Bank <span class="text-red-500">*</span>
                                 </label>
                                 <input wire:model="bank_name" type="text" id="bank_name"
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('bank_name') border-red-500 @enderror"
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none  @error('bank_name') border-red-500 @enderror"
                                     placeholder="Contoh: BCA, BNI, Mandiri">
                                 @error('bank_name')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -204,7 +204,7 @@
                                     Nomor Rekening <span class="text-red-500">*</span>
                                 </label>
                                 <input wire:model="account_number" type="text" id="account_number"
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('account_number') border-red-500 @enderror"
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none @error('account_number') border-red-500 @enderror"
                                     placeholder="Contoh: 1234567890">
                                 @error('account_number')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -217,7 +217,7 @@
                                     Nama Pemilik Rekening <span class="text-red-500">*</span>
                                 </label>
                                 <input wire:model="account_name" type="text" id="account_name"
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('account_name') border-red-500 @enderror"
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none @error('account_name') border-red-500 @enderror"
                                     placeholder="Contoh: HMIF UNMA">
                                 @error('account_name')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -227,7 +227,7 @@
                             <!-- Is Active -->
                             <div class="flex items-center">
                                 <input wire:model="is_active" type="checkbox" id="is_active"
-                                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-colors">
+                                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-colors outline-none">
                                 <label for="is_active" class="ml-2 block text-sm text-gray-700">
                                     Aktifkan metode pembayaran ini
                                 </label>

@@ -30,7 +30,7 @@
                         Judul Event <span class="text-red-500">*</span>
                     </label>
                     <input wire:model.live="title" type="text" id="title"
-                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('title') border-red-500 @enderror"
+                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors @error('title') border-red-500 @enderror"
                         placeholder="Contoh: Seminar Nasional Teknologi Informasi">
                     @error('title')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -43,7 +43,7 @@
                         Slug <span class="text-red-500">*</span>
                     </label>
                     <input wire:model="slug" type="text" id="slug"
-                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-gray-50 @error('slug') border-red-500 @enderror"
+                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors bg-gray-50 @error('slug') border-red-500 @enderror"
                         placeholder="Auto-generated dari judul" readonly>
                     @error('slug')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -56,7 +56,7 @@
                         Deskripsi <span class="text-red-500">*</span>
                     </label>
                     <textarea wire:model="description" id="description" rows="4"
-                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('description') border-red-500 @enderror"
+                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors @error('description') border-red-500 @enderror"
                         placeholder="Deskripsi lengkap tentang event..."></textarea>
                     @error('description')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -148,7 +148,7 @@
                         Lokasi <span class="text-red-500">*</span>
                     </label>
                     <input wire:model="location" type="text" id="location"
-                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('location') border-red-500 @enderror"
+                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors @error('location') border-red-500 @enderror"
                         placeholder="Contoh: Auditorium Universitas Majalengka">
                     @error('location')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -166,7 +166,7 @@
                         Pemesanan Dibuka <span class="text-red-500">*</span>
                     </label>
                     <input wire:model="start_date" type="datetime-local" id="start_date"
-                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('start_date') border-red-500 @enderror">
+                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors @error('start_date') border-red-500 @enderror">
                     @error('start_date')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -178,7 +178,7 @@
                         Pemesanan Ditutup <span class="text-red-500">*</span>
                     </label>
                     <input wire:model="end_date" type="datetime-local" id="end_date"
-                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('end_date') border-red-500 @enderror">
+                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors @error('end_date') border-red-500 @enderror">
                     @error('end_date')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -195,7 +195,7 @@
                         Event Mulai <span class="text-red-500">*</span>
                     </label>
                     <input wire:model="event_start_date" type="datetime-local" id="event_start_date"
-                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('event_start_date') border-red-500 @enderror">
+                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors @error('event_start_date') border-red-500 @enderror">
                     @error('event_start_date')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -207,7 +207,7 @@
                         Event Selesai <span class="text-red-500">*</span>
                     </label>
                     <input wire:model="event_end_date" type="datetime-local" id="event_end_date"
-                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('event_end_date') border-red-500 @enderror">
+                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors @error('event_end_date') border-red-500 @enderror">
                     @error('event_end_date')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -228,7 +228,7 @@
                             <span class="text-gray-500 sm:text-sm">Rp</span>
                         </div>
                         <input wire:model="price" type="number" id="price" min="0"
-                            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('price') border-red-500 @enderror"
+                            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors @error('price') border-red-500 @enderror"
                             placeholder="50000">
                     </div>
                     @error('price')
@@ -242,7 +242,7 @@
                         Total Kuota <span class="text-red-500">*</span>
                     </label>
                     <input wire:model="quota" type="number" id="quota" min="1"
-                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('quota') border-red-500 @enderror"
+                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors @error('quota') border-red-500 @enderror"
                         placeholder="100">
                     @error('quota')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -253,7 +253,7 @@
                 <div class="md:col-span-2">
                     <div class="flex items-center">
                         <input wire:model="is_active" type="checkbox" id="is_active"
-                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-colors">
+                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded outline-none transition-colors">
                         <label for="is_active" class="ml-2 block text-sm text-gray-700">
                             Aktifkan event ini
                         </label>
