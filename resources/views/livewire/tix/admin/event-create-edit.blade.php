@@ -241,13 +241,28 @@
                     <label for="quota" class="block text-sm font-medium text-gray-700 mb-1">
                         Total Kuota <span class="text-red-500">*</span>
                     </label>
-                    <input wire:model="quota" type="number" id="quota" min="1"
+                    <input wire:model.blur="quota" type="number" id="quota" min="1"
                         class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors @error('quota') border-red-500 @enderror"
                         placeholder="100">
                     @error('quota')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
+
+                @if($eventId)
+                <!-- Available Quota (Only on Edit) -->
+                <div>
+                    <label for="available_quota" class="block text-sm font-medium text-gray-700 mb-1">
+                        Sisa Kuota <span class="text-red-500">*</span>
+                    </label>
+                    <input wire:model="available_quota" type="number" id="available_quota" min="0" max="{{ $quota }}"
+                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors @error('available_quota') border-red-500 @enderror"
+                        placeholder="100">
+                    @error('available_quota')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+                @endif
 
                 <!-- Is Active -->
                 <div class="md:col-span-2">
@@ -290,6 +305,20 @@
                 title: 'Oops...',
                 text: event.message,
                 confirmButtonColor: '#3b82f6',
+            });
+        });
+
+        // SweetAlert Success Handler
+        $wire.on('swal:success', (event) => {
+            Swal.fire({
+                icon: 'success',
+                title: event.title,
+                text: event.text,
+                confirmButtonColor: '#3b82f6',
+            }).then(() => {
+                if (event.redirect) {
+                    Livewire.navigate(event.redirect);
+                }
             });
         });
     </script>

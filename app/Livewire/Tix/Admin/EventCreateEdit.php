@@ -30,6 +30,7 @@ class EventCreateEdit extends Component
     public string $event_end_date = '';
     public string $price = '';
     public string $quota = '';
+    public $available_quota = null;
     public bool $is_active = true;
 
     protected array $rules = [
@@ -59,6 +60,11 @@ class EventCreateEdit extends Component
         'event_end_date' => 'tanggal selesai event',
         'price' => 'harga',
         'quota' => 'kuota',
+        'available_quota' => 'sisa kuota',
+    ];
+
+    protected $messages = [
+        'available_quota.lte' => 'Sisa kuota tidak boleh melebihi total kuota.',
     ];
 
     public function mount(?int $id = null): void
@@ -77,6 +83,7 @@ class EventCreateEdit extends Component
             $this->event_end_date = $event->event_end_date->format('Y-m-d\TH:i');
             $this->price = $event->price;
             $this->quota = $event->quota;
+            $this->available_quota = $event->available_quota;
             $this->is_active = $event->is_active;
         }
     }
@@ -90,16 +97,17 @@ class EventCreateEdit extends Component
     {
         // Authorization check - only BPH or Koordinator can create/edit events
         $user = Auth::user();
-        if (!$user->hasRole('bph') && 
+        if (!$user->hasRole('bph') &&
             (!$user->position || $user->position->name !== 'Koordinator')) {
             $this->dispatch('swal:error', message: 'Anda tidak memiliki akses untuk membuat/mengubah event.');
             return;
         }
-        
+
         // Modify validation rules for update
         if ($this->eventId) {
             $this->rules['slug'] = 'required|string|max:255|unique:events,slug,' . $this->eventId;
             $this->rules['banner'] = 'nullable|image|max:2048|dimensions:min_width=800,min_height=450,max_width=1920,max_height=1080,ratio=16/9';
+            $this->rules['available_quota'] = 'required|integer|min:0|lte:quota';
         }
 
         $this->validate();
@@ -110,13 +118,13 @@ class EventCreateEdit extends Component
             $endDate = new \DateTime($this->end_date);
             $eventStartDate = new \DateTime($this->event_start_date);
             $eventEndDate = new \DateTime($this->event_end_date);
-            
+
             // Ensure booking period ends before event starts
             if ($endDate >= $eventStartDate) {
                 $this->dispatch('swal:error', message: 'Tanggal tutup pemesanan harus sebelum tanggal mulai event.');
                 return;
             }
-            
+
             $data = [
                 'title' => $this->title,
                 'slug' => $this->slug,
@@ -131,13 +139,17 @@ class EventCreateEdit extends Component
                 'is_active' => $this->is_active,
             ];
 
+            if ($this->eventId) {
+                $data['available_quota'] = $this->available_quota;
+            }
+
             // Handle banner upload
             if ($this->banner) {
                 // Delete old banner if exists
                 if ($this->existingBanner && Storage::disk('public')->exists($this->existingBanner)) {
                     Storage::disk('public')->delete($this->existingBanner);
                 }
-                
+
                 $data['banner'] = $this->banner->store('events/banners', 'public');
             }
 
@@ -151,8 +163,11 @@ class EventCreateEdit extends Component
                 $message = 'Event berhasil ditambahkan!';
             }
 
-            session()->flash('success', $message);
-            $this->redirect(route('admin.events.index'), navigate: true);
+            $this->dispatch('swal:success',
+                title: 'Berhasil!',
+                text: $message,
+                redirect: route('admin.events.index')
+            );
         } catch (\Exception $e) {
             $this->dispatch('swal:error', message: 'Terjadi kesalahan: ' . $e->getMessage());
         }

@@ -111,7 +111,6 @@
                     <p class="text-4xl font-bold text-white tracking-tight">
                         Rp {{ number_format($event->price, 0, ',', '.') }}
                     </p>
-                    <p class="text-xs text-blue-100 mt-1">per orang</p>
                 </div>
 
                 <div class="px-5 py-6">
