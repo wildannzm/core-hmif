@@ -138,16 +138,26 @@
                                 <div class="text-blue-700 font-bold text-xl">
                                     Rp {{ number_format($event->price, 0, ',', '.') }}
                                 </div>
-                                @if ($event->available_quota > 0)
-                                    <a href="{{ route('tix.event.detail', $event->slug) }}" wire:navigate
-                                        class="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow-md">
-                                        Beli Tiket
-                                    </a>
-                                @else
+                                @if ($event->start_date->isFuture())
+                                    <button disabled
+                                        class="px-5 py-2.5 bg-gray-100 text-gray-400 text-sm font-semibold rounded-lg cursor-not-allowed">
+                                        Belum Dibuka
+                                    </button>
+                                @elseif ($event->end_date->isPast())
+                                    <button disabled
+                                        class="px-5 py-2.5 bg-red-100 text-red-500 text-sm font-semibold rounded-lg cursor-not-allowed">
+                                        Ditutup
+                                    </button>
+                                @elseif ($event->available_quota <= 0)
                                     <button disabled
                                         class="px-5 py-2.5 bg-gray-100 text-gray-400 text-sm font-semibold rounded-lg cursor-not-allowed">
                                         Tiket Habis
                                     </button>
+                                @else
+                                    <a href="{{ route('tix.event.detail', $event->slug) }}" wire:navigate
+                                        class="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow-md">
+                                        Beli Tiket
+                                    </a>
                                 @endif
                             </div>
                         </div>

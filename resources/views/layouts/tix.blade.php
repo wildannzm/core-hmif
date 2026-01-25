@@ -105,6 +105,44 @@
 
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('livewire:navigated', () => {
+            @if (session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "{{ session('error') }}",
+                });
+            @endif
+
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: "{{ session('success') }}",
+                });
+            @endif
+        });
+
+        // Handle Livewire events
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('swal:error', (data) => {
+                Swal.fire({
+                    icon: 'error',
+                    title: data.title || 'Error',
+                    text: data.message,
+                });
+            });
+
+            Livewire.on('swal:success', (data) => {
+                Swal.fire({
+                    icon: 'success',
+                    title: data.title || 'Berhasil',
+                    text: data.message,
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

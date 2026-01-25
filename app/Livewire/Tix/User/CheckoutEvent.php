@@ -71,6 +71,25 @@ class CheckoutEvent extends Component
 
         // Initialize attendees array
         $this->attendees = [''];
+
+        // Security: Check if event is valid for booking
+        if (now()->lt($this->event->start_date)) {
+            session()->flash('error', 'Pemesanan tiket belum dibuka.');
+            $this->redirect(route('tix.event.detail', $this->event->slug));
+            return;
+        }
+
+        if (now()->gt($this->event->end_date)) {
+            session()->flash('error', 'Pemesanan tiket telah ditutup.');
+            $this->redirect(route('tix.event.detail', $this->event->slug));
+            return;
+        }
+
+        if ($this->event->available_quota <= 0) {
+            session()->flash('error', 'Tiket telah habis terjual.');
+            $this->redirect(route('tix.event.detail', $this->event->slug));
+            return;
+        }
     }
 
     public function updatedQuantity(): void
@@ -79,7 +98,7 @@ class CheckoutEvent extends Component
         if ($this->quantity > $this->event->available_quota) {
             $this->quantity = $this->event->available_quota;
         }
-        
+
         // Ensure quantity is at least 1
         if ($this->quantity < 1) {
             $this->quantity = 1;
@@ -119,16 +138,16 @@ class CheckoutEvent extends Component
         // Rate limiting: Prevent spam submissions (max 3 per minute per user IP)
         $key = 'checkout_attempt_' . request()->ip();
         $attempts = cache()->get($key, 0);
-        
+
         if ($attempts >= 3) {
-            $this->dispatch('swal:error', 
+            $this->dispatch('swal:error',
                 message: 'Terlalu banyak percobaan. Silakan tunggu beberapa saat.'
             );
             return;
         }
-        
+
         cache()->put($key, $attempts + 1, now()->addMinutes(1));
-        
+
         $this->validate();
 
         try {
@@ -136,17 +155,17 @@ class CheckoutEvent extends Component
             $this->buyerName = strip_tags($this->buyerName);
             $this->buyerEmail = filter_var($this->buyerEmail, FILTER_SANITIZE_EMAIL);
             $this->buyerPhone = preg_replace('/[^0-9]/', '', $this->buyerPhone);
-            
+
             foreach ($this->attendees as $key => $name) {
                 $this->attendees[$key] = strip_tags(trim($name));
             }
-            
+
             // Refresh event to get latest data
             $this->event->refresh();
-            
+
             // Pre-check quota before dispatching job
             if ($this->quantity > $this->event->available_quota) {
-                $this->dispatch('swal:error', 
+                $this->dispatch('swal:error',
                     message: 'Maaf, kuota tiket tidak mencukupi. Hanya tersisa ' . $this->event->available_quota . ' tiket.'
                 );
                 return;
@@ -154,14 +173,14 @@ class CheckoutEvent extends Component
 
             // Check if event booking period is still valid
             if (now()->lt($this->event->start_date)) {
-                $this->dispatch('swal:error', 
+                $this->dispatch('swal:error',
                     message: 'Pemesanan tiket belum dibuka. Akan dibuka pada ' . $this->event->start_date->format('d M Y, H:i') . ' WIB.'
                 );
                 return;
             }
 
             if (now()->gt($this->event->end_date)) {
-                $this->dispatch('swal:error', 
+                $this->dispatch('swal:error',
                     message: 'Pemesanan tiket telah ditutup.'
                 );
                 return;
@@ -173,7 +192,7 @@ class CheckoutEvent extends Component
                 ->first();
 
             if (!$paymentMethod) {
-                $this->dispatch('swal:error', 
+                $this->dispatch('swal:error',
                     message: 'Metode pembayaran tidak valid. Silakan pilih metode pembayaran lain.'
                 );
                 return;
@@ -207,7 +226,7 @@ class CheckoutEvent extends Component
             ]);
 
             // Show success notification
-            $this->dispatch('swal:success', 
+            $this->dispatch('swal:success',
                 title: 'Pesanan Sedang Diproses!',
                 message: 'Pesanan Anda sedang diproses. Anda akan menerima konfirmasi setelah pembayaran diverifikasi oleh admin.',
             );
@@ -219,7 +238,7 @@ class CheckoutEvent extends Component
                 'error' => $e->getMessage(),
             ]);
 
-            $this->dispatch('swal:error', 
+            $this->dispatch('swal:error',
                 message: 'Terjadi kesalahan saat memproses pesanan. Silakan coba lagi.'
             );
         }

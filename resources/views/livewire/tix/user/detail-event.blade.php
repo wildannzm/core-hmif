@@ -154,7 +154,22 @@
                     </div>
 
                     <!-- CTA Button -->
-                    @if ($event->available_quota > 0)
+                    @if ($event->start_date->isFuture())
+                        <button disabled
+                            class="block w-full bg-gray-300 text-gray-500 text-center font-bold py-4 rounded-xl cursor-not-allowed text-lg">
+                            Booking Belum Dibuka
+                        </button>
+                    @elseif ($event->end_date->isPast())
+                        <button disabled
+                            class="block w-full bg-red-100 text-red-500 text-center font-bold py-4 rounded-xl cursor-not-allowed text-lg">
+                            Booking Ditutup
+                        </button>
+                    @elseif ($event->available_quota <= 0)
+                        <button disabled
+                            class="block w-full bg-gray-300 text-gray-500 text-center font-bold py-4 rounded-xl cursor-not-allowed text-lg">
+                            Tiket Habis
+                        </button>
+                    @else
                         <a href="{{ route('tix.event.checkout', $event->slug) }}" wire:navigate
                             class="group block w-full bg-gradient-to-r from-blue-600 to-blue-700 active:from-blue-700 active:to-blue-800 text-white text-center font-bold py-4 rounded-xl transition-all duration-200 shadow-lg active:shadow-xl text-lg relative overflow-hidden">
                             <span class="relative z-10 flex items-center justify-center gap-2">
@@ -170,11 +185,6 @@
                                 class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-active:opacity-20 transition-opacity">
                             </div>
                         </a>
-                    @else
-                        <button disabled
-                            class="block w-full bg-gray-300 text-gray-500 text-center font-bold py-4 rounded-xl cursor-not-allowed text-lg">
-                            Tiket Habis
-                        </button>
                     @endif
 
                 </div>
@@ -238,7 +248,22 @@
                             </div>
 
                             <!-- CTA Button -->
-                            @if ($event->available_quota > 0)
+                            @if ($event->start_date->isFuture())
+                                <button disabled
+                                    class="block w-full bg-gray-300 text-gray-500 text-center font-bold py-4 rounded-xl cursor-not-allowed text-lg">
+                                    Booking Belum Dibuka
+                                </button>
+                            @elseif ($event->end_date->isPast())
+                                <button disabled
+                                    class="block w-full bg-red-100 text-red-500 text-center font-bold py-4 rounded-xl cursor-not-allowed text-lg">
+                                    Booking Ditutup
+                                </button>
+                            @elseif ($event->available_quota <= 0)
+                                <button disabled
+                                    class="block w-full bg-gray-300 text-gray-500 text-center font-bold py-4 rounded-xl cursor-not-allowed text-lg">
+                                    Tiket Habis
+                                </button>
+                            @else
                                 <a href="{{ route('tix.event.checkout', $event->slug) }}" wire:navigate
                                     class="group block w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-center font-bold py-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-lg relative overflow-hidden">
                                     <span class="relative z-10 flex items-center justify-center gap-2">
@@ -254,11 +279,6 @@
                                         class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transition-opacity">
                                     </div>
                                 </a>
-                            @else
-                                <button disabled
-                                    class="block w-full bg-gray-300 text-gray-500 text-center font-bold py-4 rounded-xl cursor-not-allowed text-lg">
-                                    Tiket Habis
-                                </button>
                             @endif
 
                         </div>

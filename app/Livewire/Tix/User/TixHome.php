@@ -27,7 +27,6 @@ class TixHome extends Component
     {
         $events = Event::query()
             ->where('is_active', true)
-            ->where('end_date', '>=', now()) // Show events that haven't closed booking yet
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('title', 'like', '%' . $this->search . '%')
