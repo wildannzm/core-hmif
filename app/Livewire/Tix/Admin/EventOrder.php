@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Tix\Admin;
 
+use App\Models\Event;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Title;
@@ -28,15 +29,9 @@ class EventOrder extends Component
     public function mount($eventId)
     {
         // Validate event exists
-        $event = \App\Models\Event::findOrFail($eventId);
+        $event = Event::findOrFail($eventId);
         $this->eventId = $eventId;
-        
-        // Authorization: Only Ketua, Wakil Ketua, and Bendahara can access
-        $user = Auth::user();
-        if (!$user->hasRole('bph') && 
-            (!$user->position || !in_array($user->position->name, ['Ketua', 'Wakil Ketua', 'Bendahara']))) {
-            abort(403, 'Unauthorized access to event orders.');
-        }
+
     }
 
     public function updatingSearch()
@@ -54,7 +49,7 @@ class EventOrder extends Component
         try {
             $this->selectedOrder = EventOrderModel::with(['event', 'paymentMethod', 'attendees'])
                 ->findOrFail($orderId);
-            
+
             $this->dispatch('open-payment-modal');
         } catch (\Exception $e) {
             $this->dispatch('alert', [
@@ -77,7 +72,7 @@ class EventOrder extends Component
         try {
             // Authorization check - only authorized positions can verify
             $user = Auth::user();
-            if (!$user->hasRole('bph') && 
+            if (!$user->hasRole('bph') &&
                 (!$user->position || !in_array($user->position->name, ['Ketua', 'Wakil Ketua', 'Bendahara']))) {
                 throw new \Exception('Unauthorized action.');
             }
@@ -85,7 +80,7 @@ class EventOrder extends Component
             DB::beginTransaction();
 
             $order = EventOrderModel::with('event')->lockForUpdate()->findOrFail($orderId);
-            
+
             // Validate order status
             if ($order->status !== 'pending') {
                 throw new \Exception('Pesanan ini sudah diproses sebelumnya.');
@@ -108,7 +103,7 @@ class EventOrder extends Component
             // Close modal and refresh
             $this->selectedOrder = null;
             $this->dispatch('close-payment-modal');
-            
+
             $this->dispatch('alert', [
                 'type' => 'success',
                 'title' => 'Berhasil!',
@@ -120,7 +115,7 @@ class EventOrder extends Component
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             $this->dispatch('alert', [
                 'type' => 'error',
                 'title' => 'Gagal Memverifikasi',
@@ -143,7 +138,7 @@ class EventOrder extends Component
         try {
             // Authorization check - only authorized positions can reject
             $user = Auth::user();
-            if (!$user->hasRole('bph') && 
+            if (!$user->hasRole('bph') &&
                 (!$user->position || !in_array($user->position->name, ['Ketua', 'Wakil Ketua', 'Bendahara']))) {
                 throw new \Exception('Unauthorized action.');
             }
@@ -151,7 +146,7 @@ class EventOrder extends Component
             DB::beginTransaction();
 
             $order = EventOrderModel::with('event')->lockForUpdate()->findOrFail($orderId);
-            
+
             // Validate order status
             if ($order->status !== 'pending') {
                 throw new \Exception('Pesanan ini sudah diproses sebelumnya.');
@@ -159,7 +154,7 @@ class EventOrder extends Component
 
             // Restore event quota
             $order->event->increment('available_quota', $order->quantity);
-            
+
             // Update order status
             $order->update([
                 'status' => 'rejected',
@@ -170,7 +165,7 @@ class EventOrder extends Component
             // Close modal and refresh
             $this->selectedOrder = null;
             $this->dispatch('close-payment-modal');
-            
+
             $this->dispatch('alert', [
                 'type' => 'success',
                 'title' => 'Berhasil!',
@@ -182,7 +177,7 @@ class EventOrder extends Component
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             $this->dispatch('alert', [
                 'type' => 'error',
                 'title' => 'Gagal Menolak',
@@ -198,7 +193,7 @@ class EventOrder extends Component
         try {
             // Authorization check
             $user = Auth::user();
-            if (!$user->hasRole('bph') && 
+            if (!$user->hasRole('bph') &&
                 (!$user->position || !in_array($user->position->name, ['Ketua', 'Wakil Ketua', 'Bendahara']))) {
                 $this->dispatch('alert', [
                     'type' => 'error',
@@ -207,9 +202,9 @@ class EventOrder extends Component
                 ]);
                 return;
             }
-            
+
             $order = EventOrderModel::with(['event', 'attendees'])->findOrFail($orderId);
-            
+
             if ($order->status !== 'verified') {
                 $this->dispatch('alert', [
                     'type' => 'warning',
@@ -221,7 +216,7 @@ class EventOrder extends Component
 
             // Generate PDF on-the-fly
             $attendees = $order->attendees;
-            
+
             if ($attendees->isEmpty()) {
                 $this->dispatch('alert', [
                     'type' => 'error',
@@ -233,7 +228,7 @@ class EventOrder extends Component
 
             // Generate multi-page PDF for all tickets
             $pdf = $this->generateMultiPageTicketPDF($order);
-            
+
             return response()->streamDownload(function() use ($pdf) {
                 echo $pdf->output();
             }, 'e-tickets - ' . $order->invoice_code . '.pdf', [
@@ -252,7 +247,7 @@ class EventOrder extends Component
     protected function generateMultiPageTicketPDF($order)
     {
         $tickets = [];
-        
+
         // Get event banner URL (if exists)
         $eventBannerUrl = null;
         if ($order->event->banner) {
@@ -261,11 +256,11 @@ class EventOrder extends Component
                 $eventBannerUrl = $bannerPath;
             }
         }
-        
+
         // Prepare data for each ticket
         foreach ($order->attendees as $index => $attendee) {
             $ticketCode = $attendee->ticket_code ?? strtoupper(substr(md5($attendee->id . $order->id), 0, 10));
-            
+
             // Generate QR code with ticket code as primary data
             $qrCodeSvg = QrCode::size(200)
                 ->margin(1)
@@ -288,7 +283,7 @@ class EventOrder extends Component
                 'qrCodeUrl' => $qrCodeBase64,
             ];
         }
-        
+
         // Generate PDF with A5 size (portrait)
         return Pdf::loadView('pdf.ticket', ['tickets' => $tickets])->setPaper('a5', 'portrait');
     }
@@ -298,11 +293,11 @@ class EventOrder extends Component
         if (!$order->event->event_start_date) {
             return 'TBA';
         }
-        
+
         $startTime = \Carbon\Carbon::parse($order->event->event_start_date)->format('H:i');
-        $endTime = $order->event->event_end_date ? 
+        $endTime = $order->event->event_end_date ?
                   \Carbon\Carbon::parse($order->event->event_end_date)->format('H:i') : '';
-        
+
         return $endTime ? "$startTime - $endTime" : $startTime;
     }
 
@@ -310,7 +305,7 @@ class EventOrder extends Component
     {
         try {
             $order = EventOrderModel::with(['event', 'attendees'])->findOrFail($orderId);
-            
+
             if ($order->status !== 'verified') {
                 $this->dispatch('alert', [
                     'type' => 'warning',
