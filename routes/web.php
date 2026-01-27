@@ -26,7 +26,8 @@ use App\Livewire\Tix\User\DetailEvent;
 use App\Livewire\Tix\User\CheckoutEvent;
 use App\Livewire\Attendance\ScheduleAttendance;
 
-Route::domain('internal.hmifunma.web.id')->group(function () {
+// Route::domain('internal.hmifunma.web.id')->group(function () {
+Route::prefix('internal')->group(function () {
     Route::get('/', function () {
         return redirect()->route('login');
     })->name('home');
@@ -73,7 +74,8 @@ Route::domain('internal.hmifunma.web.id')->group(function () {
     });
 });
 
-Route::domain('tix.hmifunma.web.id')->group(function () {
+// Route::domain('tix.hmifunma.web.id')->group(function () {
+Route::prefix('tix')->group(function () {
     // User-facing TIX routes (Public)
     Route::get('/', TixHome::class)->name('tix.home');
     Route::get('/event/{slug}', DetailEvent::class)->name('tix.event.detail');
@@ -85,7 +87,7 @@ Route::domain('hmifunma.web.id')->group(function () {
     Route::get('/', Home::class)->name('main.home');
     Route::get('/struktural', Structure::class)->name('main.structure');
     Route::get('/komunitas', Community::class)->name('main.community');
-    
+
     // Sitemap for SEO
     Route::get('/sitemap.xml', function () {
         $urls = [
@@ -111,7 +113,7 @@ Route::domain('hmifunma.web.id')->group(function () {
 
         $xml = '<?xml version="1.0" encoding="UTF-8"?>';
         $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-        
+
         foreach ($urls as $url) {
             $xml .= '<url>';
             $xml .= '<loc>' . $url['loc'] . '</loc>';
@@ -120,7 +122,7 @@ Route::domain('hmifunma.web.id')->group(function () {
             $xml .= '<priority>' . $url['priority'] . '</priority>';
             $xml .= '</url>';
         }
-        
+
         $xml .= '</urlset>';
 
         return response($xml, 200)->header('Content-Type', 'application/xml');

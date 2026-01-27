@@ -61,7 +61,7 @@
                                         <div class="flex justify-between items-center py-1">
                                             <span class="text-sm text-gray-500 font-medium">Jabatan:</span>
                                             <span
-                                                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium 
+                                                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium
                                                 @if ($departmentName === 'Badan Pengurus Harian') bg-red-100 text-red-800
                                                 @else bg-blue-100 text-blue-800 @endif">
                                                 {{ $this->getPositionDisplayName($member) }}
@@ -162,7 +162,7 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span
-                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                                                 @if ($departmentName === 'Badan Pengurus Harian') bg-red-100 text-red-800
                                                 @else
                                                     bg-blue-100 text-blue-800 @endif">
@@ -289,6 +289,17 @@
                                 <input type="email" wire:model="editEmail"
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                                 @error('editEmail')
+                                    <p class="mt-1 text-xs sm:text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Password -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Password Baru</label>
+                                <input type="password" wire:model="editPassword"
+                                    placeholder="Kosongkan jika tidak ingin mengubah password"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                @error('editPassword')
                                     <p class="mt-1 text-xs sm:text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>

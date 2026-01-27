@@ -9,6 +9,7 @@ use App\Models\Department;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 #[Title('Daftar Anggota')]
 #[Layout('components.layouts.app')]
@@ -17,7 +18,7 @@ class Members extends Component
     public $selectedMember = null;
     public $editingMember = false;
     public $showEditModal = false;
-    
+
     // Form properties for editing
     public $editName = '';
     public $editNim = '';
@@ -25,6 +26,7 @@ class Members extends Component
     public $editRfidUid = '';
     public $editDepartmentId = '';
     public $editPositionId = '';
+    public $editPassword = '';
 
     protected $rules = [
         'editName' => 'required|string|max:255',
@@ -46,13 +48,13 @@ class Members extends Component
         $departmentOrder = [
             'Badan Pengurus Harian',
             'LITBANG',
-            'EKSTERNAL', 
+            'EKSTERNAL',
             'DANUS',
             'KOMINFO'
         ];
 
         $members = collect();
-        
+
         foreach ($departmentOrder as $deptName) {
             $department = Department::where('name', $deptName)->first();
             if ($department) {
@@ -72,7 +74,7 @@ class Members extends Component
                             return $user->position->name === 'Koordinator' ? 0 : 1;
                         }
                     });
-                
+
                 $members->put($deptName, $deptMembers);
             }
         }
@@ -94,7 +96,7 @@ class Members extends Component
     {
         $this->resetErrorBag();
         $this->selectedMember = User::find($userId);
-        
+
         if ($this->selectedMember) {
             $this->editName = $this->selectedMember->name;
             $this->editNim = $this->selectedMember->nim;
@@ -102,7 +104,8 @@ class Members extends Component
             $this->editRfidUid = $this->selectedMember->rfid_uid ?? '';
             $this->editDepartmentId = $this->selectedMember->department_id;
             $this->editPositionId = $this->selectedMember->position_id;
-            
+            $this->editPassword = ''; // Reset password field
+
             $this->showEditModal = true;
         }
     }
@@ -121,18 +124,25 @@ class Members extends Component
             'editRfidUid' => 'nullable|string|max:255',
             'editDepartmentId' => 'required|exists:departments,id',
             'editPositionId' => 'required|exists:positions,id',
+            'editPassword' => 'nullable|string|min:8',
         ];
-        
+
         $this->validate($rules);
 
-        $this->selectedMember->update([
+        $updateData = [
             'name' => $this->editName,
             'nim' => $this->editNim,
             'email' => $this->editEmail,
             'rfid_uid' => $this->editRfidUid ?: null,
             'department_id' => $this->editDepartmentId,
             'position_id' => $this->editPositionId,
-        ]);
+        ];
+
+        if (!empty($this->editPassword)) {
+            $updateData['password'] = Hash::make($this->editPassword);
+        }
+
+        $this->selectedMember->update($updateData);
 
         $this->closeEditModal();
         session()->flash('message', 'Data anggota berhasil diperbarui!');
@@ -154,6 +164,7 @@ class Members extends Component
         $this->editRfidUid = '';
         $this->editDepartmentId = '';
         $this->editPositionId = '';
+        $this->editPassword = '';
     }
 
     public function deleteMember($memberId)
@@ -161,10 +172,10 @@ class Members extends Component
         try {
             // Find the member
             $member = User::findOrFail($memberId);
-            
+
             // Store member name for success message
             $memberName = $member->name;
-            
+
             // Prevent deletion of super admin or current user
             if ($member->hasRole('super_admin')) {
                 $this->dispatch('delete-error', [
@@ -172,25 +183,25 @@ class Members extends Component
                 ]);
                 return;
             }
-            
+
             if ($member->id === Auth::id()) {
                 $this->dispatch('delete-error', [
                     'message' => 'Anda tidak dapat menghapus akun sendiri!'
                 ]);
                 return;
             }
-            
+
             // Delete the member
             $member->delete();
-            
+
             // Dispatch success event
             $this->dispatch('member-deleted', [
                 'memberName' => $memberName
             ]);
-            
+
             // Refresh the component data
             $this->resetPage();
-            
+
         } catch (\Exception $e) {
             // Dispatch error event
             $this->dispatch('delete-error', [

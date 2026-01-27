@@ -39,6 +39,8 @@ class CheckoutEvent extends Component
     // Step 5: Payment Proof
     public $paymentProof = null;
 
+    public bool $sameAsBuyer = false;
+
     protected function rules(): array
     {
         return [
@@ -130,6 +132,22 @@ class CheckoutEvent extends Component
         if ($this->quantity > 1) {
             $this->quantity--;
             $this->updatedQuantity();
+        }
+    }
+
+    public function updatedSameAsBuyer($value): void
+    {
+        if ($value) {
+            $this->attendees[0] = $this->buyerName;
+        } else {
+            $this->attendees[0] = '';
+        }
+    }
+
+    public function updatedBuyerName($value): void
+    {
+        if ($this->sameAsBuyer && isset($this->attendees[0])) {
+            $this->attendees[0] = $value;
         }
     }
 
@@ -226,10 +244,12 @@ class CheckoutEvent extends Component
             ]);
 
             // Show success notification
-            $this->dispatch('swal:success',
+            $this->dispatch('checkout-success',
                 title: 'Pesanan Sedang Diproses!',
                 message: 'Pesanan Anda sedang diproses. Anda akan menerima konfirmasi setelah pembayaran diverifikasi oleh admin.',
             );
+
+            $this->dispatch('redirect-checkout-success');
 
         } catch (\Exception $e) {
             Log::error('Order submission failed', [
@@ -242,6 +262,11 @@ class CheckoutEvent extends Component
                 message: 'Terjadi kesalahan saat memproses pesanan. Silakan coba lagi.'
             );
         }
+    }
+
+    public function redirectHome()
+    {
+        return $this->redirect(route('tix.home'), navigate: true);
     }
 
     public function render()

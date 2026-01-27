@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\EventOrder as EventOrderModel;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Storage;
 
 #[Title('Pemesanan Event')]
 #[Layout('components.layouts.app')]
@@ -356,6 +357,81 @@ class EventOrder extends Component
                 'title' => 'Error',
                 'text' => $e->getMessage()
             ]);
+        }
+    }
+
+    public function deleteOrder($orderId)
+    {
+        // Prevent double processing
+        if ($this->processing) {
+            return;
+        }
+
+        $this->processing = true;
+
+        try {
+            // Authorization check
+            $user = Auth::user();
+            if (!$user->hasRole('bph') &&
+                (!$user->position || !in_array($user->position->name, ['Ketua', 'Wakil Ketua', 'Bendahara']))) {
+                throw new \Exception('Unauthorized action.');
+            }
+
+            DB::beginTransaction();
+
+            $order = EventOrderModel::findOrFail($orderId);
+
+            // Validate order status
+            if ($order->status !== 'rejected') {
+                throw new \Exception('Hanya pesanan yang ditolak yang dapat dihapus.');
+            }
+
+            // Delete payment proof if exists to save storage
+            if ($order->payment_proof) {
+                // Delete from public disk (storage/app/public)
+                if (Storage::disk('public')->exists($order->payment_proof)) {
+                    Storage::disk('public')->delete($order->payment_proof);
+                }
+
+                // Delete from local disk (storage/app) - fallback
+                if (Storage::disk('local')->exists($order->payment_proof)) {
+                    Storage::disk('local')->delete($order->payment_proof);
+                }
+
+                // Also try default disk if different
+                if (Storage::exists($order->payment_proof)) {
+                    Storage::delete($order->payment_proof);
+                }
+            }
+
+            // Perform deletion
+            $order->delete();
+
+            DB::commit();
+
+            // Close modal if open
+            $this->selectedOrder = null;
+            $this->dispatch('close-payment-modal');
+
+            $this->dispatch('alert', [
+                'type' => 'success',
+                'title' => 'Berhasil!',
+                'text' => 'Pesanan telah dihapus.'
+            ]);
+
+            // Refresh the page data
+            $this->dispatch('$refresh');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            $this->dispatch('alert', [
+                'type' => 'error',
+                'title' => 'Gagal Menghapus',
+                'text' => $e->getMessage()
+            ]);
+        } finally {
+            $this->processing = false;
         }
     }
 

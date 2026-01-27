@@ -94,10 +94,23 @@
                         <div class="space-y-3">
                             @foreach ($attendees as $index => $attendee)
                                 <div>
-                                    <label for="attendee-{{ $index }}"
-                                        class="block text-sm font-medium text-gray-700 mb-1">
-                                        Nama Peserta {{ $index + 1 }} <span class="text-red-500">*</span>
-                                    </label>
+                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                                        <label for="attendee-{{ $index }}"
+                                            class="block text-sm font-medium text-gray-700">
+                                            Nama Peserta {{ $index + 1 }} <span class="text-red-500">*</span>
+                                        </label>
+                                        @if ($index === 0)
+                                            <div
+                                                class="flex items-center self-start sm:self-auto bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 transition-colors hover:bg-blue-100">
+                                                <input wire:model.live="sameAsBuyer" type="checkbox" id="sameAsBuyer"
+                                                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer">
+                                                <label for="sameAsBuyer"
+                                                    class="ml-2 text-xs sm:text-sm text-blue-700 cursor-pointer font-medium select-none">
+                                                    Sama dengan data pembeli
+                                                </label>
+                                            </div>
+                                        @endif
+                                    </div>
                                     <input wire:model="attendees.{{ $index }}" type="text"
                                         id="attendee-{{ $index }}"
                                         class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none @error('attendees.' . $index) border-red-500 @enderror"
@@ -126,7 +139,7 @@
                                         value="{{ $method->id }}" id="payment-{{ $method->id }}" class="sr-only">
 
                                     <label for="payment-{{ $method->id }}"
-                                        class="relative flex flex-col h-full p-5 border-2 rounded-xl cursor-pointer transition-all duration-200 
+                                        class="relative flex flex-col h-full p-5 border-2 rounded-xl cursor-pointer transition-all duration-200
                                         {{ $selectedPaymentMethodId == $method->id ? 'border-blue-600 bg-gradient-to-br from-blue-50 to-transparent shadow-lg' : 'border-gray-200 bg-white hover:border-blue-300 hover:shadow-md' }}">
 
                                         <!-- Check Icon Badge -->
@@ -387,21 +400,29 @@
 @script
     <script>
         // SweetAlert Success Handler
-        $wire.on('swal:success', (event) => {
+        Livewire.on('checkout-success', (event) => {
             Swal.fire({
                 icon: 'success',
                 title: event.title,
                 html: `
-                    <p class="text-gray-700 mb-4">${event.message}</p>
+                <p class="text-gray-700 mb-4">${event.message}</p>
                 `,
                 confirmButtonText: 'Kembali ke Beranda',
                 confirmButtonColor: '#2563eb',
                 allowOutsideClick: false,
+                timer: 2500,
+                timerProgressBar: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = '{{ route('tix.home') }}';
+                    @this.redirectHome();
                 }
             });
+        });
+
+        Livewire.on('redirect-checkout-success', () => {
+            setTimeout(() => {
+                @this.redirectHome();
+            }, 2500);
         });
 
         // SweetAlert Error Handler
