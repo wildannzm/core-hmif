@@ -26,8 +26,7 @@ use App\Livewire\Tix\User\DetailEvent;
 use App\Livewire\Tix\User\CheckoutEvent;
 use App\Livewire\Attendance\ScheduleAttendance;
 
-// Route::domain('internal.hmifunma.web.id')->group(function () {
-Route::prefix('internal')->group(function () {
+Route::domain('internal.hmifunma.web.id')->group(function () {
     Route::get('/', function () {
         return redirect()->route('login');
     })->name('home');
@@ -74,8 +73,7 @@ Route::prefix('internal')->group(function () {
     });
 });
 
-// Route::domain('tix.hmifunma.web.id')->group(function () {
-Route::prefix('tix')->group(function () {
+Route::domain('tix.hmifunma.web.id')->group(function () {
     // User-facing TIX routes (Public)
     Route::get('/', TixHome::class)->name('tix.home');
     Route::get('/event/{slug}', DetailEvent::class)->name('tix.event.detail');
