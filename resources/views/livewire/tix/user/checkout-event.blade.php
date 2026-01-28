@@ -12,7 +12,11 @@
                 <div class="lg:col-span-3 space-y-6">
                     <!-- Step 1: Quantity Selection -->
                     <div class="bg-white rounded-xl shadow-sm p-6">
-                        <h2 class="text-xl font-bold text-gray-900 mb-4">1. Jumlah Tiket</h2>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span
+                                class="flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-600 rounded-full text-sm font-bold">1</span>
+                            <span>Jumlah Tiket</span>
+                        </h2>
                         <div class="flex items-center justify-between max-w-xs">
                             <button type="button" wire:click="decrementQuantity"
                                 class="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors {{ $quantity <= 1 ? 'opacity-50 cursor-not-allowed' : '' }}"
@@ -45,7 +49,11 @@
 
                     <!-- Step 2: Buyer Information -->
                     <div class="bg-white rounded-xl shadow-sm p-6">
-                        <h2 class="text-xl font-bold text-gray-900 mb-4">2. Data Pembeli</h2>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span
+                                class="flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-600 rounded-full text-sm font-bold">2</span>
+                            <span>Data Pembeli</span>
+                        </h2>
                         <div class="space-y-4">
                             <div>
                                 <label for="buyerName" class="block text-sm font-medium text-gray-700 mb-1">
@@ -87,7 +95,11 @@
 
                     <!-- Step 3: Attendee Details -->
                     <div class="bg-white rounded-xl shadow-sm p-6">
-                        <h2 class="text-xl font-bold text-gray-900 mb-4">3. Data Peserta</h2>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span
+                                class="flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-600 rounded-full text-sm font-bold">3</span>
+                            <span>Data Peserta</span>
+                        </h2>
                         <p class="text-sm text-gray-600 mb-4">
                             Masukkan nama setiap peserta yang akan mengikuti event ini
                         </p>
@@ -232,7 +244,11 @@
 
                     <!-- Step 5: Payment Proof -->
                     <div class="bg-white rounded-xl shadow-sm p-6">
-                        <h2 class="text-xl font-bold text-gray-900 mb-4">5. Upload Bukti Pembayaran</h2>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span
+                                class="flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-600 rounded-full text-sm font-bold">5</span>
+                            <span>Upload Bukti Pembayaran</span>
+                        </h2>
                         <div class="space-y-4">
                             @if ($paymentProof)
                                 <div class="relative">
