@@ -41,33 +41,6 @@ class AttendanceController extends Controller
             ], 404); // 404 Not Found
         }
 
-        $todaySchedule = Schedule::whereDate('start_time', today())->first();
-
-        if (!$todaySchedule) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'No active schedule for today.'
-            ], 404); // 404 Not Found
-        }
-
-        $attendance = Attendance::where('user_id', $user->id)
-            ->where('schedule_id', $todaySchedule->id)
-            ->first();
-
-        if (!$attendance) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Attendance record not found for this user and schedule.'
-            ], 404);
-        }
-
-        if ($attendance->status !== 'Alfa') {
-            return response()->json([
-                'status' => 'warning',
-                'message' => 'You have already checked in.'
-            ], 409); // 409 Conflict
-        }
-
         $appTimezone = config('app.timezone');
         $currentTime = now($appTimezone);
 
@@ -133,7 +106,7 @@ class AttendanceController extends Controller
             'message' => 'Attendance recorded successfully!',
             'data' => [
                 'user_name' => $user->name,
-                'schedule_name' => $todaySchedule->name,
+                'schedule_name' => $closestSchedule->name,
                 'tap_time' => $currentTime->toDateTimeString(),
                 'attendance_status' => $latenessDuration > 0 ? 'Terlambat' : 'Tepat Waktu',
                 'lateness_minutes' => $latenessDuration
