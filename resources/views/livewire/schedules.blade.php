@@ -96,7 +96,7 @@
     @if ($schedules->count() > 0)
         <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mx-1 sm:mx-0">
             @foreach ($schedules as $schedule)
-                <div class="bg-white border border-gray-200 rounded-lg shadow-lg">
+                <div class="bg-white border border-gray-200 rounded-lg shadow-lg flex flex-col h-full">
                     <!-- Card Header with gradient -->
                     <div class="bg-gradient-to-r from-red-500 to-blue-600 p-3 sm:p-4 rounded-t-lg relative">
                         <!-- Actions Dropdown -->
@@ -139,7 +139,7 @@
                             </div>
                         @endif
 
-                        <h3 class="text-base sm:text-lg lg:text-xl font-semibold text-white mb-2 pr-8">
+                        <h3 class="text-base sm:text-lg lg:text-xl font-semibold text-white mb-2 pr-8 truncate">
                             {{ $schedule->name }}</h3>
                         <div class="flex items-center text-white text-xs sm:text-sm opacity-90">
                             <svg class="w-3 h-3 sm:w-4 sm:h-4 me-2" fill="currentColor" viewBox="0 0 20 20">
@@ -152,7 +152,7 @@
                     </div>
 
                     <!-- Card Body -->
-                    <div class="p-3 sm:p-4">
+                    <div class="p-3 sm:p-4 flex-grow">
                         <!-- Description -->
                         <p class="text-gray-700 text-xs sm:text-sm mb-3 sm:mb-4 leading-relaxed">
                             {{ $schedule->description }}</p>

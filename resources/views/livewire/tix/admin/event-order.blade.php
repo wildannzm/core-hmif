@@ -1,4 +1,4 @@
-<div class="p-6" x-data="{}">
+<div class="sm:p-6 space-y-4 sm:space-y-6 w-full mx-auto" x-data="{}">
     <!-- Header -->
     <div class="bg-gradient-to-r from-blue-600 to-red-600 rounded-xl shadow-lg p-6 lg:p-8 mb-6">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
