@@ -126,17 +126,6 @@
         <div class="border-t border-gray-100 pt-5">
             <h3 class="text-sm sm:text-base font-bold text-gray-900 mb-3 flex items-center">
                 <span>Agenda Bulan {{ \Carbon\Carbon::parse($selectedDate)->translatedFormat('F Y') }}</span>
-                @php
-                    $activityCount = $monthEvents
-                        ->flatten()
-                        ->filter(fn($e) => !isset($e->is_holiday) || !$e->is_holiday)
-                        ->count();
-                @endphp
-                @if ($activityCount > 0)
-                    <span
-                        class="ml-2 bg-blue-100 text-blue-700 text-[10px] px-2 py-0.5 rounded-full">{{ $activityCount }}
-                        Kegiatan</span>
-                @endif
             </h3>
 
             @if ($monthEvents->isEmpty())
