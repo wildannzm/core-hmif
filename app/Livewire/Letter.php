@@ -15,8 +15,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class Letter extends Component
 {
     use WithPagination;
-    
-    
+
+
     public $activeTab = 'incoming'; // 'incoming' or 'outgoing'
     public $search = '';
     public $perPage = 10;
@@ -24,7 +24,7 @@ class Letter extends Component
     public $sortDirection = 'asc';
     public $filterPriority = '';
     public $filterStatus = '';
-    
+
     // Form properties
     public $showModal = false;
     public $editingId = null;
@@ -40,7 +40,7 @@ class Letter extends Component
     public $sent_to = '';
     public $subject = '';
     public $attachments = '';
-    
+
     protected $rules = [
         'letter_type' => 'required|in:incoming,outgoing',
         'letter_number' => 'required|string|max:255',
@@ -55,7 +55,7 @@ class Letter extends Component
         'subject' => 'required_if:letter_type,outgoing|string|max:500',
         'attachments' => 'nullable|string|max:1000',
     ];
-    
+
     protected $messages = [
         'letter_type.required' => 'Jenis surat wajib dipilih.',
         'letter_number.required' => 'Nomor surat wajib diisi.',
@@ -66,7 +66,7 @@ class Letter extends Component
         'sent_to.required_if' => 'Penerima wajib diisi untuk surat keluar.',
         'subject.required_if' => 'Perihal surat wajib diisi untuk surat keluar.',
     ];
-    
+
     public function mount()
     {
         // Determine tab based on route or query parameter
@@ -78,25 +78,25 @@ class Letter extends Component
             $this->activeTab = request()->get('tab', 'incoming');
         }
     }
-    
+
     public function updatingSearch()
     {
         $this->resetPage();
     }
-    
+
     public function updatedActiveTab()
     {
         $this->resetPage();
         $this->resetFilters();
     }
-    
+
     public function switchTab($tab)
     {
         $this->activeTab = $tab;
         $this->resetPage();
         $this->resetFilters();
     }
-    
+
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -106,25 +106,25 @@ class Letter extends Component
         }
         $this->sortField = $field;
     }
-    
+
     public function openCreateModal($type = null)
     {
         $this->resetForm();
         $this->letter_type = $type ?? $this->activeTab;
         $this->showModal = true;
-        
+
         if ($type === 'incoming') {
             $this->received_date = now()->format('Y-m-d');
         } else {
             $this->letter_date = now()->format('Y-m-d');
         }
     }
-    
+
     public function openEditModal($id)
     {
         $this->resetForm();
         $this->editingId = $id;
-        
+
         if ($this->activeTab === 'incoming') {
             $letter = IncomeLetter::find($id);
             if ($letter) {
@@ -146,20 +146,20 @@ class Letter extends Component
                 $this->attachments = $letter->attachments;
             }
         }
-        
+
         $this->showModal = true;
     }
-    
+
     public function closeModal()
     {
         $this->showModal = false;
         $this->resetForm();
     }
-    
+
     public function save()
     {
         $this->validate();
-        
+
         try {
             if ($this->letter_type === 'incoming') {
                 $data = [
@@ -169,7 +169,7 @@ class Letter extends Component
                     'sender' => $this->sender,
                     'recipient' => $this->recipient,
                 ];
-                
+
                 if ($this->editingId) {
                     IncomeLetter::find($this->editingId)->update($data);
                     $message = 'Surat masuk berhasil diperbarui.';
@@ -185,7 +185,7 @@ class Letter extends Component
                     'subject' => $this->subject,
                     'attachments' => $this->attachments,
                 ];
-                
+
                 if ($this->editingId) {
                     OutcomeLetter::find($this->editingId)->update($data);
                     $message = 'Surat keluar berhasil diperbarui.';
@@ -194,14 +194,14 @@ class Letter extends Component
                     $message = 'Surat keluar berhasil ditambahkan.';
                 }
             }
-            
+
             $this->dispatch('swal:success', ['message' => $message]);
             $this->closeModal();
         } catch (\Exception $e) {
             $this->dispatch('swal:error', ['message' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
     }
-    
+
     public function delete($id)
     {
         try {
@@ -212,20 +212,20 @@ class Letter extends Component
                 OutcomeLetter::find($id)?->delete();
                 $message = 'Surat keluar berhasil dihapus.';
             }
-            
+
             $this->dispatch('swal:success', ['message' => $message]);
         } catch (\Exception $e) {
             $this->dispatch('swal:error', ['message' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
     }
-    
+
     public function exportPdf()
     {
         try {
             if ($this->activeTab === 'incoming') {
                 // Get all incoming letters
                 $query = IncomeLetter::query();
-                
+
                 // Apply search filter if exists
                 if ($this->search) {
                     $query->where(function($q) {
@@ -234,15 +234,15 @@ class Letter extends Component
                           ->orWhere('recipient', 'like', '%' . $this->search . '%');
                     });
                 }
-                
-                $letters = $query->orderBy('received_date', 'desc')->get();
+
+                $letters = $query->orderBy('received_date', 'asc')->get();
                 $title = 'Rekap Surat Masuk HMIF 2025/2026';
                 $filename = 'rekap-surat-masuk-' . date('Y-m-d') . '.pdf';
-                
+
             } else {
                 // Get all outgoing letters
                 $query = OutcomeLetter::query();
-                
+
                 // Apply search filter if exists
                 if ($this->search) {
                     $query->where(function($q) {
@@ -252,12 +252,12 @@ class Letter extends Component
                           ->orWhere('attachments', 'like', '%' . $this->search . '%');
                     });
                 }
-                
-                $letters = $query->orderBy('letter_date', 'desc')->get();
+
+                $letters = $query->orderBy('letter_date', 'asc')->get();
                 $title = 'Rekap Surat Keluar HMIF 2025/2026';
                 $filename = 'rekap-surat-keluar-' . date('Y-m-d') . '.pdf';
             }
-            
+
             // Generate PDF directly
             $pdf = Pdf::loadView('pdf.letter-recap', [
                 'letters' => $letters,
@@ -265,20 +265,20 @@ class Letter extends Component
                 'type' => $this->activeTab,
                 'generated_at' => now()->locale('id')->translatedFormat('d F Y H:i')
             ]);
-            
+
             // Use JavaScript to trigger download
             $this->dispatch('download-pdf', [
                 'url' => 'data:application/pdf;base64,' . base64_encode($pdf->output()),
                 'filename' => $filename
             ]);
-            
+
             $this->dispatch('swal:success', ['message' => 'PDF berhasil diunduh']);
-            
+
         } catch (\Exception $e) {
             $this->dispatch('swal:error', ['message' => 'Gagal mengekspor PDF: ' . $e->getMessage()]);
         }
     }
-    
+
     public function duplicate($id)
     {
         try {
@@ -288,7 +288,7 @@ class Letter extends Component
                     $duplicate = $original->replicate();
                     $duplicate->letter_number = $this->generateUniqueLetterNumber();
                     $duplicate->save();
-                    
+
                     $this->dispatch('swal:success', ['message' => 'Surat keluar berhasil diduplikasi.']);
                 }
             }
@@ -296,23 +296,23 @@ class Letter extends Component
             $this->dispatch('swal:error', ['message' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
     }
-    
+
     public function generateLetterNumber()
     {
         $this->letter_number = $this->generateUniqueLetterNumber();
     }
-    
+
     private function generateUniqueLetterNumber()
     {
         $year = date('Y');
         $month = date('m');
-        
+
         // Get next sequence number from database
         $lastLetter = OutcomeLetter::whereYear('letter_date', $year)
                                   ->whereMonth('letter_date', $month)
                                   ->orderBy('id', 'desc')
                                   ->first();
-        
+
         $sequence = 1;
         if ($lastLetter) {
             // Extract sequence from last letter number (format: SK/XXX/MM/YYYY)
@@ -320,10 +320,10 @@ class Letter extends Component
                 $sequence = (int)$matches[1] + 1;
             }
         }
-        
+
         return sprintf("SK/%03d/%s/%s", $sequence, $month, $year);
     }
-    
+
     private function resetForm()
     {
         $this->editingId = null;
@@ -341,7 +341,7 @@ class Letter extends Component
         $this->attachments = '';
         $this->resetErrorBag();
     }
-    
+
     private function resetFilters()
     {
         $this->search = '';
@@ -350,14 +350,14 @@ class Letter extends Component
         $this->sortField = 'received_date';
         $this->sortDirection = 'asc';
     }
-    
 
-    
+
+
     public function render()
     {
         if ($this->activeTab === 'incoming') {
             $query = IncomeLetter::query();
-            
+
             // Apply search filter
             if ($this->search) {
                 $query->where(function($q) {
@@ -366,16 +366,16 @@ class Letter extends Component
                       ->orWhere('recipient', 'like', '%' . $this->search . '%');
                 });
             }
-            
+
             // Apply sorting
             $sortField = $this->sortField === 'received_date' ? 'received_date' : $this->sortField;
             $query->orderBy($sortField, $this->sortDirection);
-            
+
             $letters = $query->paginate($this->perPage);
-            
+
         } else {
             $query = OutcomeLetter::query();
-            
+
             // Apply search filter
             if ($this->search) {
                 $query->where(function($q) {
@@ -385,16 +385,16 @@ class Letter extends Component
                       ->orWhere('attachments', 'like', '%' . $this->search . '%');
                 });
             }
-            
+
             // Apply sorting
-            $sortField =($this->sortField === 'received_date' || $this->sortField === 'letter_date') 
-                         ? 'letter_date' 
+            $sortField =($this->sortField === 'received_date' || $this->sortField === 'letter_date')
+                         ? 'letter_date'
                          : $this->sortField;
             $query->orderBy($sortField, $this->sortDirection);
-            
+
             $letters = $query->paginate($this->perPage);
         }
-        
+
         return view('livewire.letter', compact('letters'));
     }
 }
