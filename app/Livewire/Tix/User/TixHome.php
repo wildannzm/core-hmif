@@ -33,7 +33,7 @@ class TixHome extends Component
                         ->orWhere('location', 'like', '%' . $this->search . '%');
                 });
             })
-            ->orderBy('event_start_date', 'asc')
+            ->orderBy('event_start_date', 'desc')
             ->paginate(12);
 
         return view('livewire.tix.user.tix-home', [
