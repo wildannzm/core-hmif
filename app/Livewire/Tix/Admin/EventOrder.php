@@ -438,6 +438,7 @@ class EventOrder extends Component
     public function render()
     {
         $query = EventOrderModel::with(['event', 'paymentMethod', 'attendees'])
+            ->where('event_id', $this->eventId)
             ->when($this->search, function ($q) {
                 $q->where(function ($query) {
                     $query->where('invoice_code', 'like', '%' . $this->search . '%')
@@ -456,10 +457,10 @@ class EventOrder extends Component
         $orders = $query->paginate(10);
 
         $stats = [
-            'total' => EventOrderModel::count(),
-            'pending' => EventOrderModel::where('status', 'pending')->count(),
-            'verified' => EventOrderModel::where('status', 'verified')->count(),
-            'rejected' => EventOrderModel::where('status', 'rejected')->count(),
+            'total' => EventOrderModel::where('event_id', $this->eventId)->count(),
+            'pending' => EventOrderModel::where('event_id', $this->eventId)->where('status', 'pending')->count(),
+            'verified' => EventOrderModel::where('event_id', $this->eventId)->where('status', 'verified')->count(),
+            'rejected' => EventOrderModel::where('event_id', $this->eventId)->where('status', 'rejected')->count(),
         ];
 
         return view('livewire.tix.admin.event-order', [
