@@ -20,6 +20,7 @@ class Event extends Model
         'event_start_date',
         'event_end_date',
         'price',
+        'strike_price',
         'quota',
         'available_quota', // Penting untuk logika locking/pengurangan stok
         'is_active',
@@ -32,6 +33,7 @@ class Event extends Model
         'event_end_date' => 'datetime',
         'is_active' => 'boolean',
         'price' => 'integer',
+        'strike_price' => 'integer',
         'quota' => 'integer',
         'available_quota' => 'integer',
     ];

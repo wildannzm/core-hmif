@@ -79,8 +79,14 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="text-sm text-gray-900 font-medium">{{ $method->account_number }}</div>
-                                    <div class="text-sm text-gray-500">{{ $method->account_name }}</div>
+                                    @if($method->is_cash)
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            Tunai (Cash)
+                                        </span>
+                                    @else
+                                        <div class="text-sm text-gray-900 font-medium">{{ $method->account_number }}</div>
+                                        <div class="text-sm text-gray-500">{{ $method->account_name }}</div>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <button wire:click="toggleStatus({{ $method->id }})"
@@ -197,32 +203,44 @@
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-
-                            <!-- Account Number -->
-                            <div>
-                                <label for="account_number" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Nomor Rekening <span class="text-red-500">*</span>
+                            <!-- Is Cash -->
+                            <div class="flex items-center pt-2">
+                                <input wire:model.live="is_cash" type="checkbox" id="is_cash"
+                                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-colors outline-none">
+                                <label for="is_cash" class="ml-2 block text-sm font-medium text-gray-900">
+                                    Metode Pembayaran Tunai (Cash)
                                 </label>
-                                <input wire:model="account_number" type="text" id="account_number"
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none @error('account_number') border-red-500 @enderror"
-                                    placeholder="Contoh: 1234567890">
-                                @error('account_number')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
                             </div>
 
-                            <!-- Account Name -->
-                            <div>
-                                <label for="account_name" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Nama Pemilik Rekening <span class="text-red-500">*</span>
-                                </label>
-                                <input wire:model="account_name" type="text" id="account_name"
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none @error('account_name') border-red-500 @enderror"
-                                    placeholder="Contoh: HMIF UNMA">
-                                @error('account_name')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                            <!-- Account Details (Hidden if Cash) -->
+                            <div x-data="{ isCash: @entangle('is_cash') }" x-show="!isCash" class="space-y-4 pt-2">
+                                <!-- Account Number -->
+                                <div>
+                                    <label for="account_number" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Nomor Rekening <span class="text-red-500">*</span>
+                                    </label>
+                                    <input wire:model="account_number" type="text" id="account_number"
+                                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none @error('account_number') border-red-500 @enderror"
+                                        placeholder="Contoh: 1234567890">
+                                    @error('account_number')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <!-- Account Name -->
+                                <div>
+                                    <label for="account_name" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Nama Pemilik Rekening <span class="text-red-500">*</span>
+                                    </label>
+                                    <input wire:model="account_name" type="text" id="account_name"
+                                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none @error('account_name') border-red-500 @enderror"
+                                        placeholder="Contoh: HMIF UNMA">
+                                    @error('account_name')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
+
 
                             <!-- Is Active -->
                             <div class="flex items-center">

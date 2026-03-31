@@ -218,6 +218,24 @@
                     <h3 class="text-lg font-semibold text-gray-900 border-b pb-2">Harga & Kuota</h3>
                 </div>
 
+                <!-- Strike Price (Harga Coret) -->
+                <div>
+                    <label for="strike_price" class="block text-sm font-medium text-gray-700 mb-1">
+                        Harga Coret (Opsional)
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="text-gray-500 sm:text-sm">Rp</span>
+                        </div>
+                        <input wire:model="strike_price" type="number" id="strike_price" min="0"
+                            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors @error('strike_price') border-red-500 @enderror"
+                            placeholder="100000">
+                    </div>
+                    @error('strike_price')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <!-- Price -->
                 <div>
                     <label for="price" class="block text-sm font-medium text-gray-700 mb-1">

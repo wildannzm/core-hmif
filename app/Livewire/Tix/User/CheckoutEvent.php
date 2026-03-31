@@ -38,21 +38,29 @@ class CheckoutEvent extends Component
 
     // Step 5: Payment Proof
     public $paymentProof = null;
+    public bool $isCashPayment = false;
 
     public bool $sameAsBuyer = false;
 
     protected function rules(): array
     {
-        return [
+        $rules = [
             'quantity' => 'required|integer|min:1|max:' . $this->event->available_quota,
             'buyerName' => 'required|string|min:3|max:255',
             'buyerEmail' => 'required|email:rfc,dns|max:255',
             'buyerPhone' => 'required|string|regex:/^[0-9]{10,15}$/|max:20',
             'attendees' => 'required|array|size:' . $this->quantity,
             'attendees.*' => 'required|string|min:3|max:255',
-            'selectedPaymentMethodId' => 'required|exists:payment_methods,id',
-            'paymentProof' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ];
+
+        if ($this->event && $this->event->price > 0) {
+            $rules['selectedPaymentMethodId'] = 'required|exists:payment_methods,id';
+            if (!$this->isCashPayment) {
+                $rules['paymentProof'] = 'required|image|mimes:jpeg,png,jpg|max:2048';
+            }
+        }
+
+        return $rules;
     }
 
     protected $validationAttributes = [
@@ -151,6 +159,17 @@ class CheckoutEvent extends Component
         }
     }
 
+    public function updatedSelectedPaymentMethodId($value): void
+    {
+        if ($value) {
+            $method = PaymentMethod::find($value);
+            $this->isCashPayment = $method ? $method->is_cash : false;
+        } else {
+            $this->isCashPayment = false;
+        }
+        $this->paymentProof = null;
+    }
+
     public function submit(): void
     {
         // Rate limiting: Prevent spam submissions (max 3 per minute per user IP)
@@ -204,20 +223,31 @@ class CheckoutEvent extends Component
                 return;
             }
 
-            // Verify payment method is still active
-            $paymentMethod = PaymentMethod::where('id', $this->selectedPaymentMethodId)
-                ->where('is_active', true)
-                ->first();
+            // Process payment rules
+            if ($this->event->price > 0) {
+                // Verify payment method is still active
+                $paymentMethod = PaymentMethod::where('id', $this->selectedPaymentMethodId)
+                    ->where('is_active', true)
+                    ->first();
 
-            if (!$paymentMethod) {
-                $this->dispatch('swal:error',
-                    message: 'Metode pembayaran tidak valid. Silakan pilih metode pembayaran lain.'
-                );
-                return;
+                if (!$paymentMethod) {
+                    $this->dispatch('swal:error',
+                        message: 'Metode pembayaran tidak valid. Silakan pilih metode pembayaran lain.'
+                    );
+                    return;
+                }
+
+                if (!$paymentMethod->is_cash) {
+                    // Store payment proof with unique filename
+                    $paymentProofPath = $this->paymentProof->store('payment-proofs', 'public');
+                } else {
+                    $paymentProofPath = null;
+                }
+            } else {
+                $paymentProofPath = null;
+                $this->selectedPaymentMethodId = null;
             }
 
-            // Store payment proof with unique filename
-            $paymentProofPath = $this->paymentProof->store('payment-proofs', 'public');
             $totalAmount = $this->event->price * $this->quantity;
 
             // Generate invoice code for display

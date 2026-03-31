@@ -87,8 +87,8 @@ class EventOrder extends Component
                 throw new \Exception('Pesanan ini sudah diproses sebelumnya.');
             }
 
-            // Validate payment proof exists
-            if (!$order->payment_proof) {
+            // Validate payment proof exists if order is not free and not using cash method
+            if ($order->total_amount > 0 && (!$order->paymentMethod || !$order->paymentMethod->is_cash) && !$order->payment_proof) {
                 throw new \Exception('Bukti pembayaran tidak ditemukan.');
             }
 

@@ -14,9 +14,11 @@ class PaymentMethod extends Model
         'account_number',
         'account_name',
         'is_active',
+        'is_cash',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_cash' => 'boolean',
     ];
 }

@@ -27,8 +27,8 @@ class ProcessEventOrder implements ShouldQueue
         public string $buyerEmail,
         public string $buyerPhone,
         public int $quantity,
-        public int $paymentMethodId,
-        public string $paymentProofPath,
+        public ?int $paymentMethodId,
+        public ?string $paymentProofPath,
         public int $totalAmount,
         public array $attendeeNames
     ) {
@@ -76,7 +76,7 @@ class ProcessEventOrder implements ShouldQueue
                 // Create attendees with unique ticket codes
                 foreach ($this->attendeeNames as $attendeeName) {
                     $ticketCode = $this->generateUniqueTicketCode();
-                    
+
                     EventAttendee::create([
                         'event_order_id' => $order->id,
                         'ticket_code' => $ticketCode,
@@ -107,7 +107,7 @@ class ProcessEventOrder implements ShouldQueue
             ]);
 
             // Delete uploaded payment proof if order fails
-            if (Storage::disk('public')->exists($this->paymentProofPath)) {
+            if ($this->paymentProofPath && Storage::disk('public')->exists($this->paymentProofPath)) {
                 Storage::disk('public')->delete($this->paymentProofPath);
             }
 
@@ -137,14 +137,14 @@ class ProcessEventOrder implements ShouldQueue
         do {
             $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             $ticketCode = '';
-            
+
             for ($i = 0; $i < 6; $i++) {
                 $ticketCode .= $characters[random_int(0, strlen($characters) - 1)];
             }
-            
+
             $exists = EventAttendee::where('ticket_code', $ticketCode)->exists();
         } while ($exists);
-        
+
         return $ticketCode;
     }
 
@@ -159,6 +159,5 @@ class ProcessEventOrder implements ShouldQueue
             'error' => $exception->getMessage(),
         ]);
 
-        // TODO: Notify admin about failed order
     }
 }

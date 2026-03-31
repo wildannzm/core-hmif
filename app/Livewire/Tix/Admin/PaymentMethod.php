@@ -20,16 +20,21 @@ class PaymentMethod extends Component
     public string $account_number = '';
     public string $account_name = '';
     public bool $is_active = true;
+    public bool $is_cash = false;
     public string $search = '';
 
     protected $paginationTheme = 'tailwind';
 
-    protected array $rules = [
-        'bank_name' => 'required|string|max:255',
-        'account_number' => 'required|string|max:255',
-        'account_name' => 'required|string|max:255',
-        'is_active' => 'boolean',
-    ];
+    protected function rules(): array
+    {
+        return [
+            'bank_name' => 'required|string|max:255',
+            'is_cash' => 'boolean',
+            'account_number' => $this->is_cash ? 'nullable|string|max:255' : 'required|string|max:255',
+            'account_name' => $this->is_cash ? 'nullable|string|max:255' : 'required|string|max:255',
+            'is_active' => 'boolean',
+        ];
+    }
 
     protected $validationAttributes = [
         'bank_name' => 'nama bank',
@@ -54,9 +59,10 @@ class PaymentMethod extends Component
         
         $this->editingId = $paymentMethod->id;
         $this->bank_name = $paymentMethod->bank_name;
-        $this->account_number = $paymentMethod->account_number;
-        $this->account_name = $paymentMethod->account_name;
+        $this->account_number = $paymentMethod->account_number ?? '';
+        $this->account_name = $paymentMethod->account_name ?? '';
         $this->is_active = $paymentMethod->is_active;
+        $this->is_cash = $paymentMethod->is_cash;
         
         $this->showModal = true;
     }
@@ -77,18 +83,20 @@ class PaymentMethod extends Component
                 $paymentMethod = PaymentMethodModel::findOrFail($this->editingId);
                 $paymentMethod->update([
                     'bank_name' => $this->bank_name,
-                    'account_number' => $this->account_number,
-                    'account_name' => $this->account_name,
+                    'account_number' => $this->is_cash ? null : $this->account_number,
+                    'account_name' => $this->is_cash ? null : $this->account_name,
                     'is_active' => $this->is_active,
+                    'is_cash' => $this->is_cash,
                 ]);
 
                 $message = 'Metode pembayaran berhasil diperbarui!';
             } else {
                 PaymentMethodModel::create([
                     'bank_name' => $this->bank_name,
-                    'account_number' => $this->account_number,
-                    'account_name' => $this->account_name,
+                    'account_number' => $this->is_cash ? null : $this->account_number,
+                    'account_name' => $this->is_cash ? null : $this->account_name,
                     'is_active' => $this->is_active,
+                    'is_cash' => $this->is_cash,
                 ]);
 
                 $message = 'Metode pembayaran berhasil ditambahkan!';
@@ -135,6 +143,7 @@ class PaymentMethod extends Component
         $this->account_number = '';
         $this->account_name = '';
         $this->is_active = true;
+        $this->is_cash = false;
     }
 
     public function render()

@@ -144,8 +144,11 @@
                                     <div class="text-xs text-gray-500">Tersedia / Total</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">
-                                        Rp {{ number_format($event->price, 0, ',', '.') }}
+                                    <div class="text-sm font-medium text-gray-900 flex flex-col">
+                                        @if($event->strike_price)
+                                            <span class="text-xs text-gray-400 line-through">Rp {{ number_format($event->strike_price, 0, ',', '.') }}</span>
+                                        @endif
+                                        <span>{{ $event->price == 0 ? 'Gratis' : 'Rp ' . number_format($event->price, 0, ',', '.') }}</span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -300,8 +303,12 @@
                                 </div>
                                 <div>
                                     <span class="text-gray-500 block mb-1">Harga:</span>
-                                    <p class="text-gray-900 font-semibold">Rp
-                                        {{ number_format($event->price, 0, ',', '.') }}</p>
+                                    <div class="text-gray-900 font-semibold flex flex-col">
+                                        @if($event->strike_price)
+                                            <span class="text-xs text-gray-400 line-through font-normal">Rp {{ number_format($event->strike_price, 0, ',', '.') }}</span>
+                                        @endif
+                                        <span>{{ $event->price == 0 ? 'Gratis' : 'Rp ' . number_format($event->price, 0, ',', '.') }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

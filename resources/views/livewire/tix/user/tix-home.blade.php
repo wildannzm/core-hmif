@@ -135,8 +135,13 @@
                             </div>
 
                             <div class="pt-4 border-t border-gray-100 flex items-center justify-between mt-auto">
-                                <div class="text-blue-700 font-bold text-xl">
-                                    Rp {{ number_format($event->price, 0, ',', '.') }}
+                                <div class="flex flex-col">
+                                    @if($event->strike_price)
+                                        <span class="text-xs text-gray-400 line-through">Rp {{ number_format($event->strike_price, 0, ',', '.') }}</span>
+                                    @endif
+                                    <span class="text-blue-700 font-bold text-xl">
+                                        {{ $event->price == 0 ? 'Gratis' : 'Rp ' . number_format($event->price, 0, ',', '.') }}
+                                    </span>
                                 </div>
                                 @if ($event->start_date->isFuture())
                                     <button disabled

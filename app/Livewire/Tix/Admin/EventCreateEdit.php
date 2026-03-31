@@ -29,6 +29,7 @@ class EventCreateEdit extends Component
     public string $event_start_date = '';
     public string $event_end_date = '';
     public string $price = '';
+    public $strike_price = '';
     public string $quota = '';
     public $available_quota = null;
     public bool $is_active = true;
@@ -44,6 +45,7 @@ class EventCreateEdit extends Component
         'event_start_date' => 'required|date',
         'event_end_date' => 'date|after:event_start_date',
         'price' => 'required|numeric|min:0',
+        'strike_price' => 'nullable|numeric|min:0',
         'quota' => 'required|integer|min:1',
         'is_active' => 'boolean',
     ];
@@ -59,6 +61,7 @@ class EventCreateEdit extends Component
         'event_start_date' => 'tanggal mulai event',
         'event_end_date' => 'tanggal selesai event',
         'price' => 'harga',
+        'strike_price' => 'harga coret',
         'quota' => 'kuota',
         'available_quota' => 'sisa kuota',
     ];
@@ -82,6 +85,7 @@ class EventCreateEdit extends Component
             $this->event_start_date = $event->event_start_date->format('Y-m-d\TH:i');
             $this->event_end_date = $event->event_end_date->format('Y-m-d\TH:i');
             $this->price = $event->price;
+            $this->strike_price = $event->strike_price ?? '';
             $this->quota = $event->quota;
             $this->available_quota = $event->available_quota;
             $this->is_active = $event->is_active;
@@ -135,6 +139,7 @@ class EventCreateEdit extends Component
                 'event_start_date' => $this->event_start_date,
                 'event_end_date' => $this->event_end_date,
                 'price' => $this->price,
+                'strike_price' => $this->strike_price !== '' ? $this->strike_price : null,
                 'quota' => $this->quota,
                 'is_active' => $this->is_active,
             ];

@@ -135,6 +135,7 @@
                         </div>
                     </div>
 
+                    @if ($event->price > 0)
                     <!-- Step 4: Payment Method -->
                     <div class="bg-white rounded-xl shadow-sm p-6">
                         <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
@@ -181,12 +182,14 @@
                                             <div class="flex-1">
                                                 <p class="font-bold text-gray-900 text-base leading-tight">
                                                     {{ $method->bank_name }}</p>
-                                                <p class="text-xs text-gray-500 mt-0.5">Transfer Bank</p>
+                                                <p class="text-xs text-gray-500 mt-0.5">
+                                                    {{ $method->is_cash ? 'Tunai (Bayar Di Tempat)' : 'Transfer Bank' }}
+                                                </p>
                                             </div>
                                         </div>
 
                                         <!-- Account Details (Expanded when selected) -->
-                                        @if ($selectedPaymentMethodId == $method->id)
+                                        @if ($selectedPaymentMethodId == $method->id && !$method->is_cash)
                                             <div class="mt-2 pt-3 border-t border-gray-200">
                                                 <div class="space-y-3">
                                                     <!-- Account Number -->
@@ -243,6 +246,7 @@
                     </div>
 
                     <!-- Step 5: Payment Proof -->
+                    @if(!$isCashPayment)
                     <div class="bg-white rounded-xl shadow-sm p-6">
                         <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                             <span
@@ -287,6 +291,8 @@
                             @enderror
                         </div>
                     </div>
+                    @endif
+                    @endif
                 </div>
 
                 <!-- Order Summary (Sticky Sidebar) -->
@@ -348,8 +354,12 @@
 
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-600">Harga Tiket</span>
-                                <span class="font-medium text-gray-900">Rp
-                                    {{ number_format($event->price, 0, ',', '.') }}</span>
+                                <div class="flex flex-col items-end">
+                                    @if($event->strike_price)
+                                        <span class="text-xs text-gray-400 line-through">Rp {{ number_format($event->strike_price, 0, ',', '.') }}</span>
+                                    @endif
+                                    <span class="font-medium text-gray-900">{{ $event->price == 0 ? 'Gratis' : 'Rp ' . number_format($event->price, 0, ',', '.') }}</span>
+                                </div>
                             </div>
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-600">Jumlah Tiket</span>
@@ -360,7 +370,7 @@
                                 <div class="flex justify-between items-center">
                                     <span class="text-base lg:text-lg font-bold text-gray-900">Total Pembayaran</span>
                                     <span class="text-xl lg:text-2xl font-bold text-blue-600">
-                                        Rp {{ number_format($event->price * $quantity, 0, ',', '.') }}
+                                        {{ $event->price == 0 ? 'Gratis' : 'Rp ' . number_format($event->price * $quantity, 0, ',', '.') }}
                                     </span>
                                 </div>
                             </div>
