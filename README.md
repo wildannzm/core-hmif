@@ -1,12 +1,55 @@
 # Core HMIF
 
-Organization management system for Himpunan Mahasiswa Informatika (HMIF): membership, attendance (manual + IoT RFID), schedules, letters, finance, content plans, and event ticketing (TIX).
+**Core HMIF** is a comprehensive Organization Management System designed for _Himpunan Mahasiswa Informatika_ (HMIF). It serves as a central ERP-like solution to streamline administrative, financial, and operational workflows within the organization.
 
-Stack: Laravel 12, Livewire + Volt + Flux UI, Tailwind CSS 4, Vite. Testing: Pest. Default database is MySQL.
+## 🚀 Overview
+
+This application is built to modernize the internal operations of the student organization. From managing memberships and tracking attendance (with IoT integration) to handling event ticketing and financial records, Core HMIF provides a unified platform for organizational governance.
+
+## ✨ Key Features
+
+### 👥 Human Resources (HR) Management
+
+- **Member Directory**: Manage detailed profiles for all members, including Departments and Positions.
+- **Attendance Tracking**:
+    - Integrated with IoT devices for seamless `tap-in` attendance recording.
+    - Manual attendance logging and management.
+    - Dedicated API endpoints for internal hardware verification.
+- **Schedule Management**: Create and assign schedules for organizational shifts or duties.
+
+### 📅 Event Management
+
+- **Event Lifecycle**: Create and manage events with detailed descriptions.
+- **Ticketing System**: Internal ticketing engine with `EventOrder` and `EventAttendee` tracking.
+- **Payment Processing**: Support for multiple `PaymentMethod` types for event registrations.
+
+### 💰 Finance & Administration
+
+- **Financial Recording**: Track `Finance` records for income and expenses.
+- **Correspondence**: Digital management of `IncomeLetter` (Surat Masuk) and `OutcomeLetter` (Surat Keluar).
+- **Transparency**: Centralized ledger for organizational budget tracking.
+
+### 📢 Content & Social Media
+
+- **Content Planning**: A dedicated module for scheduling and planning social media posts or internal content releases via `ContentPlan`.
+
+## 🛠 Technology Stack
+
+This project leverages the latest Laravel ecosystem for a robust and reactive user experience.
+
+- **Backend Framework**: [Laravel 12](https://laravel.com)
+- **Frontend Architecture**: [Livewire](https://livewire.laravel.com) + [Flux UI](https://fluxui.dev)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com)
+- **Bundler**: [Vite](https://vitejs.dev)
+- **Database**: MySQL
+- **Testing**: Pest PHP
 
 ## Table of Contents
 
-- [Features](#features)
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Technology Stack](#-technology-stack)
+- [Module Reference](#module-reference)
 - [Architecture](#architecture)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
@@ -23,7 +66,7 @@ Stack: Laravel 12, Livewire + Volt + Flux UI, Tailwind CSS 4, Vite. Testing: Pes
 - [Security](#security)
 - [License](#license)
 
-## Features
+## Module Reference
 
 | Module | Description |
 |---|---|
@@ -85,12 +128,10 @@ Copy `.env.example` to `.env`. Key variables:
 | Key | Default | Description |
 |---|---|---|
 | `APP_URL` | `http://localhost` | Local base URL |
-| `DB_CONNECTION` | `mysql` | Local default; use `mysql` plus `DB_HOST/PORT/DATABASE/USERNAME/PASSWORD` for production |
+| `DB_CONNECTION` | `mysql` | Default; set `DB_HOST/PORT/DATABASE/USERNAME/PASSWORD` to match your environment |
 | `QUEUE_CONNECTION` | `database` | Used by `queue:listen` in dev mode |
 | `MAIL_MAILER` | `log` | Dev default, does not send real email |
 | `IOT_API_TOKEN` | empty | Required for the RFID tap API |
-
-MySQL example:
 
 ```env
 DB_CONNECTION=mysql
@@ -206,7 +247,7 @@ curl -X POST https://internal.hmifunma.web.id/api/attendance/tap \
 
 ## Testing
 
-Tests use in-memory SQLite (`phpunit.xml`), so no dedicated database is needed:
+App default is MySQL; tests override to in-memory SQLite (`phpunit.xml`), so no dedicated test database is needed:
 
 ```bash
 composer test
