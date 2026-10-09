@@ -26,7 +26,7 @@ use App\Livewire\Tix\User\DetailEvent;
 use App\Livewire\Tix\User\CheckoutEvent;
 use App\Livewire\Attendance\ScheduleAttendance;
 
-Route::domain('internal.hmifunma.web.id')->group(function () {
+Route::domain('internal.hmif.unma.ac.id')->group(function () {
     Route::get('/', function () {
         return redirect()->route('login');
     })->name('home');
@@ -73,7 +73,7 @@ Route::domain('internal.hmifunma.web.id')->group(function () {
     });
 });
 
-Route::domain('tix.hmifunma.web.id')->group(function () {
+Route::domain('tix.hmif.unma.ac.id')->group(function () {
     // User-facing TIX routes (Public)
     Route::get('/', TixHome::class)->name('tix.home');
     Route::get('/event/{slug}', DetailEvent::class)->name('tix.event.detail');
@@ -81,7 +81,7 @@ Route::domain('tix.hmifunma.web.id')->group(function () {
 });
 
 
-Route::domain('hmifunma.web.id')->group(function () {
+Route::domain('hmif.unma.ac.id')->group(function () {
     Route::get('/', Home::class)->name('main.home');
     Route::get('/struktural', Structure::class)->name('main.structure');
     Route::get('/komunitas', Community::class)->name('main.community');
@@ -90,19 +90,19 @@ Route::domain('hmifunma.web.id')->group(function () {
     Route::get('/sitemap.xml', function () {
         $urls = [
             [
-                'loc' => 'https://hmifunma.web.id/',
+                'loc' => 'https://hmif.unma.ac.id/',
                 'lastmod' => now()->toAtomString(),
                 'changefreq' => 'weekly',
                 'priority' => '1.0'
             ],
             [
-                'loc' => 'https://hmifunma.web.id/struktural',
+                'loc' => 'https://hmif.unma.ac.id/struktural',
                 'lastmod' => now()->toAtomString(),
                 'changefreq' => 'monthly',
                 'priority' => '0.8'
             ],
             [
-                'loc' => 'https://hmifunma.web.id/komunitas',
+                'loc' => 'https://hmif.unma.ac.id/komunitas',
                 'lastmod' => now()->toAtomString(),
                 'changefreq' => 'monthly',
                 'priority' => '0.8'
